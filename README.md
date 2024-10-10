@@ -30,7 +30,7 @@ We will be tracking our progress, report bugs and fixes, as well as maintain an 
 
 - Python 
 - Flask 
-- HTML
+- HTML/CSS
 - JavaScript
 - Flake8
 - Black 
