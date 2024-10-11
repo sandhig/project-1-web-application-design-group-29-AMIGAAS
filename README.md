@@ -52,3 +52,20 @@ TBD.
 Please see [CONTRIBUTION.md](/CONTRIBUTION.md). 
 
 
+# Setup (delete later -- Amy)
+
+Start a virtual environment:
+```
+python3 -m venv venv
+source venv/bin/activate
+```
+
+Install everything:
+```
+pip install -r requirements.txt
+```
+
+Start the app:
+```
+python3 manage.py runserver
+```
