@@ -144,6 +144,29 @@ class ProductSerializer(serializers.ModelSerializer):
         fields = '__all__'
 ```
 
+Add the following to views.py to handle the GET and POST HTTP requests:
+```
+from rest_framework import status
+from rest_framework.response import Response
+from rest_framework.decorators import api_view
+from .models import Product
+from .serializers import ProductSerializer
+
+@api_view(['GET', 'POST'])
+def product_list(request):
+    if request.method == 'GET':
+        products = Product.objects.all()
+        serializer = ProductSerializer(products, many=True)
+        return Response(serializer.data)
+
+    elif request.method == 'POST':
+        serializer = ProductSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+```
+
 Create another new file called urls.py. Add the following:
 ```
 from django.urls import path
