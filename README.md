@@ -54,6 +54,8 @@ Please see [CONTRIBUTION.md](/CONTRIBUTION.md).
 
 # Setup (delete later -- Amy)
 
+### In one terminal:
+
 Start a virtual environment:
 ```
 python3 -m venv venv
@@ -65,7 +67,16 @@ Install everything:
 pip install -r requirements.txt
 ```
 
-Start the app:
+Start the backend:
 ```
+cd backend
 python3 manage.py runserver
+```
+
+### In another terminal:
+
+Start the frontend:
+```
+cd frontend
+npm start
 ```
