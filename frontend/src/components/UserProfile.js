@@ -7,14 +7,13 @@ function UserProfile({ currentUserId }) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        // Fetch user profile
         fetch(`http://localhost:8000/api/profile/${userId}/`)
             .then(response => response.json())
             .then(data => setUser(data));
     }, [userId]);
 
     const handleMessageMe = () => {
-        navigate(`/user/${userId}/messages`);
+        navigate(`/messages?userId=${userId}`);
     };
 
     if (!user) {

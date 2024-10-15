@@ -13,6 +13,12 @@ class Conversation(models.Model):
 
     def __str__(self):
         return f"Conversation with {', '.join([user.name for user in self.participants.all()])}"
+    
+    def get_other_participant_name(self, current_user):
+        other_participants = self.participants.exclude(id=current_user.id)
+        if other_participants.exists():
+            return other_participants.first().name
+        return 'Unknown'
 
 class Message(models.Model):
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')
@@ -22,4 +28,4 @@ class Message(models.Model):
     read = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.sender.username}: {self.content[:30]}..."
+        return f"{self.sender.username}: {self.content}"

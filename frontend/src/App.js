@@ -4,14 +4,14 @@ import UserProfile from './components/UserProfile';
 import PrivateMessage from './components/PrivateMessaging';
 
 function App() {
-    const currentUserId = 1; // Hardcoded for now
+    const currentUserId = 2; // Hardcoded for now
 
     return (
         <Router>
             <Routes>
                 <Route path="/" element={<HomePage currentUserId={currentUserId} />} />
                 <Route path="/user/:userId" element={<UserProfile currentUserId={currentUserId} />} />
-                <Route path="/user/:userId/messages" element={<PrivateMessage currentUserId={currentUserId} />} />
+                <Route path="/messages" element={<PrivateMessage currentUserId={currentUserId} />} />
             </Routes>
         </Router>
     );
@@ -20,7 +20,8 @@ function App() {
 function HomePage({ currentUserId }) {
     const users = [
         { id: 1, name: 'User 1' },
-        { id: 2, name: 'User 2' }
+        { id: 2, name: 'User 2' },
+        { id: 3, name: 'User 3' }
     ];
 
     return (
@@ -35,6 +36,7 @@ function HomePage({ currentUserId }) {
                     </li>
                 ))}
             </ul>
+            <Link to="/messages">Messages</Link>
         </div>
     );
 }
