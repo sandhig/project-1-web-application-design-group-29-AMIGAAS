@@ -36,7 +36,16 @@
         flex-direction: column;
         gap: 5px;
         margin-bottom: 10px;
+        overflow: scroll;
+        height: 100%;
     } 
+
+    .timestamp {
+        text-align: center;
+        font-size: small;
+        color: rgba(0, 0, 0, 0.5);
+        margin: 10px;
+    }
 
     .message-container {
         height: 100%;
@@ -49,12 +58,36 @@
         justify-content: space-between;
         display: flex;
         flex-direction: column;
+        overflow: hidden;
     }
 
     .message {
         padding: 10px 20px;
         width: fit-content;
         border-radius: 20px;
+        position: relative;
+        display: inline-block;
+
+        .time {
+            visibility: hidden;
+            width: 50px;
+            background-color: white;
+            color: #00000071;
+            text-align: center;
+            font-size: x-small;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            top: 100%;
+            left: 50%;
+            margin-left: -25px;
+        }
+
+        &:hover .time {
+            transition-delay: 1s;
+            visibility: visible;
+        }
     }
         
     .to {

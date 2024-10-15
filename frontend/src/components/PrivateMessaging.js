@@ -101,6 +101,14 @@ function PrivateMessage({ currentUserId }) {
         }
     };
 
+    const messageListRef = useRef(null);
+    
+    useEffect(() => {
+        if (messageListRef.current) {
+        messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+        }
+    }, [messages]);
+
     const selectedConversation = conversations.find(c => c.id === selectedConversationId);
 
     return (
@@ -124,12 +132,33 @@ function PrivateMessage({ currentUserId }) {
                             <div>Loading...</div>
                         ) : (
                         <div className='message-inner-container'>
-                            <div className="message-list">
-                                {messages.map(message => (
-                                <div key={message.id} className={message.sender_id === currentUserId ? 'from' : 'to'}>
+                            <div className="message-list" ref={messageListRef}>
+                                {messages.map((message, i) => (
+                                    <div key={message.id}>
+                                        {(i === 0 || (new Date(message.timestamp).getTime() - new Date(messages[i-1].timestamp).getTime())/(1000 * 3600) > 2) && (
+                                            <div className="timestamp">
+                                                {new Date(message.timestamp).toLocaleString('en-US', {
+                                                    year: 'numeric',
+                                                    month: 'short',
+                                                    day: 'numeric',
+                                                    hour: 'numeric',
+                                                    minute: 'numeric',
+                                                    hour12: true
+                                                })}
+                                            </div>
+                                        )}
+                                <div className={message.sender_id === currentUserId ? 'from' : 'to'}>
+                                    
                                     <div className='message'>
                                         {message.content}
+                                        <span className="time">{
+                                            new Date(message.timestamp).toLocaleString('en-US', {
+                                                hour: 'numeric',
+                                                minute: 'numeric',
+                                                hour12: true
+                                        })}</span>
                                     </div>
+                                </div>
                                 </div>
                                 ))}
                             </div>
