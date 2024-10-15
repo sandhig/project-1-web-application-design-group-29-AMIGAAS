@@ -1,12 +1,14 @@
 import './App.css';
 import React from "react";
 import Products from "./components/Products";
-import Users from "./components/Users"
+import UsersSignUp from "./components/UsersSignUp"
+import UsersLogin from './components/UsersLogin';
 
 function App() {
   return (
     <div className="App">
-      <Users />
+      <UsersSignUp />
+      <UsersLogin />
       <Products />
     </div>
   );

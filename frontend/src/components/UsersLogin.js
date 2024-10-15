@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
-const Users = () => {
+const UsersLogin = () => {
   const [formData, setFormData] = useState({
-    first_name: '',
-    last_name: '',
     uoft_email: '',
     password: '',
   });
@@ -22,45 +20,26 @@ const Users = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/users/', formData, {
+      const response = await axios.post('http://127.0.0.1:8000/api/users/login', formData, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
-      if (response.status === 201) {
-        setSuccessMessage('User successfully added!');
+      if (response.status === 200) {
+        setSuccessMessage('Login successful!');
         setErrorMessage('');
+        // Optionally, you could store a token or session data here
       }
     } catch (error) {
-      setErrorMessage('Error adding user');
+      setErrorMessage('Invalid email or password.');
       setSuccessMessage('');
     }
   };
 
   return (
     <div>
-      <h2>Sign Up</h2>
+      <h2>Login</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          <label>First Name:</label>
-          <input
-            type="text"
-            name="first_name"
-            value={formData.first_name}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Last Name:</label>
-          <input
-            type="text"
-            name="last_name"
-            value={formData.last_name}
-            onChange={handleChange}
-            required
-          />
-        </div>
         <div>
           <label>UofT Email:</label>
           <input
@@ -81,7 +60,7 @@ const Users = () => {
             required
           />
         </div>
-        <button type="submit">Sign In</button>
+        <button type="submit">Login</button>
       </form>
 
       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
@@ -90,4 +69,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default UsersLogin;

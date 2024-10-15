@@ -14,5 +14,11 @@ class UsersSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Email already exists.")
         
         return value 
+
+
+class LoginSerializer(serializers.Serializer) :
+    email = serializers.EmailField()
+    password = serializers.CharField(write_only=True)
+    
     
     
