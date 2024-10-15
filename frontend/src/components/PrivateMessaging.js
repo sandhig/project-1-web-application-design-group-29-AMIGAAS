@@ -52,8 +52,39 @@ function PrivateMessage({ currentUserId }) {
                 .then(response => response.json())
                 .then(data => {
                     setMessages(data.messages);
+
                     setLoading(false);
+
+                    const unreadMessageIds = data.messages
+                        .filter(msg => !msg.read && msg.sender_id !== currentUserId)
+                        .map(msg => msg.id);
+
+                        if (unreadMessageIds.length > 0) {
+                            fetch(`http://localhost:8000/api/conversation/${selectedConversationId}/mark_as_read/`, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                },
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.status === 'success') {
+                                    setMessages(prevMessages =>
+                                        prevMessages.map(msg =>
+                                            unreadMessageIds.includes(msg.id) ? { ...msg, read: true } : msg
+                                        )
+                                    );
+                                } else {
+                                    console.error('Failed to mark messages as read:', data.error);
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error marking messages as read:', error);
+                            });
+                        }
                 });
+            
+            let lastReadMessageId = getLastReadMessageId();
 
             ws.current = new WebSocket(`ws://localhost:8000/ws/chat/${selectedConversationId}/`);
 
@@ -111,6 +142,15 @@ function PrivateMessage({ currentUserId }) {
 
     const selectedConversation = conversations.find(c => c.id === selectedConversationId);
 
+    const getLastReadMessageId = () => {
+        const lastReadMessage = messages
+            .filter(msg => msg.sender_id === currentUserId && msg.read)
+            .slice(-1)[0];
+        return lastReadMessage ? lastReadMessage.id : null;
+    };
+
+    let lastReadMessageId = getLastReadMessageId();
+
     return (
         <div className="container">
             <div className="conversations">
@@ -124,14 +164,14 @@ function PrivateMessage({ currentUserId }) {
             </div>
             <div className="messages">
                 {selectedConversationId ? (
-                    <div className='message-container'>
+                    <div className='messages-container'>
                         <h2>
                             {selectedConversation ? selectedConversation.name : ''}
                         </h2>
                         {loading ? (
                             <div>Loading...</div>
                         ) : (
-                        <div className='message-inner-container'>
+                        <div className='messages-inner-container'>
                             <div className="message-list" ref={messageListRef}>
                                 {messages.map((message, i) => (
                                     <div key={message.id}>
@@ -148,15 +188,21 @@ function PrivateMessage({ currentUserId }) {
                                             </div>
                                         )}
                                 <div className={message.sender_id === currentUserId ? 'from' : 'to'}>
-                                    
-                                    <div className='message'>
-                                        {message.content}
-                                        <span className="time">{
-                                            new Date(message.timestamp).toLocaleString('en-US', {
-                                                hour: 'numeric',
-                                                minute: 'numeric',
-                                                hour12: true
-                                        })}</span>
+                                    <div className="message-container">
+                                        <div className='message'>
+                                            {message.content}
+                                            <span className="time">{
+                                                new Date(message.timestamp).toLocaleString('en-US', {
+                                                    hour: 'numeric',
+                                                    minute: 'numeric',
+                                                    hour12: true
+                                            })}</span>
+                                        </div>
+                                        <div className="read-receipt">
+                                            {message.id === lastReadMessageId && (
+                                                <p>Read</p>
+                                            )}
+                                        </div>
                                     </div>
                                 </div>
                                 </div>

@@ -5,7 +5,7 @@ from .models import User, Conversation, Message
 
 # Hardcode login as user 1
 def get_current_user():
-    return get_object_or_404(User, id=2)
+    return get_object_or_404(User, id=1)
 
 def get_user_profile(request, user_id):
     user = get_object_or_404(User, id=user_id)
@@ -69,3 +69,23 @@ def send_message(request):
         return JsonResponse({'status': 'success', 'message_id': message.id})
     else:
         return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
+
+@csrf_exempt
+def mark_messages_as_read(request, conversation_id):
+    if request.method == 'POST':
+        current_user = get_current_user()
+        conversation = get_object_or_404(Conversation, id=conversation_id)
+
+        if current_user not in conversation.participants.all():
+            return JsonResponse({'error': 'Unauthorized'}, status=403)
+
+        messages_to_update = Message.objects.filter(
+            conversation=conversation,
+            read=False
+        ).exclude(sender=current_user)
+
+        messages_to_update.update(read=True)
+
+        return JsonResponse({'status': 'success'})
+    else:
+        return JsonResponse({'error': 'Invalid method'}, status=405)

@@ -4,7 +4,7 @@ import UserProfile from './components/UserProfile';
 import PrivateMessage from './components/PrivateMessaging';
 
 function App() {
-    const currentUserId = 2; // Hardcoded for now
+    const currentUserId = 1; // Hardcoded for now
 
     return (
         <Router>
