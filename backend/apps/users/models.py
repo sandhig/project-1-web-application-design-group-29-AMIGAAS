@@ -6,7 +6,7 @@ class Users(models.Model):
     first_name = models.CharField(max_length=255) 
     last_name = models.CharField(max_length=255) 
     uoft_email = models.CharField(max_length=255) 
-    bio = models.TextField()
+    password = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return self.first_name 
