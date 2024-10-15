@@ -1,12 +1,14 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useLocation } from 'react-router-dom';
 import './PrivateMessage.css';
+import { IoSend } from "react-icons/io5";
 
 function PrivateMessage({ currentUserId }) {
     const [conversations, setConversations] = useState([]);
     const [selectedConversationId, setSelectedConversationId] = useState(null);
     const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
+    const [loading, setLoading] = useState(false);
     const ws = useRef(null);
     const isUnmounting = useRef(false);
     const location = useLocation();
@@ -42,11 +44,15 @@ function PrivateMessage({ currentUserId }) {
 
     useEffect(() => {
         if (selectedConversationId) {
+
+            setLoading(true);
+
             // Fetch messages for the selected conversation
             fetch(`http://localhost:8000/api/conversation/${selectedConversationId}/messages/`)
                 .then(response => response.json())
                 .then(data => {
                     setMessages(data.messages);
+                    setLoading(false);
                 });
 
             ws.current = new WebSocket(`ws://localhost:8000/ws/chat/${selectedConversationId}/`);
@@ -98,48 +104,48 @@ function PrivateMessage({ currentUserId }) {
     const selectedConversation = conversations.find(c => c.id === selectedConversationId);
 
     return (
-        <div className="private-message-container">
-            <div className="conversations-list">
-                <h2>Conversations</h2>
-                <ul>
-                    {conversations.map(conversation => (
-                    <li
-                        key={conversation.id}
-                        onClick={() => setSelectedConversationId(conversation.id)}
-                        className={
-                        conversation.id === selectedConversationId ? 'selected' : ''
-                        }
-                    >
-                        {conversation.name}
-                    </li>
-                    ))}
-                </ul>
+        <div className="container">
+            <div className="conversations">
+                <h2>Chats</h2>
+                {conversations.map(conversation => (
+                <div key={conversation.id} onClick={() => setSelectedConversationId(conversation.id)}
+                    className={conversation.id === selectedConversationId ? 'selected' : ''}>
+                    {conversation.name}
                 </div>
-                <div className="messages-area">
+                ))}
+            </div>
+            <div className="messages">
                 {selectedConversationId ? (
-                    <div>
-                    <h2>
-                        Conversation with{' '}
-                        {selectedConversation ? selectedConversation.name : ''}
-                    </h2>
-                    <div className="message-list">
-                        {messages.map(message => (
-                        <div key={message.id} className="message">
-                            <strong>{message.sender_name}:</strong> {message.content}
+                    <div className='message-container'>
+                        <h2>
+                            {selectedConversation ? selectedConversation.name : ''}
+                        </h2>
+                        {loading ? (
+                            <div>Loading...</div>
+                        ) : (
+                        <div className='message-inner-container'>
+                            <div className="message-list">
+                                {messages.map(message => (
+                                <div key={message.id} className={message.sender_id === currentUserId ? 'from' : 'to'}>
+                                    <div className='message'>
+                                        {message.content}
+                                    </div>
+                                </div>
+                                ))}
+                            </div>
+                            
+                            <div className="text-input">
+                                <input type="text" value={input} onChange={e => setInput(e.target.value)}
+                                    onKeyPress={e => {
+                                        if (e.key === 'Enter') {
+                                            sendMessage();
+                                        }
+                                    }}
+                                />
+                                <button onClick={sendMessage}><IoSend /></button>
+                            </div>
                         </div>
-                        ))}
-                    </div>
-                    <input
-                        type="text"
-                        value={input}
-                        onChange={e => setInput(e.target.value)}
-                        onKeyPress={e => {
-                        if (e.key === 'Enter') {
-                            sendMessage();
-                        }
-                        }}
-                    />
-                    <button onClick={sendMessage}>Send</button>
+                        )}
                     </div>
                 ) : (
                     <div>Select a conversation</div>
