@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.hashers import check_password
+from django.utils.crypto import get_random_string
 
 # Create your models here.
 
@@ -13,4 +14,4 @@ class Users(models.Model):
         return check_password(raw_password, self.password)
 
     def __str__(self):
-        return self.first_name 
+        return self.uoft_email 
