@@ -1,0 +1,153 @@
+.container {
+    height: 100vh;
+    display: flex;
+    flex-direction: row;
+}
+
+.conversations {
+    width: 30%;
+    padding: 20px;
+
+    div {
+        border-radius: 10px;
+        padding: 10px;
+
+        &:hover {
+            background-color: #f0f0f0;
+            cursor: pointer;
+        }
+
+        &.selected {
+            font-weight: bold;
+            background-color: #e0dddd;
+        }
+    }
+    
+    
+}
+
+.messages {
+    width: 100%;
+    padding: 20px;
+    background-color: lightgray;
+
+    .message-list {
+        display: flex;
+        flex-direction: column;
+        gap: 5px;
+        margin-bottom: 10px;
+        overflow: scroll;
+        height: 100%;
+    } 
+
+    .timestamp {
+        text-align: center;
+        font-size: small;
+        color: rgba(0, 0, 0, 0.5);
+        margin: 10px;
+    }
+
+    .messages-container {
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .messages-inner-container {
+        height: 100%;
+        justify-content: space-between;
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
+
+    .message-container {
+        display: flex;
+        flex-direction: column;
+        max-width: 70%;
+
+        .read-receipt {
+            justify-content: right;
+            display: flex;
+            position: relative;
+            right: 10px;
+
+            p {
+                margin: 4px;
+                font-size: small;
+                color: rgba(0, 0, 0, 0.5);
+            }
+        }
+    }
+
+    .message {
+        padding: 10px 20px;
+        width: fit-content;
+        border-radius: 20px;
+        position: relative;
+        display: inline-block;
+
+        .time {
+            visibility: hidden;
+            width: 50px;
+            background-color: white;
+            color: #00000071;
+            text-align: center;
+            font-size: x-small;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            top: 100%;
+            left: 50%;
+            margin-left: -25px;
+        }
+
+        &:hover .time {
+            transition-delay: 1s;
+            visibility: visible;
+        }
+    }
+        
+    .to {
+        .message {
+            background-color: white;
+        }
+    }
+
+    .from {
+        display: flex;
+        justify-content: end;
+
+        .message {
+            background-color: rgb(201, 201, 255);
+        }
+    }
+
+    .text-input {
+        width: 100%;
+        display: flex;
+
+        input {
+            width: calc(100% - 40px);
+            background-color: rgba(255, 255, 255, 0.5);
+            border: none;
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        button {
+            width: 30px;
+            border: none;
+            background-color: transparent;
+
+            svg {
+                height: 100%;
+            }
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+}

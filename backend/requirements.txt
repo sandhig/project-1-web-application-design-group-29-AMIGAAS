@@ -1,0 +1,9 @@
+django 
+djangorestframework 
+channels 
+channels-redis
+django-allauth
+axios
+psycopg2-binary
+awsebcli
+django-cors-headers
