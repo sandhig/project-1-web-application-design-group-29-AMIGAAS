@@ -4,6 +4,7 @@ import Products from "./components/screens/Products";
 import UsersSignUp from "./components/screens/UsersSignUp";
 import UsersLogin from './components/screens/UsersLogin';
 import HomeScreen from "./components/screens/HomeScreen"; 
+import EmailVerification from './components/screens/EmailVerification';
 import Header from "./components/Header"; 
 
 import { HashRouter as Router, Routes, Route } from 'react-router-dom';
@@ -20,6 +21,10 @@ function App() {
 
         <Routes>
           <Route exact path = "/users/signup" element={<UsersSignUp/>}></Route>
+        </Routes>
+
+        <Routes>
+          <Route exact path = "/users/verify-email" element={<EmailVerification/>}></Route>
         </Routes>
 
         <Routes>

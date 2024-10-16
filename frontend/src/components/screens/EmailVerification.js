@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 
-const UsersLogin = () => {
+const EmailVerification = () => {
   const [formData, setFormData] = useState({
     uoft_email: '',
-    password: '',
+    verification_code: '',
   });
-  
+
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
@@ -21,25 +20,24 @@ const UsersLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/users/login', formData, {
+      const response = await axios.post('http://127.0.0.1:8000/api/users/verify-email/', formData, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
       if (response.status === 200) {
-        setSuccessMessage('Login successful!');
+        setSuccessMessage('Email verified successfully!');
         setErrorMessage('');
-        // Optionally, you could store a token or session data here
       }
     } catch (error) {
-      setErrorMessage('Invalid email or password.');
+      setErrorMessage('Invalid verification code or email.');
       setSuccessMessage('');
     }
   };
 
   return (
     <div>
-      <h2>Login</h2>
+      <h2>Email Verification</h2>
       <form onSubmit={handleSubmit}>
         <div>
           <label>UofT Email:</label>
@@ -52,22 +50,17 @@ const UsersLogin = () => {
           />
         </div>
         <div>
-          <label>Password:</label>
+          <label>Verification Code:</label>
           <input
-            type="password"
-            name="password"
-            value={formData.password}
+            type="text"
+            name="verification_code"
+            value={formData.verification_code}
             onChange={handleChange}
             required
           />
         </div>
-        <button type="submit">Login</button>
+        <button type="submit">Verify Email</button>
       </form>
-
-      <p> 
-          Not a User? 
-          <Link to="/users/signup"> Signup</Link>
-      </p>
 
       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
       {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
@@ -75,4 +68,4 @@ const UsersLogin = () => {
   );
 };
 
-export default UsersLogin;
+export default EmailVerification;

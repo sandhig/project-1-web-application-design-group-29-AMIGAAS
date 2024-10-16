@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 
@@ -99,6 +100,10 @@ const UsersSignUp = () => {
         </div>
         <button type="submit">Sign In</button>
       </form>
+      <p> 
+          Already User? 
+          <Link to="/users/login"> Login</Link>
+      </p>
 
       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
       {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}

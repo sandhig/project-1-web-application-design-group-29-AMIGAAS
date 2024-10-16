@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import Users
 from django.utils.crypto import get_random_string
+from django.core.mail import send_mail
 
 class UsersSerializer(serializers.ModelSerializer):
     class Meta:
@@ -25,7 +26,7 @@ class UsersSerializer(serializers.ModelSerializer):
             uoft_email=validated_data['uoft_email'],
             password=validated_data['password'],  
             verification_code= verification_code,
-            isVerified=False,
+            is_verified=False,
         ) 
 
         send_mail(
