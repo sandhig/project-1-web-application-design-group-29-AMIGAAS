@@ -83,8 +83,6 @@ function PrivateMessage({ currentUserId }) {
                             });
                         }
                 });
-            
-            let lastReadMessageId = getLastReadMessageId();
 
             ws.current = new WebSocket(`ws://localhost:8000/ws/chat/${selectedConversationId}/`);
 
@@ -157,8 +155,8 @@ function PrivateMessage({ currentUserId }) {
                 <h2>Chats</h2>
                 {conversations.map(conversation => (
                 <div key={conversation.id} onClick={() => setSelectedConversationId(conversation.id)}
-                    className={conversation.id === selectedConversationId ? 'selected' : ''}>
-                    {conversation.name}
+                    className={conversation.id === selectedConversationId ? 'selected' : '' || !conversation.is_read ? 'unread' : ''}>
+                    <span className={!conversation.is_read ? 'dot' : ''}></span> {conversation.name}: {conversation.last_message}
                 </div>
                 ))}
             </div>

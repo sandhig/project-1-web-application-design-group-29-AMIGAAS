@@ -18,7 +18,9 @@ def get_user_conversations(request):
         'conversations': [
             {
                 'id': convo.id,
-                'name': convo.get_other_participant_name(current_user)
+                'name': convo.get_other_participant_name(current_user),
+                'last_message': convo.get_last_message(),
+                'is_read': convo.is_read(current_user)
             }
             for convo in conversations
         ]

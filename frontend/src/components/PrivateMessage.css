@@ -11,6 +11,9 @@
     div {
         border-radius: 10px;
         padding: 10px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
 
         &:hover {
             background-color: #f0f0f0;
@@ -18,8 +21,21 @@
         }
 
         &.selected {
-            font-weight: bold;
             background-color: #e0dddd;
+        }
+
+        &.unread {
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dot {
+            height: 8px;
+            width: 8px;
+            background-color: rgb(41, 123, 255);
+            border-radius: 50%;
         }
     }
     

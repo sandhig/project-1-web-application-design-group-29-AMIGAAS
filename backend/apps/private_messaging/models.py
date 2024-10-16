@@ -20,6 +20,15 @@ class Conversation(models.Model):
             return other_participants.first().name
         return 'Unknown'
 
+    def get_last_message(self):
+        return self.messages.order_by('-timestamp').first().content
+    
+    def is_read(self, current_user):
+        if len(self.messages.exclude(sender_id=current_user.id)) > 0:
+            return self.messages.exclude(sender_id=current_user.id).order_by('-timestamp').first().read
+        else:
+            return True
+
 class Message(models.Model):
     conversation = models.ForeignKey(Conversation, on_delete=models.CASCADE, related_name='messages')
     sender = models.ForeignKey(User, on_delete=models.CASCADE)
@@ -28,4 +37,4 @@ class Message(models.Model):
     read = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"{self.sender.username}: {self.content}"
+        return f"{self.sender.name}: {self.content}"
