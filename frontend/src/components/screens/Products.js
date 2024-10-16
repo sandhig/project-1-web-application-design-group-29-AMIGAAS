@@ -18,7 +18,7 @@ const Products = () => {
       .catch((error) => {
         console.error("There was an error fetching the products!", error);
       });
-  }, []);
+  }, []); 
 
   // Handle form input changes
   const handleInputChange = (e) => {
