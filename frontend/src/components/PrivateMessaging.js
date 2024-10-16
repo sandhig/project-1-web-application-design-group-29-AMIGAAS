@@ -52,36 +52,41 @@ function PrivateMessage({ currentUserId }) {
                 .then(response => response.json())
                 .then(data => {
                     setMessages(data.messages);
-
                     setLoading(false);
+
+                    lastReadMessageId = getLastReadMessageId();
+
+                    console.log("Got messages")
 
                     const unreadMessageIds = data.messages
                         .filter(msg => !msg.read && msg.sender_id !== currentUserId)
                         .map(msg => msg.id);
 
-                        if (unreadMessageIds.length > 0) {
-                            fetch(`http://localhost:8000/api/conversation/${selectedConversationId}/mark_as_read/`, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.status === 'success') {
-                                    setMessages(prevMessages =>
-                                        prevMessages.map(msg =>
-                                            unreadMessageIds.includes(msg.id) ? { ...msg, read: true } : msg
-                                        )
-                                    );
-                                } else {
-                                    console.error('Failed to mark messages as read:', data.error);
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error marking messages as read:', error);
-                            });
-                        }
+                    if (unreadMessageIds.length > 0) {
+                        console.log(unreadMessageIds)
+                        fetch(`http://localhost:8000/api/conversation/${selectedConversationId}/mark_as_read/`, {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                        })
+                        .then(response => response.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                setMessages(prevMessages =>
+                                    prevMessages.map(msg =>
+                                        unreadMessageIds.includes(msg.id) ? { ...msg, read: true } : msg
+                                    )
+                                );
+                                fetchConversations();
+                            } else {
+                                console.error('Failed to mark messages as read:', data.error);
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error marking messages as read:', error);
+                        });
+                    }
                 });
 
             ws.current = new WebSocket(`ws://localhost:8000/ws/chat/${selectedConversationId}/`);

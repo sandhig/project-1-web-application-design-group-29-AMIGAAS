@@ -5,7 +5,7 @@ from .models import User, Conversation, Message
 
 # Hardcode login as user 1
 def get_current_user():
-    return get_object_or_404(User, id=1)
+    return get_object_or_404(User, id=2)
 
 def get_user_profile(request, user_id):
     user = get_object_or_404(User, id=user_id)
