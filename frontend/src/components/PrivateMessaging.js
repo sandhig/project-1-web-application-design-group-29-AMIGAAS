@@ -6,7 +6,7 @@ import { IoSend } from "react-icons/io5";
 function PrivateMessage({ currentUserId }) {
     const [conversations, setConversations] = useState([]);
     const [selectedConversationId, setSelectedConversationId] = useState(null);
-    const [messages, setMessages] = useState({});
+    const [messages, setMessages] = useState([]);
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);
     const ws = useRef(null);
@@ -36,17 +36,15 @@ function PrivateMessage({ currentUserId }) {
                 const conversationId = message.conversation_id;
                 const updatedMessages = prevMessages[conversationId] || [];
 
-                console.log(conversationId)
-                console.log(updatedMessages)
+                console.log('convo id:', conversationId)
+                console.log('prevMessages:', prevMessages)
+                console.log('updatedMessages', updatedMessages)
 
-                if (updatedMessages.some(m => m.id === message.id)) {
-                    return prevMessages;
+                if (updatedMessages?.some(m => m.id === message.id)) {
+                    return prevMessages[conversationId];
                 }
 
-                return {
-                    ...prevMessages,
-                    [conversationId]: [...updatedMessages, message]
-                };
+                return [...updatedMessages, message];
             });
             console.log("set messages")
 
@@ -98,9 +96,10 @@ function PrivateMessage({ currentUserId }) {
                 .then(response => response.json())
                 .then(data => {
                     setMessages(prevMessages => ({
-                        ...prevMessages,
+                        ...prevMessages[selectedConversationId],
                         [selectedConversationId]: data.messages
                     }));
+                    
                     setLoading(false);
 
                     console.log("Got messages from conversation: ", selectedConversationId)
@@ -113,6 +112,8 @@ function PrivateMessage({ currentUserId }) {
                         .filter(msg => !msg.read && msg.sender_id !== currentUserId)
                         .map(msg => msg.id);
 
+                    console.log("Unread message ids: ", unreadMessageIds)
+
                     if (unreadMessageIds.length > 0) {
                         console.log(unreadMessageIds)
                         fetch(`http://localhost:8000/api/conversation/${selectedConversationId}/mark_as_read/`, {
@@ -124,12 +125,15 @@ function PrivateMessage({ currentUserId }) {
                         .then(response => response.json())
                         .then(data => {
                             if (data.status === 'success') {
+                                console.log('success')
                                 setMessages(prevMessages =>
                                     prevMessages[selectedConversationId].map(msg =>
                                         unreadMessageIds.includes(msg.id) ? { ...msg, read: true } : msg
                                     )
                                 );
+                                console.log('set messages')
                                 fetchConversations();
+                                console.log('fetched')
                             } else {
                                 console.error('Failed to mark messages as read:', data.error);
                             }
@@ -140,7 +144,7 @@ function PrivateMessage({ currentUserId }) {
                     }
                 });
 
-            
+            console.log("?")
         }
     }, [selectedConversationId]);
     
@@ -169,10 +173,11 @@ function PrivateMessage({ currentUserId }) {
     }, [messages]);
 
     const selectedConversation = conversations.find(c => c.id === selectedConversationId);
-    const selectedMessages = Array.isArray(messages[selectedConversationId]) ? messages[selectedConversationId] : [];
+
+    console.log(messages)
     
     const getLastReadMessageId = () => {
-        const lastReadMessage = selectedMessages
+        const lastReadMessage = messages
             .filter(msg => msg.sender_id === currentUserId && msg.read)
             .slice(-1)[0];
         return lastReadMessage ? lastReadMessage.id : null;
@@ -206,9 +211,9 @@ function PrivateMessage({ currentUserId }) {
                         ) : (
                         <div className='messages-inner-container'>
                             <div className="message-list" ref={messageListRef}>
-                                {selectedMessages.map((message, i) => (
+                                {messages.map((message, i) => (
                                     <div key={message.id}>
-                                        {(i === 0 || (new Date(message.timestamp).getTime() - new Date(selectedMessages[i-1].timestamp).getTime())/(1000 * 3600) > 2) && (
+                                        {(i === 0 || (new Date(message.timestamp).getTime() - new Date(messages[i-1].timestamp).getTime())/(1000 * 3600) > 2) && (
                                             <div className="timestamp">
                                                 {new Date(message.timestamp).toLocaleString('en-US', {
                                                     year: 'numeric',
