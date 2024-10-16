@@ -8,7 +8,7 @@ class Users(models.Model):
     first_name = models.CharField(max_length=255) 
     last_name = models.CharField(max_length=255) 
     uoft_email = models.CharField(max_length=255, unique=True) 
-    password = models.CharField(max_length=255, null=True, blank=True)
+    password = models.CharField(max_length=255)
     is_verified = models.BooleanField(default=False)
     verification_code = models.CharField(max_length=6, null=True, blank=True)
 
