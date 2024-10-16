@@ -64,7 +64,6 @@ class EmailVerificationSerializer(serializers.Serializer):
         user.save()
 
 
-
 class LoginSerializer(serializers.Serializer) :
     uoft_email = serializers.EmailField()
     password = serializers.CharField(write_only=True)

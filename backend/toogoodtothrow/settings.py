@@ -143,7 +143,6 @@ DEFAULT_FROM_EMAIL = 'toogoodtothrow59@gmail.com'
 
 
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
