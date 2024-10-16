@@ -21,7 +21,7 @@ class Conversation(models.Model):
         return 'Unknown'
 
     def get_last_message(self):
-        return self.messages.order_by('-timestamp').first().content
+        return self.messages.order_by('-timestamp').first()
     
     def is_read(self, current_user):
         if len(self.messages.exclude(sender_id=current_user.id)) > 0:

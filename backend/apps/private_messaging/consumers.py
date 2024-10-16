@@ -45,13 +45,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         content = text_data_json['content']
         sender_id = text_data_json['sender_id']
+        conversation_id = text_data_json['conversation_id']
 
         # Save message to database
-        message = await self.create_message(self.conversation_id, sender_id, content)
+        message = await self.create_message(conversation_id, sender_id, content)
+
+        conversation_group_name = f'chat_{conversation_id}'
 
         # Send message to conversation group
         await self.channel_layer.group_send(
-            self.conversation_group_name,
+            conversation_group_name,
             {
                 'type': 'chat_message',
                 'message': {
@@ -60,6 +63,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'sender_name': message.sender.name,
                     'content': message.content,
                     'timestamp': message.timestamp.isoformat(),
+                    'conversation_id': conversation_id
                 }
             }
         )

@@ -5,7 +5,8 @@
 }
 
 .conversations {
-    width: 200px;
+    width: 20%;
+    min-width: 200px;
     padding: 20px;
 
     div {
@@ -22,6 +23,14 @@
 
         &.selected {
             background-color: #e0dddd;
+        }
+
+        .title {
+            p {
+                margin: 0;
+                font-size: small;
+                color: #00000071;
+            }
         }
 
         &.unread {

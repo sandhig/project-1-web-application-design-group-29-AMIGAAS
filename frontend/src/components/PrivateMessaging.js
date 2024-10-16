@@ -29,10 +29,15 @@ function PrivateMessage({ currentUserId }) {
         ws.current.onmessage = function (e) {
             const data = JSON.parse(e.data);
             const message = data.message;
+            console.log(message)
+            console.log("got a message from conversation ", message.conversation_id)
 
             setMessages(prevMessages => {
                 const conversationId = message.conversation_id;
                 const updatedMessages = prevMessages[conversationId] || [];
+
+                console.log(conversationId)
+                console.log(updatedMessages)
 
                 if (updatedMessages.some(m => m.id === message.id)) {
                     return prevMessages;
@@ -43,6 +48,11 @@ function PrivateMessage({ currentUserId }) {
                     [conversationId]: [...updatedMessages, message]
                 };
             });
+            console.log("set messages")
+
+            fetchConversations();
+
+            console.log(conversations)
         };
 
         ws.current.onclose = function () {
@@ -115,7 +125,7 @@ function PrivateMessage({ currentUserId }) {
                         .then(data => {
                             if (data.status === 'success') {
                                 setMessages(prevMessages =>
-                                    prevMessages.map(msg =>
+                                    prevMessages[selectedConversationId].map(msg =>
                                         unreadMessageIds.includes(msg.id) ? { ...msg, read: true } : msg
                                     )
                                 );
@@ -139,9 +149,11 @@ function PrivateMessage({ currentUserId }) {
             ws.current.send(
                 JSON.stringify({
                     content: input,
-                    sender_id: currentUserId
+                    sender_id: currentUserId,
+                    conversation_id: selectedConversationId
                 })
             );
+            console.log("sent a message to ", selectedConversationId)
             setInput('');
 
             fetchConversations();
@@ -157,7 +169,7 @@ function PrivateMessage({ currentUserId }) {
     }, [messages]);
 
     const selectedConversation = conversations.find(c => c.id === selectedConversationId);
-    const selectedMessages = messages[selectedConversationId] || [];
+    const selectedMessages = Array.isArray(messages[selectedConversationId]) ? messages[selectedConversationId] : [];
     
     const getLastReadMessageId = () => {
         const lastReadMessage = selectedMessages
@@ -173,10 +185,14 @@ function PrivateMessage({ currentUserId }) {
             <div className="conversations">
                 <h2>Chats</h2>
                 {conversations.map(conversation => (
-                <div key={conversation.id} onClick={() => setSelectedConversationId(conversation.id)}
-                    className={conversation.id === selectedConversationId ? 'selected' : '' || !conversation.is_read ? 'unread' : ''}>
-                    <span className={!conversation.is_read ? 'dot' : ''}></span> {conversation.name}: {conversation.last_message}
-                </div>
+                    <div key={conversation.id} onClick={() => setSelectedConversationId(conversation.id)}
+                        className={conversation.id === selectedConversationId ? 'selected' : '' || !conversation.is_read ? 'unread' : ''}>
+                        <span className={!conversation.is_read ? 'dot' : ''}></span> 
+                        <span className="title">
+                            {conversation.name}
+                            <p>{conversation.last_sender_id == currentUserId ? 'You': conversation.last_sender_name}: {conversation.last_message}</p>
+                        </span>
+                    </div>
                 ))}
             </div>
             <div className="messages">
