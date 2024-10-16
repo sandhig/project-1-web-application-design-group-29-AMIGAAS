@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class ProductsConfig(AppConfig):
+class PrivateMessagingConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
-    name = 'apps.products'
+    name = 'apps.private_messaging'
