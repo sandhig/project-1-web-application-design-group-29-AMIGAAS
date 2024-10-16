@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 
+
 const UsersSignUp = () => {
   const [formData, setFormData] = useState({
     first_name: '',
@@ -9,8 +10,15 @@ const UsersSignUp = () => {
     password: '',
   });
   
+
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+
+
+  const isUofTEmail = (email) => {
+    return email.endsWith('@mail.utoronto.ca');
+  };
+
 
   const handleChange = (e) => {
     setFormData({
@@ -19,8 +27,15 @@ const UsersSignUp = () => {
     });
   };
 
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!isUofTEmail(formData.uoft_email)) {
+      setErrorMessage('Please use UofT Email Address.');
+      return;
+    }
+
     try {
       const response = await axios.post('http://127.0.0.1:8000/api/users/signup', formData, {
         headers: {
@@ -36,6 +51,7 @@ const UsersSignUp = () => {
       setSuccessMessage('');
     }
   };
+
 
   return (
     <div>
