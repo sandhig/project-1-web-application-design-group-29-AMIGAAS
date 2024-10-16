@@ -6,7 +6,7 @@ import { IoSend } from "react-icons/io5";
 function PrivateMessage({ currentUserId }) {
     const [conversations, setConversations] = useState([]);
     const [selectedConversationId, setSelectedConversationId] = useState(null);
-    const [messages, setMessages] = useState([]);
+    const [messages, setMessages] = useState({});
     const [input, setInput] = useState('');
     const [loading, setLoading] = useState(false);
     const ws = useRef(null);
@@ -20,6 +20,43 @@ function PrivateMessage({ currentUserId }) {
                 setConversations(data.conversations);
             });
     };
+
+    // Connect to Websocket on initialization
+    useEffect(() => {
+        ws.current = new WebSocket(`ws://localhost:8000/ws/chat/`);
+        console.log("connected")
+
+        ws.current.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            const message = data.message;
+
+            setMessages(prevMessages => {
+                const conversationId = message.conversation_id;
+                const updatedMessages = prevMessages[conversationId] || [];
+
+                if (updatedMessages.some(m => m.id === message.id)) {
+                    return prevMessages;
+                }
+
+                return {
+                    ...prevMessages,
+                    [conversationId]: [...updatedMessages, message]
+                };
+            });
+        };
+
+        ws.current.onclose = function () {
+            console.log("WebSocket connection closed");
+        };
+
+        return () => {
+            isUnmounting.current = true;
+            if (ws.current) {
+                ws.current.close();
+            }
+        };
+
+    }, [])
 
     useEffect(() => {
         
@@ -44,19 +81,23 @@ function PrivateMessage({ currentUserId }) {
 
     useEffect(() => {
         if (selectedConversationId) {
-
             setLoading(true);
 
             // Fetch messages for the selected conversation
             fetch(`http://localhost:8000/api/conversation/${selectedConversationId}/messages/`)
                 .then(response => response.json())
                 .then(data => {
-                    setMessages(data.messages);
+                    setMessages(prevMessages => ({
+                        ...prevMessages,
+                        [selectedConversationId]: data.messages
+                    }));
                     setLoading(false);
 
-                    lastReadMessageId = getLastReadMessageId();
+                    console.log("Got messages from conversation: ", selectedConversationId)
 
-                    console.log("Got messages")
+                    console.log(messages)
+
+                    lastReadMessageId = getLastReadMessageId();
 
                     const unreadMessageIds = data.messages
                         .filter(msg => !msg.read && msg.sender_id !== currentUserId)
@@ -89,38 +130,10 @@ function PrivateMessage({ currentUserId }) {
                     }
                 });
 
-            ws.current = new WebSocket(`ws://localhost:8000/ws/chat/${selectedConversationId}/`);
-
-            ws.current.onmessage = function (e) {
-                const data = JSON.parse(e.data);
-                const message = data.message;
-
-                setMessages(prevMessages => {
-                    if (prevMessages.some(m => m.id === message.id)) {
-                        return prevMessages;
-                    }
-                    return [...prevMessages, message];
-                });
-
-            };
-
-            ws.current.onclose = function (e) {
-                if (!isUnmounting.current) {
-                    console.error('Chat socket closed unexpectedly');
-                } else {
-                    console.log('Chat socket closed due to component unmounting');
-                }
-            };
-
-            return () => {
-                isUnmounting.current = true;
-                if (ws.current) {
-                    ws.current.close();
-                }
-            };
+            
         }
     }, [selectedConversationId]);
-
+    
     const sendMessage = () => {
         if (input !== '') {
             ws.current.send(
@@ -144,15 +157,16 @@ function PrivateMessage({ currentUserId }) {
     }, [messages]);
 
     const selectedConversation = conversations.find(c => c.id === selectedConversationId);
-
+    const selectedMessages = messages[selectedConversationId] || [];
+    
     const getLastReadMessageId = () => {
-        const lastReadMessage = messages
+        const lastReadMessage = selectedMessages
             .filter(msg => msg.sender_id === currentUserId && msg.read)
             .slice(-1)[0];
         return lastReadMessage ? lastReadMessage.id : null;
     };
-
-    let lastReadMessageId = getLastReadMessageId();
+    
+    let lastReadMessageId = 0;
 
     return (
         <div className="container">
@@ -176,9 +190,9 @@ function PrivateMessage({ currentUserId }) {
                         ) : (
                         <div className='messages-inner-container'>
                             <div className="message-list" ref={messageListRef}>
-                                {messages.map((message, i) => (
+                                {selectedMessages.map((message, i) => (
                                     <div key={message.id}>
-                                        {(i === 0 || (new Date(message.timestamp).getTime() - new Date(messages[i-1].timestamp).getTime())/(1000 * 3600) > 2) && (
+                                        {(i === 0 || (new Date(message.timestamp).getTime() - new Date(selectedMessages[i-1].timestamp).getTime())/(1000 * 3600) > 2) && (
                                             <div className="timestamp">
                                                 {new Date(message.timestamp).toLocaleString('en-US', {
                                                     year: 'numeric',
