@@ -78,16 +78,20 @@ source venv/bin/activate
 
 Install everything:
 ```
+cd backend
 pip install -r requirements.txt
 ```
 
 Start the backend:
 ```
-cd backend
 python3 manage.py runserver
 ```
 
 ### In another terminal:
+Install everything
+```
+npm install react-scripts
+```
 
 Start the frontend:
 ```
