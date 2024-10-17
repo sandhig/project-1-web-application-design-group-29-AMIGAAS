@@ -34,8 +34,6 @@ class UsersSerializer(serializers.ModelSerializer):
         user.set_password(validated_data['password'])  # This hashes the password
         user.save()  # Save the user with the hashed password
 
-        ssl._create_default_https_context = ssl._create_unverified_context
-
         send_mail(
             'Verify Your Email', 
             f'Your verification code is {verification_code}.', 
