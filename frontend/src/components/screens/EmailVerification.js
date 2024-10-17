@@ -7,6 +7,7 @@ const EmailVerification = () => {
     verification_code: '',
   });
 
+  const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
 
@@ -19,8 +20,15 @@ const EmailVerification = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true); 
+
+    const trimmedFormData ={
+      uoft_email: formData.uoft_email.trim(),
+      verification_code:formData.verification_code.trim(),
+    };
+
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/users/verify-email/', formData, {
+      const response = await axios.post('http://127.0.0.1:8000/api/users/verify-email', trimmedFormData, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -30,8 +38,15 @@ const EmailVerification = () => {
         setErrorMessage('');
       }
     } catch (error) {
-      setErrorMessage('Invalid verification code or email.');
+      // Improved error handling
+      if (error.response && error.response.data && error.response.data.detail) {
+        setErrorMessage(error.response.data.detail);
+      } else {
+        setErrorMessage('An error occurred. Please try again.');
+      }
       setSuccessMessage('');
+    } finally {
+      setLoading(false);  // Reset loading state when request finishes
     }
   };
 
@@ -59,7 +74,9 @@ const EmailVerification = () => {
             required
           />
         </div>
-        <button type="submit">Verify Email</button>
+        <button type="submit" disabled={loading}>
+          {loading ? 'Verifying...' : 'Verify Email'}
+        </button>
       </form>
 
       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}

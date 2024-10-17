@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+
 
 
 const UsersSignUp = () => {
@@ -10,11 +12,9 @@ const UsersSignUp = () => {
     uoft_email: '',
     password: '',
   });
-  
-
+  const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
-
 
   const isUofTEmail = (email) => {
     return email.endsWith('@mail.utoronto.ca');
@@ -46,6 +46,10 @@ const UsersSignUp = () => {
       if (response.status === 201) {
         setSuccessMessage('User successfully added!');
         setErrorMessage('');
+
+        setTimeout(() => {
+          navigate('/users/verify-email');  // Redirects to verify-email page
+        }, 2000);  // Adjust the timeout duration as needed
       }
     } catch (error) {
       setErrorMessage('Error adding user');
