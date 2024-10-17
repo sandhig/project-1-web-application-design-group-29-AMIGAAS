@@ -12,9 +12,10 @@ class Users(models.Model):
     is_verified = models.BooleanField(default=False)
     verification_code = models.CharField(max_length=6, null=True, blank=True)
 
-    def set_password (self, raw_password):
-        self_password = make_password(raw_password)
-    
+    def set_password(self, raw_password):
+        self.password = make_password(raw_password)
+
+    # Check the password against the hashed password in the database
     def check_password(self, raw_password):
         return check_password(raw_password, self.password)
 

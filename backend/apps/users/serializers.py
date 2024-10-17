@@ -3,6 +3,7 @@ from .models import Users
 from django.utils.crypto import get_random_string
 import ssl
 from django.core.mail import send_mail
+from django.contrib.auth.hashers import make_password, check_password
 
 
 class UsersSerializer(serializers.ModelSerializer):

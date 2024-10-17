@@ -32,19 +32,8 @@ def login_user(request):
     serializer = LoginSerializer(data=request.data)
 
     if serializer.is_valid():
-        email = serializer.validated_data['email']
-        password = serializer.validated_data['password']
-
-        try:
-            user = Users.objects.get(uoft_email=email)
-
-            if user.check_user_password(password):
-                return Response({'message': 'Login successful!'}, status=status.HTTP_200_OK)
-            else:
-                return Response({'error': 'Invalid password'}, status=status.HTTP_401_UNAUTHORIZED)
-        
-        except Users.DoesNotExist:
-            return Response({'error': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+        # If valid, return a success message
+        return Response({'message': 'Login successful!'}, status=status.HTTP_200_OK)
     
     # If the data is not valid, return validation errors
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
