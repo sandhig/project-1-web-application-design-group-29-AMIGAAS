@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const EmailVerification = () => {
   const [formData, setFormData] = useState({
@@ -7,6 +8,7 @@ const EmailVerification = () => {
     verification_code: '',
   });
 
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
@@ -36,6 +38,9 @@ const EmailVerification = () => {
       if (response.status === 200) {
         setSuccessMessage('Email verified successfully!');
         setErrorMessage('');
+        setTimeout(() => {
+          navigate('/users/login');  // Redirects to verify-email page
+        }, 2000);  // Adjust the timeout duration as needed
       }
     } catch (error) {
       // Improved error handling
