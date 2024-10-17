@@ -19,9 +19,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
     """
 
     async def connect(self):
+        self.user_id = self.scope['url_route']['kwargs']['user_id']
         self.conversation_group_names = []
-        self.conversations = await self.get_user_conversations(2)
-
+        self.conversations = await self.get_user_conversations(self.user_id)
+        #print(self.conversations)
         for conversation in self.conversations:
             conversation_group_name = f'chat_{conversation.id}'
             self.conversation_group_names.append(conversation_group_name)
@@ -63,7 +64,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     'sender_name': message.sender.name,
                     'content': message.content,
                     'timestamp': message.timestamp.isoformat(),
-                    'conversation_id': conversation_id
+                    'conversation_id': conversation_id,
+                    'read': message.read
                 }
             }
         )
@@ -83,7 +85,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         return list(user.conversations.all())
 
     @database_sync_to_async
-    def create_message(self, conversation_id, sender_id, content):
+    def create_message(self, conversation_id, sender_id, content ):
         conversation = Conversation.objects.get(id=conversation_id)
         sender = User.objects.get(id=sender_id)
         message = Message.objects.create(conversation=conversation, sender=sender, content=content)

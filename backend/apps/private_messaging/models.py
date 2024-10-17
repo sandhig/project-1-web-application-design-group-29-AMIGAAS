@@ -12,7 +12,7 @@ class Conversation(models.Model):
     participants = models.ManyToManyField(User, related_name='conversations')
 
     def __str__(self):
-        return f"Conversation with {', '.join([user.name for user in self.participants.all()])}"
+        return f"Conversation IDs: {self.id}"
     
     def get_other_participant_name(self, current_user):
         other_participants = self.participants.exclude(id=current_user.id)
@@ -21,7 +21,10 @@ class Conversation(models.Model):
         return 'Unknown'
 
     def get_last_message(self):
-        return self.messages.order_by('-timestamp').first()
+        if len(self.messages.all()) > 0:
+            return self.messages.order_by('-timestamp').first()
+        else:
+            return Message(content=None, sender=User(id=None, name=None))
     
     def is_read(self, current_user):
         if len(self.messages.exclude(sender_id=current_user.id)) > 0:

@@ -12,6 +12,9 @@ function PrivateMessage({ currentUserId }) {
     const ws = useRef(null);
     const isUnmounting = useRef(false);
     const location = useLocation();
+    const selectedConversationRef = useRef(selectedConversationId);
+    const loadingRef = useRef(loading);
+    const messageBuffer = useRef([]);
 
     const fetchConversations = () => {
         fetch(`http://localhost:8000/api/conversations/`)
@@ -23,34 +26,25 @@ function PrivateMessage({ currentUserId }) {
 
     // Connect to Websocket on initialization
     useEffect(() => {
-        ws.current = new WebSocket(`ws://localhost:8000/ws/chat/`);
+        ws.current = new WebSocket(`ws://localhost:8000/ws/chat/user/${currentUserId}/`);
         console.log("connected")
 
         ws.current.onmessage = function (e) {
             const data = JSON.parse(e.data);
             const message = data.message;
-            console.log(message)
-            console.log("got a message from conversation ", message.conversation_id)
 
-            setMessages(prevMessages => {
-                const conversationId = message.conversation_id;
-                const updatedMessages = prevMessages[conversationId] || [];
-
-                console.log('convo id:', conversationId)
-                console.log('prevMessages:', prevMessages)
-                console.log('updatedMessages', updatedMessages)
-
-                if (updatedMessages?.some(m => m.id === message.id)) {
-                    return prevMessages[conversationId];
+            if (selectedConversationRef.current && message.conversation_id === selectedConversationRef.current) {
+                if (loadingRef.current) {
+                    messageBuffer.current.push(message);
+                } else {
+                    setMessages(prevMessages => [...prevMessages, message]);
+                    if (message.sender_id !== currentUserId) {
+                        markMessagesAsRead([message.id])
+                    }
                 }
-
-                return [...updatedMessages, message];
-            });
-            console.log("set messages")
+            }
 
             fetchConversations();
-
-            console.log(conversations)
         };
 
         ws.current.onclose = function () {
@@ -90,63 +84,65 @@ function PrivateMessage({ currentUserId }) {
     useEffect(() => {
         if (selectedConversationId) {
             setLoading(true);
+            loadingRef.current = true;
+            console.log(loadingRef.current);
+            selectedConversationRef.current = selectedConversationId;
 
             // Fetch messages for the selected conversation
             fetch(`http://localhost:8000/api/conversation/${selectedConversationId}/messages/`)
                 .then(response => response.json())
                 .then(data => {
-                    setMessages(prevMessages => ({
-                        ...prevMessages[selectedConversationId],
-                        [selectedConversationId]: data.messages
-                    }));
-                    
+                    setMessages(data.messages);
                     setLoading(false);
+                    loadingRef.current = false;
 
-                    console.log("Got messages from conversation: ", selectedConversationId)
-
-                    console.log(messages)
+                    if (messageBuffer.current.length > 0) {
+                        setMessages(prevMessages => {
+                            const updatedMessages = [...prevMessages, ...messageBuffer.current];
+                            messageBuffer.current = [];
+                            return updatedMessages;
+                        });
+                    }
 
                     lastReadMessageId = getLastReadMessageId();
 
+                    // Mark messages as read
                     const unreadMessageIds = data.messages
                         .filter(msg => !msg.read && msg.sender_id !== currentUserId)
                         .map(msg => msg.id);
-
-                    console.log("Unread message ids: ", unreadMessageIds)
-
-                    if (unreadMessageIds.length > 0) {
-                        console.log(unreadMessageIds)
-                        fetch(`http://localhost:8000/api/conversation/${selectedConversationId}/mark_as_read/`, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                            },
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.status === 'success') {
-                                console.log('success')
-                                setMessages(prevMessages =>
-                                    prevMessages[selectedConversationId].map(msg =>
-                                        unreadMessageIds.includes(msg.id) ? { ...msg, read: true } : msg
-                                    )
-                                );
-                                console.log('set messages')
-                                fetchConversations();
-                                console.log('fetched')
-                            } else {
-                                console.error('Failed to mark messages as read:', data.error);
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error marking messages as read:', error);
-                        });
-                    }
+                        if (unreadMessageIds.length > 0) {
+                            markMessagesAsRead(unreadMessageIds);
+                        }
                 });
-
-            console.log("?")
         }
     }, [selectedConversationId]);
+
+    const markMessagesAsRead = (messageIds) => {
+        fetch(`http://localhost:8000/api/conversation/${selectedConversationRef.current}/mark_as_read/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                setMessages(prevMessages => {
+                    prevMessages.map(msg =>
+                        messageIds.includes(msg.id) ? { ...msg, read: true } : msg
+                    )
+                    return [...prevMessages];
+                });
+
+                fetchConversations();
+            } else {
+                console.error('Failed to mark messages as read:', data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error marking messages as read:', error);
+        });
+    }
     
     const sendMessage = () => {
         if (input !== '') {
@@ -157,7 +153,6 @@ function PrivateMessage({ currentUserId }) {
                     conversation_id: selectedConversationId
                 })
             );
-            console.log("sent a message to ", selectedConversationId)
             setInput('');
 
             fetchConversations();
@@ -168,13 +163,11 @@ function PrivateMessage({ currentUserId }) {
     
     useEffect(() => {
         if (messageListRef.current) {
-        messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+            messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
         }
     }, [messages]);
 
     const selectedConversation = conversations.find(c => c.id === selectedConversationId);
-
-    console.log(messages)
     
     const getLastReadMessageId = () => {
         const lastReadMessage = messages
@@ -183,7 +176,7 @@ function PrivateMessage({ currentUserId }) {
         return lastReadMessage ? lastReadMessage.id : null;
     };
     
-    let lastReadMessageId = 0;
+    let lastReadMessageId = getLastReadMessageId();
 
     return (
         <div className="container">
@@ -236,11 +229,13 @@ function PrivateMessage({ currentUserId }) {
                                                     hour12: true
                                             })}</span>
                                         </div>
+                                        {/*
                                         <div className="read-receipt">
                                             {message.id === lastReadMessageId && (
                                                 <p>Read</p>
                                             )}
                                         </div>
+                                        */}
                                     </div>
                                 </div>
                                 </div>
