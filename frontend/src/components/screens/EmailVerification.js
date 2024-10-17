@@ -38,6 +38,7 @@ const EmailVerification = () => {
       if (response.status === 200) {
         setSuccessMessage('Email verified successfully!');
         setErrorMessage('');
+        
         setTimeout(() => {
           navigate('/users/login');  // Redirects to verify-email page
         }, 2000);  // Adjust the timeout duration as needed
