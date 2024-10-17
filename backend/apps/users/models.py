@@ -1,5 +1,5 @@
 from django.db import models
-from django.contrib.auth.hashers import check_password
+from django.contrib.auth.hashers import make_password, check_password
 from django.utils.crypto import get_random_string
 
 # Create your models here.
@@ -12,7 +12,10 @@ class Users(models.Model):
     is_verified = models.BooleanField(default=False)
     verification_code = models.CharField(max_length=6, null=True, blank=True)
 
-    def check_user_password(self, raw_password):
+    def set_password (self, raw_password):
+        self_password = make_password(raw_password)
+    
+    def check_password(self, raw_password):
         return check_password(raw_password, self.password)
 
     def __str__(self):
@@ -23,6 +26,3 @@ class Users(models.Model):
         self.verification_code = code
         self.save()
         return code
-
-    def __str__(self):
-        return self.uoft_email

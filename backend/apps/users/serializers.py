@@ -1,7 +1,9 @@
 from rest_framework import serializers
 from .models import Users
 from django.utils.crypto import get_random_string
+import ssl
 from django.core.mail import send_mail
+
 
 class UsersSerializer(serializers.ModelSerializer):
     class Meta:
@@ -24,15 +26,19 @@ class UsersSerializer(serializers.ModelSerializer):
             first_name=validated_data['first_name'],
             last_name=validated_data['last_name'],
             uoft_email=validated_data['uoft_email'],
-            password=validated_data['password'],  
             verification_code= verification_code,
             is_verified=False,
         ) 
 
+        user.set_password(validated_data['password'])  # This hashes the password
+        user.save()  # Save the user with the hashed password
+
+        ssl._create_default_https_context = ssl._create_unverified_context
+
         send_mail(
             'Verify Your Email', 
             f'Your verification code is {verification_code}.', 
-            'toogoodtothrow59@gmail.com', 
+            'toogoodtothrow59@gmail.com',
             [user.uoft_email], 
             fail_silently = False,
         )
@@ -80,7 +86,7 @@ class LoginSerializer(serializers.Serializer) :
             raise serializers.ValidationError("Email is not verified.")
 
         # Check if the password is correct
-        if not user.check_user_password(data['password']):
+        if not user.check_password(data['password']):
             raise serializers.ValidationError("Incorrect password.")
 
         return data
