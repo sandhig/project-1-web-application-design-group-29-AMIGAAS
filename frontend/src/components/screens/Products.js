@@ -7,10 +7,11 @@ const Products = () => {
     name: "",
     description: "",
   });
-
+  /*
   useEffect(() => {
+    
     const token = localStorage.getItem('authToken');
-
+    
     fetch("http://localhost:8000/api/products/", {
       method: 'GET',
       headers: {
@@ -31,7 +32,7 @@ const Products = () => {
       console.error("There was an error fetching the products!", error);
     });
   }, []);
-
+  */
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewProduct({
@@ -56,13 +57,17 @@ const Products = () => {
       .catch((error) => {
         console.error("There was an error creating the product!", error);
       });
+      
   };
+  
+  
 
   return (
     <div>
       <h2>Products</h2>
-
-      {/* List Products */}
+      <h3>Coming soon...</h3>
+      
+      {/*
       <ul>
         {products.map((product) => (
           <li key={product.id}>
@@ -72,7 +77,6 @@ const Products = () => {
         ))}
       </ul>
 
-      {/* Form to Add New Product */}
       <form onSubmit={handleSubmit}>
         <input
           type="text"
@@ -89,6 +93,7 @@ const Products = () => {
         />
         <button type="submit">Add Product</button>
       </form>
+      */}
     </div>
   );
 };

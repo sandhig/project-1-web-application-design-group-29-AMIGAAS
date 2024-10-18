@@ -5,7 +5,7 @@ function HomeScreen() {
     const { currentUser } = useUser();
 
     if (!currentUser) {
-        return <p>No user is logged in</p>;
+        return <p>Loading...</p>;
       }
     
       return (

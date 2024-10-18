@@ -11,9 +11,8 @@ export const UserProvider = ({ children }) => {
   
     useEffect(() => {
       const token = localStorage.getItem('authToken');
-      console.log(typeof(token), token)
+
       if (token && token !== 'undefined') {
-        console.log("hello")
         fetch('http://localhost:8000/api/users/get_user', {
             method: 'GET',
             headers: {
