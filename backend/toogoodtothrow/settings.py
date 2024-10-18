@@ -39,8 +39,10 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'channels',
-    'apps.private_messaging',
     'rest_framework'
+    'apps.products',
+    'apps.private_messaging',
+    'apps.users'
 ]
 
 MIDDLEWARE = [
@@ -107,6 +109,9 @@ AUTH_PASSWORD_VALIDATORS = [
     },
     {
         'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
+        'OPTIONS': {
+            'min_length': 8,  # You can change the minimum length if needed
+        }
     },
     {
         'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
@@ -127,6 +132,26 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
+
+import ssl
+from smtplib import SMTP
+
+class CustomEmailBackend(SMTP):
+    def __init__(self, *args, **kwargs):
+        context = ssl._create_unverified_context()  # Disable SSL verification
+        kwargs["context"] = context
+        super().__init__(*args, **kwargs)
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'toogoodtothrow59@gmail.com'
+EMAIL_HOST_PASSWORD = 'vgiu enpv scek afod'
+DEFAULT_FROM_EMAIL = 'toogoodtothrow59@gmail.com'
+
+# settings.py
+
 
 
 # Static files (CSS, JavaScript, Images)
