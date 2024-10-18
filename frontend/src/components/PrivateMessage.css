@@ -1,7 +1,9 @@
 .container {
-    height: 100vh;
+    flex: 1;
+    height: 0px;
     display: flex;
     flex-direction: row;
+    text-align: left;
 }
 
 .conversations {
