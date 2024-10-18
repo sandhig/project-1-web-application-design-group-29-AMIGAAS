@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'channels',
-    'rest_framework'
+    'rest_framework',
     'apps.products',
     'apps.private_messaging',
     'apps.users'
