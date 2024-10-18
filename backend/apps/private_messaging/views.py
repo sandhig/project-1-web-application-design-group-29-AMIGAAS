@@ -5,7 +5,7 @@ from .models import User, Conversation, Message
 
 # Hardcode login as user 1
 def get_current_user():
-    return get_object_or_404(User, id=1)
+    return get_object_or_404(User, id=2)
 
 def get_user_profile(request, user_id):
     user = get_object_or_404(User, id=user_id)
@@ -18,7 +18,11 @@ def get_user_conversations(request):
         'conversations': [
             {
                 'id': convo.id,
-                'name': convo.get_other_participant_name(current_user)
+                'name': convo.get_other_participant_name(current_user),
+                'last_message': convo.get_last_message().content,
+                'last_sender_id': convo.get_last_message().sender.id,
+                'last_sender_name': convo.get_last_message().sender.name,
+                'is_read': convo.is_read(current_user)
             }
             for convo in conversations
         ]

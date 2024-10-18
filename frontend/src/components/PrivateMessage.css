@@ -5,7 +5,8 @@
 }
 
 .conversations {
-    width: 30%;
+    width: 20%;
+    min-width: 200px;
     padding: 20px;
 
     div {
@@ -18,8 +19,37 @@
         }
 
         &.selected {
-            font-weight: bold;
             background-color: #e0dddd;
+        }
+
+        .title {
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+
+            p {
+                margin: 0;
+                font-size: small;
+                color: #00000071;
+                white-space: nowrap;
+                overflow: hidden;
+                text-overflow: ellipsis;
+            }
+        }
+
+        &.unread {
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .dot {
+            height: 8px;
+            width: 8px;
+            background-color: rgb(41, 123, 255);
+            border-radius: 50%;
         }
     }
     

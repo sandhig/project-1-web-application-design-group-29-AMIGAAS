@@ -12,6 +12,9 @@ function PrivateMessage({ currentUserId }) {
     const ws = useRef(null);
     const isUnmounting = useRef(false);
     const location = useLocation();
+    const selectedConversationRef = useRef(selectedConversationId);
+    const loadingRef = useRef(loading);
+    const messageBuffer = useRef([]);
 
     const fetchConversations = () => {
         fetch(`http://localhost:8000/api/conversations/`)
@@ -20,6 +23,42 @@ function PrivateMessage({ currentUserId }) {
                 setConversations(data.conversations);
             });
     };
+
+    // Connect to Websocket on initialization
+    useEffect(() => {
+        ws.current = new WebSocket(`ws://localhost:8000/ws/chat/user/${currentUserId}/`);
+        console.log("connected")
+
+        ws.current.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            const message = data.message;
+
+            if (selectedConversationRef.current && message.conversation_id === selectedConversationRef.current) {
+                if (loadingRef.current) {
+                    messageBuffer.current.push(message);
+                } else {
+                    setMessages(prevMessages => [...prevMessages, message]);
+                    if (message.sender_id !== currentUserId) {
+                        markMessagesAsRead([message.id])
+                    }
+                }
+            }
+
+            fetchConversations();
+        };
+
+        ws.current.onclose = function () {
+            console.log("WebSocket connection closed");
+        };
+
+        return () => {
+            isUnmounting.current = true;
+            if (ws.current) {
+                ws.current.close();
+            }
+        };
+
+    }, [])
 
     useEffect(() => {
         
@@ -44,86 +83,74 @@ function PrivateMessage({ currentUserId }) {
 
     useEffect(() => {
         if (selectedConversationId) {
-
             setLoading(true);
+            loadingRef.current = true;
+            console.log(loadingRef.current);
+            selectedConversationRef.current = selectedConversationId;
 
             // Fetch messages for the selected conversation
             fetch(`http://localhost:8000/api/conversation/${selectedConversationId}/messages/`)
                 .then(response => response.json())
                 .then(data => {
                     setMessages(data.messages);
-
                     setLoading(false);
+                    loadingRef.current = false;
 
+                    if (messageBuffer.current.length > 0) {
+                        setMessages(prevMessages => {
+                            const updatedMessages = [...prevMessages, ...messageBuffer.current];
+                            messageBuffer.current = [];
+                            return updatedMessages;
+                        });
+                    }
+
+                    lastReadMessageId = getLastReadMessageId();
+
+                    // Mark messages as read
                     const unreadMessageIds = data.messages
                         .filter(msg => !msg.read && msg.sender_id !== currentUserId)
                         .map(msg => msg.id);
-
                         if (unreadMessageIds.length > 0) {
-                            fetch(`http://localhost:8000/api/conversation/${selectedConversationId}/mark_as_read/`, {
-                                method: 'POST',
-                                headers: {
-                                    'Content-Type': 'application/json',
-                                },
-                            })
-                            .then(response => response.json())
-                            .then(data => {
-                                if (data.status === 'success') {
-                                    setMessages(prevMessages =>
-                                        prevMessages.map(msg =>
-                                            unreadMessageIds.includes(msg.id) ? { ...msg, read: true } : msg
-                                        )
-                                    );
-                                } else {
-                                    console.error('Failed to mark messages as read:', data.error);
-                                }
-                            })
-                            .catch(error => {
-                                console.error('Error marking messages as read:', error);
-                            });
+                            markMessagesAsRead(unreadMessageIds);
                         }
                 });
-            
-            let lastReadMessageId = getLastReadMessageId();
-
-            ws.current = new WebSocket(`ws://localhost:8000/ws/chat/${selectedConversationId}/`);
-
-            ws.current.onmessage = function (e) {
-                const data = JSON.parse(e.data);
-                const message = data.message;
-
-                setMessages(prevMessages => {
-                    if (prevMessages.some(m => m.id === message.id)) {
-                        return prevMessages;
-                    }
-                    return [...prevMessages, message];
-                });
-
-            };
-
-            ws.current.onclose = function (e) {
-                if (!isUnmounting.current) {
-                    console.error('Chat socket closed unexpectedly');
-                } else {
-                    console.log('Chat socket closed due to component unmounting');
-                }
-            };
-
-            return () => {
-                isUnmounting.current = true;
-                if (ws.current) {
-                    ws.current.close();
-                }
-            };
         }
     }, [selectedConversationId]);
 
+    const markMessagesAsRead = (messageIds) => {
+        fetch(`http://localhost:8000/api/conversation/${selectedConversationRef.current}/mark_as_read/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.status === 'success') {
+                setMessages(prevMessages => {
+                    prevMessages.map(msg =>
+                        messageIds.includes(msg.id) ? { ...msg, read: true } : msg
+                    )
+                    return [...prevMessages];
+                });
+
+                fetchConversations();
+            } else {
+                console.error('Failed to mark messages as read:', data.error);
+            }
+        })
+        .catch(error => {
+            console.error('Error marking messages as read:', error);
+        });
+    }
+    
     const sendMessage = () => {
         if (input !== '') {
             ws.current.send(
                 JSON.stringify({
                     content: input,
-                    sender_id: currentUserId
+                    sender_id: currentUserId,
+                    conversation_id: selectedConversationId
                 })
             );
             setInput('');
@@ -136,19 +163,19 @@ function PrivateMessage({ currentUserId }) {
     
     useEffect(() => {
         if (messageListRef.current) {
-        messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
+            messageListRef.current.scrollTop = messageListRef.current.scrollHeight;
         }
     }, [messages]);
 
     const selectedConversation = conversations.find(c => c.id === selectedConversationId);
-
+    
     const getLastReadMessageId = () => {
         const lastReadMessage = messages
             .filter(msg => msg.sender_id === currentUserId && msg.read)
             .slice(-1)[0];
         return lastReadMessage ? lastReadMessage.id : null;
     };
-
+    
     let lastReadMessageId = getLastReadMessageId();
 
     return (
@@ -156,10 +183,14 @@ function PrivateMessage({ currentUserId }) {
             <div className="conversations">
                 <h2>Chats</h2>
                 {conversations.map(conversation => (
-                <div key={conversation.id} onClick={() => setSelectedConversationId(conversation.id)}
-                    className={conversation.id === selectedConversationId ? 'selected' : ''}>
-                    {conversation.name}
-                </div>
+                    <div key={conversation.id} onClick={() => setSelectedConversationId(conversation.id)}
+                        className={conversation.id === selectedConversationId ? 'selected' : '' || !conversation.is_read ? 'unread' : ''}>
+                        <span className={!conversation.is_read ? 'dot' : ''}></span> 
+                        <span className="title">
+                            {conversation.name}
+                            <p>{conversation.last_sender_id == currentUserId ? 'You': conversation.last_sender_name}: {conversation.last_message}</p>
+                        </span>
+                    </div>
                 ))}
             </div>
             <div className="messages">
@@ -198,11 +229,13 @@ function PrivateMessage({ currentUserId }) {
                                                     hour12: true
                                             })}</span>
                                         </div>
+                                        {/*
                                         <div className="read-receipt">
                                             {message.id === lastReadMessageId && (
                                                 <p>Read</p>
                                             )}
                                         </div>
+                                        */}
                                     </div>
                                 </div>
                                 </div>
