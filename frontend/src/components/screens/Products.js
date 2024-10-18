@@ -8,19 +8,30 @@ const Products = () => {
     description: "",
   });
 
-  // Fetch products from the backend
   useEffect(() => {
-    axios
-      .get("http://localhost:8000/api/products/")
-      .then((response) => {
-        setProducts(response.data);
-      })
-      .catch((error) => {
-        console.error("There was an error fetching the products!", error);
-      });
-  }, []); 
+    const token = localStorage.getItem('authToken');
 
-  // Handle form input changes
+    fetch("http://localhost:8000/api/products/", {
+      method: 'GET',
+      headers: {
+        'Authorization': `Token ${token}`,
+        'Content-Type': 'application/json',
+      }
+    })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch products');
+      }
+      return response.json();
+    })
+    .then(data => {
+      setProducts(data);
+    })
+    .catch(error => {
+      console.error("There was an error fetching the products!", error);
+    });
+  }, []);
+
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setNewProduct({
@@ -29,14 +40,18 @@ const Products = () => {
     });
   };
 
-  // Submit new product to the backend
   const handleSubmit = (e) => {
     e.preventDefault();
+    const token = localStorage.getItem('authToken');
     axios
-      .post("http://localhost:8000/api/products/", newProduct)
+      .post("http://localhost:8000/api/products/", newProduct, {
+        headers: {
+          'Authorization': `Token ${token}`,
+        }
+      })
       .then((response) => {
-        setProducts([...products, response.data]); // Add the new product to the list
-        setNewProduct({ name: "", description: "" }); // Reset form
+        setProducts([...products, response.data]);
+        setNewProduct({ name: "", description: "" });
       })
       .catch((error) => {
         console.error("There was an error creating the product!", error);

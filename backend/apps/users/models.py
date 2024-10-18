@@ -6,7 +6,6 @@ from django.contrib.auth.hashers import make_password, check_password
 
 # Create your models here.
 
-
 class Users(models.Model):
     first_name = models.CharField(max_length=255) 
     last_name = models.CharField(max_length=255) 

@@ -28,9 +28,8 @@ const UsersLogin = () => {
       });
       if (response.status === 200) {
         const token = response.data.token;
-        const userId = response.data.user_id;
+        console.log(token)
         localStorage.setItem('authToken', token);
-        localStorage.setItem('userId', userId);
         
         setSuccessMessage('Login successful!');
         setErrorMessage('');
