@@ -27,6 +27,11 @@ const UsersLogin = () => {
         },
       });
       if (response.status === 200) {
+        const token = response.data.token;
+        const userId = response.data.user_id;
+        localStorage.setItem('authToken', token);
+        localStorage.setItem('userId', userId);
+        
         setSuccessMessage('Login successful!');
         setErrorMessage('');
         // Optionally, you could store a token or session data here

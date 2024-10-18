@@ -28,7 +28,7 @@ class UsersSerializer(serializers.ModelSerializer):
             last_name=validated_data['last_name'],
             uoft_email=validated_data['uoft_email'],
             verification_code= verification_code,
-            is_verified=False,
+            is_authenticated=False,
         ) 
 
         user.set_password(validated_data['password'])  # This hashes the password
@@ -64,7 +64,7 @@ class EmailVerificationSerializer(serializers.Serializer):
         # Mark the user as verified
         uoft_email = self.validated_data['uoft_email']
         user = Users.objects.get(uoft_email=uoft_email)
-        user.is_verified = True
+        user.is_authenticated = True
         user.verification_code = None  # Optionally clear the code after verification
         user.save()
 
@@ -74,6 +74,7 @@ class LoginSerializer(serializers.Serializer) :
     password = serializers.CharField(write_only=True)
 
     def validate(self, data):
+        
         try:
             # Fetch the user by email
             user = Users.objects.get(uoft_email=data['uoft_email'])
@@ -81,13 +82,14 @@ class LoginSerializer(serializers.Serializer) :
             raise serializers.ValidationError("User not found.")
 
         # Check if the email is verified
-        if not user.is_verified:
+        if not user.is_authenticated:
             raise serializers.ValidationError("Email is not verified.")
 
         # Check if the password is correct
         if not user.check_password(data['password']):
             raise serializers.ValidationError("Incorrect password.")
 
+        data['user'] = user
         return data
     
     
