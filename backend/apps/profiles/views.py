@@ -4,19 +4,18 @@ from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from .models import Users
-from .serializers import UsersSerializer, LoginSerializer, EmailVerificationSerializer
+from .models import Profile
+from .serializers import ProfilesSerializer, LoginSerializer, EmailVerificationSerializer
 from django.core.mail import send_mail
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import AllowAny
 
-
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def add_user(request):
-    serializer = UsersSerializer(data=request.data)
+    serializer = ProfilesSerializer(data=request.data)
     if serializer.is_valid():
         serializer.save()
         return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
@@ -54,5 +53,9 @@ def login_user(request):
 @permission_classes([IsAuthenticated])
 def get_current_user(request):
     user = request.user
-    serializer = UsersSerializer(user)
-    return Response(serializer.data)
+    return Response({
+        'username': user.username,
+        'email': user.email,
+        'first_name': user.first_name,
+        'last_name': user.last_name,
+    })

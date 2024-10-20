@@ -9,7 +9,7 @@ const UsersSignUp = () => {
   const [formData, setFormData] = useState({
     first_name: '',
     last_name: '',
-    uoft_email: '',
+    email: '',
     password: '',
   });
   const navigate = useNavigate();
@@ -32,13 +32,13 @@ const UsersSignUp = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!isUofTEmail(formData.uoft_email)) {
+    if (!isUofTEmail(formData.email)) {
       setErrorMessage('Please use UofT Email Address.');
       return;
     }
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/users/signup', formData, {
+      const response = await axios.post('http://127.0.0.1:8000/api/profiles/signup', formData, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -86,8 +86,8 @@ const UsersSignUp = () => {
           <label>UofT Email:</label>
           <input
             type="email"
-            name="uoft_email"
-            value={formData.uoft_email}
+            name="email"
+            value={formData.email}
             onChange={handleChange}
             required
           />
@@ -106,7 +106,7 @@ const UsersSignUp = () => {
       </form>
       <p> 
           Already User? 
-          <Link to="/users/login"> Login</Link>
+          <Link to="/profilesogin"> Login</Link>
       </p>
 
       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}

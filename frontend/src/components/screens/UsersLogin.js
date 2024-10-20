@@ -4,7 +4,7 @@ import axios from 'axios';
 
 const UsersLogin = () => {
   const [formData, setFormData] = useState({
-    uoft_email: '',
+    email: '',
     password: '',
   });
   
@@ -21,14 +21,13 @@ const UsersLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/users/login', formData, {
+      const response = await axios.post('http://127.0.0.1:8000/api/profiles/login', formData, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
       if (response.status === 200) {
         const token = response.data.token;
-        console.log(token)
         localStorage.setItem('authToken', token);
         
         setSuccessMessage('Login successful!');
@@ -49,8 +48,8 @@ const UsersLogin = () => {
           <label>UofT Email:</label>
           <input
             type="email"
-            name="uoft_email"
-            value={formData.uoft_email}
+            name="email"
+            value={formData.email}
             onChange={handleChange}
             required
           />

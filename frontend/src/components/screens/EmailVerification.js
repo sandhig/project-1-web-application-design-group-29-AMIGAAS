@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 
 const EmailVerification = () => {
   const [formData, setFormData] = useState({
-    uoft_email: '',
+    email: '',
     verification_code: '',
   });
 
@@ -25,12 +25,12 @@ const EmailVerification = () => {
     setLoading(true); 
 
     const trimmedFormData ={
-      uoft_email: formData.uoft_email.trim(),
+      email: formData.email.trim(),
       verification_code:formData.verification_code.trim(),
     };
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/users/verify-email', trimmedFormData, {
+      const response = await axios.post('http://127.0.0.1:8000/api/profiles/verify-email', trimmedFormData, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -40,7 +40,7 @@ const EmailVerification = () => {
         setErrorMessage('');
         
         setTimeout(() => {
-          navigate('/users/login');  // Redirects to verify-email page
+          navigate('/profiles/login');  // Redirects to verify-email page
         }, 2000);  // Adjust the timeout duration as needed
       }
     } catch (error) {
@@ -64,8 +64,8 @@ const EmailVerification = () => {
           <label>UofT Email:</label>
           <input
             type="email"
-            name="uoft_email"
-            value={formData.uoft_email}
+            name="email"
+            value={formData.email}
             onChange={handleChange}
             required
           />

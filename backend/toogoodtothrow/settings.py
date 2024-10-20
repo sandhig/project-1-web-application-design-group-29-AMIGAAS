@@ -39,11 +39,11 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'corsheaders',
     'channels',
-    'apps.products',
-    'apps.private_messaging',
-    'apps.users',
     'rest_framework',
     'rest_framework.authtoken',
+    'apps.products',
+    'apps.private_messaging',
+    'apps.profiles',
 ]
 
 MIDDLEWARE = [
@@ -186,5 +186,3 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ]
 }
-
-AUTH_USER_MODEL = 'users.Users'

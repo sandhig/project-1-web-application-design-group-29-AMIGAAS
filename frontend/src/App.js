@@ -25,7 +25,7 @@ function App() {
               {/* Public pages */}
               <Route path = "/users/signup" element={<UsersSignUp/>}></Route>
               <Route path = "/users/verify-email" element={<EmailVerification/>}></Route>
-              <Route path = "/users/login" element={<UsersLogin/>}></Route>
+              <Route path = "/profilesogin" element={<UsersLogin/>}></Route>
 
               {/* Protected pages */}
               <Route path = "/" element={<PrivateRoute element={<HomeScreen />} />}></Route>

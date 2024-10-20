@@ -1,6 +1,7 @@
 import React from 'react';
 import {Link} from 'react-router-dom'; 
 import './Header.css'
+import LogoutButton from './UsersLogOut';
 
 function Header() {
     return (
@@ -10,8 +11,9 @@ function Header() {
             </div>
             <nav>
                 <ul className="nav-links">
-                    <li><Link to="/users/login">Login</Link></li>   
+                    <li><Link to="/profilesogin">Login</Link></li>   
                     <li><Link to="/users/signup">Signup</Link></li>  
+                    <LogoutButton />
                     <li><Link to="/products">Products</Link></li> 
                     <li><Link to="/messages">Messages</Link></li>
                 </ul>

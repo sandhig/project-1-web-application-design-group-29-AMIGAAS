@@ -1,15 +1,20 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useUser } from '../context/UserContext';
 
-function UserProfile({ currentUserId }) {
+function UserProfile() {
     const { userId } = useParams();
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
 
+    const { currentUser } = useUser();
+
     useEffect(() => {
-        fetch(`http://localhost:8000/api/profile/${userId}/`)
-            .then(response => response.json())
-            .then(data => setUser(data));
+        if (currentUser) {
+            fetch(`http://localhost:8000/api/profile/${userId}/`)
+                .then(response => response.json())
+                .then(data => setUser(data));
+        }
     }, [userId]);
 
     const handleMessageMe = () => {
@@ -23,7 +28,7 @@ function UserProfile({ currentUserId }) {
     return (
         <div>
             <h1>{user.name}</h1>
-            {parseInt(currentUserId) !== parseInt(user.id) && (
+            {parseInt(currentUser.id) !== parseInt(user.id) && (
                 <button onClick={handleMessageMe}>Message Me</button>
             )}
         </div>

@@ -1,19 +1,24 @@
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import User, Conversation, Message
-
-# Hardcode login as user 1
-def get_current_user():
-    return get_object_or_404(User, id=2)
+from .models import Conversation, Message
+from django.contrib.auth.models import User
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
+from rest_framework.decorators import authentication_classes, permission_classes, api_view
 
 def get_user_profile(request, user_id):
     user = get_object_or_404(User, id=user_id)
     return JsonResponse({'id': user.id, 'name': user.name})
 
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def get_user_conversations(request):
-    current_user = get_current_user()
+
+    current_user = request.user
     conversations = Conversation.objects.filter(participants=current_user)
+
     data = {
         'conversations': [
             {
@@ -30,8 +35,10 @@ def get_user_conversations(request):
     return JsonResponse(data)
 
 @csrf_exempt
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def start_conversation(request, user_id):
-    current_user = get_current_user()
+    current_user = request.user
     other_user = get_object_or_404(User, id=user_id)
 
     conversations = Conversation.objects.filter(participants=current_user).filter(participants=other_user)
@@ -47,6 +54,8 @@ def start_conversation(request, user_id):
         'name': other_user.name
     })
 
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def get_conversation_messages(request, conversation_id):
     conversation = get_object_or_404(Conversation, id=conversation_id)
     messages = conversation.messages.order_by('timestamp')
@@ -63,9 +72,11 @@ def get_conversation_messages(request, conversation_id):
     return JsonResponse({'conversation_id': conversation.id, 'messages': messages_data})
 
 @csrf_exempt
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def send_message(request):
     if request.method == 'POST':
-        current_user = get_current_user()
+        current_user = request.user
         conversation_id = request.POST.get('conversation_id')
         content = request.POST.get('content')
         conversation = get_object_or_404(Conversation, id=conversation_id)
@@ -75,9 +86,11 @@ def send_message(request):
         return JsonResponse({'status': 'error', 'message': 'Invalid request method.'})
 
 @csrf_exempt
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def mark_messages_as_read(request, conversation_id):
     if request.method == 'POST':
-        current_user = get_current_user()
+        current_user = request.user
         conversation = get_object_or_404(Conversation, id=conversation_id)
 
         if current_user not in conversation.participants.all():

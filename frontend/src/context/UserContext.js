@@ -13,7 +13,7 @@ export const UserProvider = ({ children }) => {
       const token = localStorage.getItem('authToken');
 
       if (token && token !== 'undefined') {
-        fetch('http://localhost:8000/api/users/get_user', {
+        fetch('http://localhost:8000/api/profiles/get_user', {
             method: 'GET',
             headers: {
             'Authorization': `Token ${token}`,
