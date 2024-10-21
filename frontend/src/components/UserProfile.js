@@ -9,11 +9,19 @@ function UserProfile() {
 
     const { currentUser } = useUser();
 
+    const token = localStorage.getItem('authToken');
+
     useEffect(() => {
         if (currentUser) {
-            fetch(`http://localhost:8000/api/profile/${userId}/`)
-                .then(response => response.json())
-                .then(data => setUser(data));
+            fetch(`http://localhost:8000/api/profile/${userId}/`, {
+                method: 'GET',
+                headers: {
+                  'Authorization': `Token ${token}`,
+                  'Content-Type': 'application/json',
+                },
+              })
+            .then(response => response.json())
+            .then(data => setUser(data));
         }
     }, [userId]);
 
@@ -27,7 +35,7 @@ function UserProfile() {
 
     return (
         <div>
-            <h1>{user.name}</h1>
+            <h1>{user.first_name}</h1>
             {parseInt(currentUser.id) !== parseInt(user.id) && (
                 <button onClick={handleMessageMe}>Message Me</button>
             )}

@@ -54,8 +54,17 @@ def login_user(request):
 def get_current_user(request):
     user = request.user
     return Response({
+        'id': user.id,
         'username': user.username,
         'email': user.email,
         'first_name': user.first_name,
         'last_name': user.last_name,
     })
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def list_all_profiles(request):
+    profiles = Profile.objects.all()
+    serializer = ProfilesSerializer(profiles, many=True)
+    return Response(serializer.data) 

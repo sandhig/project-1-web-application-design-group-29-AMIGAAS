@@ -1,7 +1,9 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
-from .models import Conversation, Message, User
+from .models import Conversation, Message
+from apps.profiles.models import Profile
 from channels.db import database_sync_to_async
+from asgiref.sync import sync_to_async
 
 class ChatConsumer(AsyncWebsocketConsumer):
     """
@@ -52,6 +54,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         message = await self.create_message(conversation_id, sender_id, content)
 
         conversation_group_name = f'chat_{conversation_id}'
+        sender_first_name = await sync_to_async(lambda: message.sender.user.first_name)()
 
         # Send message to conversation group
         await self.channel_layer.group_send(
@@ -61,7 +64,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 'message': {
                     'id': message.id,
                     'sender_id': message.sender.id,
-                    'sender_name': message.sender.name,
+                    'sender_name': sender_first_name,
                     'content': message.content,
                     'timestamp': message.timestamp.isoformat(),
                     'conversation_id': conversation_id,
@@ -81,12 +84,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def get_user_conversations(self, user_id):
-        user = User.objects.get(id=user_id)
+        user = Profile.objects.get(id=user_id)
         return list(user.conversations.all())
 
     @database_sync_to_async
     def create_message(self, conversation_id, sender_id, content ):
         conversation = Conversation.objects.get(id=conversation_id)
-        sender = User.objects.get(id=sender_id)
+        sender = Profile.objects.get(id=sender_id)
         message = Message.objects.create(conversation=conversation, sender=sender, content=content)
         return message

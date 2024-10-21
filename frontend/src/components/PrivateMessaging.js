@@ -20,6 +20,8 @@ function PrivateMessage() {
 
     const { currentUser } = useUser();
 
+    const token = localStorage.getItem('authToken');
+
     const fetchConversations = () => {
         if (currentUser) {
             fetch(`http://localhost:8000/api/conversations/`, {
@@ -44,58 +46,60 @@ function PrivateMessage() {
                     'Authorization': `Token ${currentUser.token}`,
                 }
             })
-                .then(response => {
-                    if (!response.ok) {
-                        throw new Error('Failed to fetch conversations');
-                    }
-                    return response.json();
-                })
-                .then(data => {
-                    if (data.length > 0) {
-                        setHasConversations(true);
-                        ws.current = new WebSocket(`ws://localhost:8000/ws/chat/user/${currentUser.id}/`);
-                        console.log("connected")
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Failed to fetch conversations');
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data['conversations'].length > 0) {
+                    ws.current = new WebSocket(`ws://localhost:8000/ws/chat/user/${currentUser.id}/`);
+                    console.log("connected")
 
-                        ws.current.onmessage = function (e) {
-                            const data = JSON.parse(e.data);
-                            const message = data.message;
+                    setHasConversations(true);
+                    setConversations(data.conversations);
 
-                            if (selectedConversationRef.current && message.conversation_id === selectedConversationRef.current) {
-                                if (loadingRef.current) {
-                                    messageBuffer.current.push(message);
-                                } else {
-                                    setMessages(prevMessages => [...prevMessages, message]);
-                                    if (message.sender_id !== currentUser.id) {
-                                        markMessagesAsRead([message.id])
-                                    }
+                    ws.current.onmessage = function (e) {
+                        const data = JSON.parse(e.data);
+                        const message = data.message;
+
+                        if (selectedConversationRef.current && message.conversation_id === selectedConversationRef.current) {
+                            if (loadingRef.current) {
+                                messageBuffer.current.push(message);
+                            } else {
+                                setMessages(prevMessages => [...prevMessages, message]);
+                                if (message.sender_id !== currentUser.id) {
+                                    markMessagesAsRead([message.id])
                                 }
                             }
+                        }
 
-                            fetchConversations();
-                        };
+                        fetchConversations();
+                    };
 
-                        ws.current.onclose = function () {
-                            console.log("WebSocket connection closed");
-                        };
+                    ws.current.onclose = function () {
+                        console.log("WebSocket connection closed");
+                    };
 
-                        ws.current.onerror = (error) => {
-                            console.error("WebSocket error:", error);
-                        };
+                    ws.current.onerror = (error) => {
+                        console.error("WebSocket error:", error);
+                    };
 
-                        return () => {
-                            isUnmounting.current = true;
-                            if (ws.current) {
-                                ws.current.close();
-                            }
-                        };
-                    } else {
-                        setHasConversations(false);
-                    }
-                })
-                .catch(error => {
-                    console.error("Error fetching conversations:", error);
+                    return () => {
+                        isUnmounting.current = true;
+                        if (ws.current) {
+                            ws.current.close();
+                        }
+                    };
+                } else {
                     setHasConversations(false);
-                });
+                }
+            })
+            .catch(error => {
+                console.error("Error fetching conversations:", error);
+                setHasConversations(false);
+            });
         }
 
     }, [currentUser])
@@ -112,11 +116,31 @@ function PrivateMessage() {
         if (userId) {
             fetch(`http://localhost:8000/api/conversation/start/${userId}/`, {
                 method: 'POST',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                    'Content-Type': 'application/json',
+                },
             })
                 .then(response => response.json())
                 .then(data => {
+
+                    setConversations(prevConversations => {
+                        const existingConversation = prevConversations.find(convo => convo.id === data.conversation_id);
+                        if (!existingConversation) {
+                            return [...prevConversations, {
+                                id: data.conversation_id,
+                                name: data.name,
+                                last_message: '',
+                                last_sender_name: '',
+                                last_sender_id: '',
+                                is_read: true
+                            }];
+                        }
+                        return prevConversations;
+                    });
+
                     setSelectedConversationId(data.conversation_id);
-                    fetchConversations();
+                    setHasConversations(true);
                 });
         }
     }, [location.search]);
@@ -130,7 +154,12 @@ function PrivateMessage() {
             selectedConversationRef.current = selectedConversationId;
 
             // Fetch messages for the selected conversation
-            fetch(`http://localhost:8000/api/conversation/${selectedConversationId}/messages/`)
+            fetch(`http://localhost:8000/api/conversation/${selectedConversationId}/messages/`, {
+                    headers: {
+                        'Authorization': `Token ${token}`,
+                        'Content-Type': 'application/json',
+                    },
+                })
                 .then(response => response.json())
                 .then(data => {
                     setMessages(data.messages);
@@ -147,12 +176,14 @@ function PrivateMessage() {
 
                     lastReadMessageId = getLastReadMessageId();
 
-                    // Mark messages as read
-                    const unreadMessageIds = data.messages
-                        .filter(msg => !msg.read && msg.sender_id !== currentUser.id)
-                        .map(msg => msg.id);
-                    if (unreadMessageIds.length > 0) {
-                        markMessagesAsRead(unreadMessageIds);
+                    if (data.messages) {
+                        // Mark messages as read
+                        const unreadMessageIds = data.messages
+                            .filter(msg => !msg.read && msg.sender_id !== currentUser.id)
+                            .map(msg => msg.id);
+                        if (unreadMessageIds.length > 0) {
+                            markMessagesAsRead(unreadMessageIds);
+                        }
                     }
                 });
         }
@@ -162,6 +193,7 @@ function PrivateMessage() {
         fetch(`http://localhost:8000/api/conversation/${selectedConversationRef.current}/mark_as_read/`, {
             method: 'POST',
             headers: {
+                'Authorization': `Token ${currentUser.token}`,
                 'Content-Type': 'application/json',
             },
         })
@@ -211,10 +243,15 @@ function PrivateMessage() {
     const selectedConversation = conversations.find(c => c.id === selectedConversationId);
 
     const getLastReadMessageId = () => {
-        const lastReadMessage = messages
-            .filter(msg => msg.sender_id === currentUser.id && msg.read)
-            .slice(-1)[0];
-        return lastReadMessage ? lastReadMessage.id : null;
+        if (messages) {
+            const lastReadMessage = messages
+                .filter(msg => msg.sender_id === currentUser.id && msg.read)
+                .slice(-1)[0];
+            return lastReadMessage ? lastReadMessage.id : null;
+            }
+        else {
+            return null;
+        }
     };
 
     let lastReadMessageId = getLastReadMessageId();

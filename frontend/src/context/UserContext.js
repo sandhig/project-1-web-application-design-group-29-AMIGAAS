@@ -28,9 +28,13 @@ export const UserProvider = ({ children }) => {
         })
         .then(data => {
             setCurrentUser({
-                ...data,
-                token: token
-            });
+              id: data.id,
+              username: data.username,
+              email: data.email,
+              first_name: data.first_name,
+              last_name: data.last_name,
+              token: token,
+          });
         })
         .catch(error => {
           console.error("Error fetching user data", error);

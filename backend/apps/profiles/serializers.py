@@ -6,14 +6,14 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
 class ProfilesSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField()
-    password = serializers.CharField(write_only=True)
-    first_name = serializers.CharField(write_only=True)
-    last_name = serializers.CharField(write_only=True)
+    user_id = serializers.IntegerField(source='user.id')
+    email = serializers.EmailField(source='user.email')
+    first_name = serializers.CharField(source='user.first_name')
+    last_name = serializers.CharField(source='user.last_name')
 
     class Meta:
         model = Profile
-        fields = ['email', 'password', 'first_name', 'last_name']
+        fields = ['user_id', 'email', 'first_name', 'last_name']
 
     def validate_email(self, value):
         if '@mail.utoronto.ca' not in value:
