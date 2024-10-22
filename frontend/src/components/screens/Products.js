@@ -12,7 +12,7 @@ const Products = () => {
     
     const token = localStorage.getItem('authToken');
     
-    fetch("http://localhost:8000/api/products/", {
+    fetch("http://127.0.0.1:8000/api/products/", {
       method: 'GET',
       headers: {
         'Authorization': `Token ${token}`,
@@ -45,7 +45,7 @@ const Products = () => {
     e.preventDefault();
     const token = localStorage.getItem('authToken');
     axios
-      .post("http://localhost:8000/api/products/", newProduct, {
+      .post("http://127.0.0.1:8000/api/products/", newProduct, {
         headers: {
           'Authorization': `Token ${token}`,
         }

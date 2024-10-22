@@ -112,20 +112,18 @@ def mark_messages_as_read(request, conversation_id):
     messages_to_update.update(read=True)
 
     return JsonResponse({'status': 'success'})
-"""
+
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def get_unread_messages(request):
     current_user = request.user.profile
-    conversations = Conversation.objects.filter(participants=current_user)
 
-    unread_message_count = 0
+    unread_messages = Message.objects.filter(
+        conversation__participants=current_user,
+        read=False
+    ).exclude(sender=current_user)
 
-    for convo in conversations:
-        for message in convo.messages:
-            if message.is_read == False:
-                unread_message_count += 1
+    unread_message_count = unread_messages.count()
 
-    return unread_message_count
-"""
+    return JsonResponse({'unread_message_count': unread_message_count})

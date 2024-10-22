@@ -9,7 +9,7 @@ function HomeScreen() {
     useEffect(() => {
       const token = localStorage.getItem('authToken');
     
-      fetch('http://localhost:8000/api/profiles/', {
+      fetch('http://127.0.0.1:8000/api/profiles/', {
         method: 'GET',
         headers: {
           'Authorization': `Token ${token}`,
