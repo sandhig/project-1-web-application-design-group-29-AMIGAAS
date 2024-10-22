@@ -6,14 +6,15 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
 
 class ProfilesSerializer(serializers.ModelSerializer):
-    user_id = serializers.IntegerField(source='user.id')
+    user_id = serializers.IntegerField(source='user.id', read_only=True)
     email = serializers.EmailField(source='user.email')
     first_name = serializers.CharField(source='user.first_name')
     last_name = serializers.CharField(source='user.last_name')
+    password = serializers.CharField(write_only=True, source='user.password')
 
     class Meta:
         model = Profile
-        fields = ['user_id', 'email', 'first_name', 'last_name']
+        fields = ['user_id', 'email', 'first_name', 'last_name', 'password']
 
     def validate_email(self, value):
         if '@mail.utoronto.ca' not in value:
@@ -27,15 +28,23 @@ class ProfilesSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         verification_code=get_random_string(length=6, allowed_chars='0123456789')
 
-        first_name = validated_data.pop('first_name')
-        last_name = validated_data.pop('last_name')
-        password = validated_data.pop('password')
-        email = validated_data.pop('email')
-    
-        user = User.objects.create_user(username=email, email=email, password=password, first_name=first_name, last_name=last_name)
+        user_data = validated_data.pop('user')
+        password = user_data.pop('password')
+        
+        user = User.objects.create_user(
+            username=user_data['email'],
+            email=user_data['email'],
+            first_name=user_data['first_name'],
+            last_name=user_data['last_name']
+        )
+
+        user.set_password(password)
+        user.save()
+        
         profile = Profile.objects.create (
             user=user,
-            verification_code=verification_code
+            verification_code=verification_code,
+            **validated_data
         ) 
 
         send_mail(
