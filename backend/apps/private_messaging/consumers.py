@@ -6,19 +6,6 @@ from channels.db import database_sync_to_async
 from asgiref.sync import sync_to_async
 
 class ChatConsumer(AsyncWebsocketConsumer):
-    """
-    async def connect(self):
-        self.conversation_id = self.scope['url_route']['kwargs']['conversation_id']
-        self.conversation_group_name = f'chat_{self.conversation_id}'
-
-        # Join conversation group
-        await self.channel_layer.group_add(
-            self.conversation_group_name,
-            self.channel_name
-        )
-
-        await self.accept()
-    """
 
     async def connect(self):
         self.user_id = self.scope['url_route']['kwargs']['user_id']
@@ -84,8 +71,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
     @database_sync_to_async
     def get_user_conversations(self, user_id):
-        user = Profile.objects.get(id=user_id)
-        return list(user.conversations.all())
+        user = Profile.objects.prefetch_related(
+            'conversations__messages',
+            'conversations__participants'
+        ).get(id=user_id)
+        conversations = user.conversations.all()
+        return list(conversations)
 
     @database_sync_to_async
     def create_message(self, conversation_id, sender_id, content ):

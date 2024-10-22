@@ -26,7 +26,7 @@ SECRET_KEY = 'django-insecure-m_wv1jcga9smxirv_)h%b7$ts&$#96$a+1omwn_=lq$4l4g5hr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '3.87.240.14']
 
 
 # Application definition
@@ -166,7 +166,12 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",
+    "http://127.0.0.1:3000",
+    "http://127.0.0.1:8000",
+    "http://3.87.240.14",
+]
 
 ASGI_APPLICATION = 'toogoodtothrow.asgi.application'
 
@@ -174,8 +179,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            #"hosts": [("127.0.0.1", 6379)],
-            'hosts': [('redis-cache-444-y0uvf8.serverless.use1.cache.amazonaws.com', 6379)],
+            'hosts': [('redis://redis-3.y0uvf8.ng.0001.use1.cache.amazonaws.com:6379')]
         },
     },
 }

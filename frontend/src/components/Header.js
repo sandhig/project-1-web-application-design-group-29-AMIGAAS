@@ -14,7 +14,7 @@ function Header() {
         if (currentUser && token) {
             const fetchUnreadMessagesCount = async () => {
                 try {
-                const response = await fetch('http://127.0.0.1:8000/api/unread_messages/', {
+                const response = await fetch('http://3.87.240.14:8000/api/unread_messages/', {
                     headers: {
                     'Authorization': `Token ${token}`,
                     'Content-Type': 'application/json',

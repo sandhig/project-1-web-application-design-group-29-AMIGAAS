@@ -24,7 +24,7 @@ function PrivateMessage() {
 
     const fetchConversations = () => {
         if (currentUser) {
-            fetch(`http://127.0.0.1:8000/api/conversations/`, {
+            fetch(`http://3.87.240.14:8000/api/conversations/`, {
                 headers: {
                     'Authorization': `Token ${currentUser.token}`,
                 }
@@ -41,7 +41,7 @@ function PrivateMessage() {
 
         if (currentUser) {
 
-            fetch(`http://127.0.0.1:8000/api/conversations/`, {
+            fetch(`http://3.87.240.14:8000/api/conversations/`, {
                 headers: {
                     'Authorization': `Token ${currentUser.token}`,
                 }
@@ -54,11 +54,13 @@ function PrivateMessage() {
             })
             .then(data => {
                 if (data['conversations'].length > 0) {
-                    ws.current = new WebSocket(`ws://127.0.0.1:8000/ws/chat/user/${currentUser.id}/`);
-                    console.log("connected")
-
-                    setHasConversations(true);
-                    setConversations(data.conversations);
+                    ws.current = new WebSocket(`ws://3.87.240.14:8000/ws/chat/user/${currentUser.id}/`);
+                    
+                    ws.current.onopen = function () {
+                        console.log("WebSocket connection opened");
+                        setHasConversations(true);
+                        setConversations(data.conversations);
+                    };
 
                     ws.current.onmessage = function (e) {
                         const data = JSON.parse(e.data);
@@ -114,7 +116,7 @@ function PrivateMessage() {
 
         // Fetch or create conversation with user
         if (userId) {
-            fetch(`http://127.0.0.1:8000/api/conversation/start/${userId}/`, {
+            fetch(`http://3.87.240.14:8000/api/conversation/start/${userId}/`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Token ${token}`,
@@ -154,7 +156,7 @@ function PrivateMessage() {
             selectedConversationRef.current = selectedConversationId;
 
             // Fetch messages for the selected conversation
-            fetch(`http://127.0.0.1:8000/api/conversation/${selectedConversationId}/messages/`, {
+            fetch(`http://3.87.240.14:8000/api/conversation/${selectedConversationId}/messages/`, {
                     headers: {
                         'Authorization': `Token ${token}`,
                         'Content-Type': 'application/json',
@@ -190,7 +192,7 @@ function PrivateMessage() {
     }, [selectedConversationId]);
 
     const markMessagesAsRead = (messageIds) => {
-        fetch(`http://127.0.0.1:8000/api/conversation/${selectedConversationRef.current}/mark_as_read/`, {
+        fetch(`http://3.87.240.14:8000/api/conversation/${selectedConversationRef.current}/mark_as_read/`, {
             method: 'POST',
             headers: {
                 'Authorization': `Token ${currentUser.token}`,
@@ -218,7 +220,7 @@ function PrivateMessage() {
     }
 
     const sendMessage = () => {
-        if (input !== '') {
+        if (ws.current && ws.current.readyState === WebSocket.OPEN & input != '') {
             ws.current.send(
                 JSON.stringify({
                     content: input,
