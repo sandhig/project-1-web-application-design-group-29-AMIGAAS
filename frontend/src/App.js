@@ -1,53 +1,44 @@
-import React from 'react';
+import './App.css';
+import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+
 import UserProfile from './components/UserProfile';
 import PrivateMessage from './components/PrivateMessaging';
 import Products from './components/Products';
 import CreateListing from './components/CreateListing';
+import UsersSignUp from "./components/screens/UsersSignUp";
+import UsersLogin from './components/screens/UsersLogin';
+import HomeScreen from "./components/screens/HomeScreen"; 
+import EmailVerification from './components/screens/EmailVerification';
+import Header from "./components/Header"; 
+import PrivateRoute from './components/PrivateRoute';
+import { UserProvider } from './context/UserContext';
 
 function App() {
-    const currentUserId = 1; // Hardcoded for now
 
     return (
-        <Router>
+      <div className="App">
+        <UserProvider>
+          <Router>
+            <Header/>
+    
             <Routes>
-                <Route path="/" element={<HomePage currentUserId={currentUserId} />} />
-                <Route path="/user/:userId" element={<UserProfile currentUserId={currentUserId} />} />
-                <Route path="/products" element={<Products />} />
-                <Route path="/products/create" element={<CreateListing />} />
-                <Route path="/messages" element={<PrivateMessage currentUserId={currentUserId} />} />
+              {/* Public pages */}
+              <Route path = "/users/signup" element={<UsersSignUp/>}></Route>
+              <Route path = "/users/verify-email" element={<EmailVerification/>}></Route>
+              <Route path = "/profiles/login" element={<UsersLogin/>}></Route>
+
+              {/* Protected pages */}
+              <Route path = "/" element={<PrivateRoute element={<HomeScreen />} />}></Route>
+              <Route path="/products" element={<PrivateRoute element={<Products />} />} />
+              <Route path="/user/:userId" element={<PrivateRoute element={<UserProfile />} />} />
+              <Route path="/messages" element={<PrivateRoute element={<PrivateMessage />} />} />
             </Routes>
-        </Router>
+    
+          </Router>
+        </UserProvider>
+      </div>
     );
-}
-
-function HomePage({ currentUserId }) {
-    const users = [
-        { id: 1, name: 'User 1' },
-        { id: 2, name: 'User 2' },
-        { id: 3, name: 'User 3' }
-    ];
-
-    return (
-        <div>
-            <h1>2good2throw</h1>
-            <h2>Signed in as {currentUserId}</h2>
-            <h2>Users:</h2>
-            <ul>
-                {users.map(user => (
-                    <li key={user.id}>
-                        <Link to={`/user/${user.id}`}>{user.name}</Link>
-                    </li>
-                ))}
-            </ul>
-            <p>
-                <Link to="/products">Products</Link>
-            </p>
-            <p>
-                <Link to="/messages">Messages</Link>
-            </p>
-        </div>
-    );
-}
+  }
 
 export default App;

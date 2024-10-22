@@ -85,6 +85,7 @@ pip install -r requirements.txt
 Start the backend:
 ```
 python3 manage.py runserver
+daphne -b 0.0.0.0 -p 8000 toogoodtothrow.asgi:application
 ```
 
 ### In another terminal:

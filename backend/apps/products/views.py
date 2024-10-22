@@ -2,13 +2,18 @@ from django.shortcuts import render
 
 from rest_framework import status
 from rest_framework.response import Response
-from rest_framework.decorators import api_view, parser_classes
+from rest_framework.decorators import api_view, parser_classes, authentication_classes, permission_classes
 from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.authentication import TokenAuthentication
+
 from .models import Product
 from .serializers import ProductSerializer
 
 @api_view(['GET', 'POST'])
 @parser_classes([MultiPartParser, FormParser])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
 def product_list(request):
     if request.method == 'GET':
         products = Product.objects.all()

@@ -1,15 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
+import { useUser } from '../context/UserContext';
 
-function UserProfile({ currentUserId }) {
+function UserProfile() {
     const { userId } = useParams();
     const [user, setUser] = useState(null);
     const navigate = useNavigate();
 
+    const { currentUser } = useUser();
+
+    const token = localStorage.getItem('authToken');
+
     useEffect(() => {
-        fetch(`http://localhost:8000/api/profile/${userId}/`)
+        if (currentUser) {
+            fetch(`http://127.0.0.1:8000/api/profile/${userId}/`, {
+                method: 'GET',
+                headers: {
+                  'Authorization': `Token ${token}`,
+                  'Content-Type': 'application/json',
+                },
+              })
             .then(response => response.json())
             .then(data => setUser(data));
+        }
     }, [userId]);
 
     const handleMessageMe = () => {
@@ -22,8 +35,8 @@ function UserProfile({ currentUserId }) {
 
     return (
         <div>
-            <h1>{user.name}</h1>
-            {parseInt(currentUserId) !== parseInt(user.id) && (
+            <h1>{user.first_name}</h1>
+            {parseInt(currentUser.id) !== parseInt(user.id) && (
                 <button onClick={handleMessageMe}>Message Me</button>
             )}
         </div>
