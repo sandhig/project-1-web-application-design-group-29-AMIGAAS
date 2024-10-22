@@ -106,7 +106,7 @@ const UsersSignUp = () => {
       </form>
       <p> 
           Already User? 
-          <Link to="/profilesogin"> Login</Link>
+          <Link to="/profiles/login"> Login</Link>
       </p>
 
       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}

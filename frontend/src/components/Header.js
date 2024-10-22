@@ -11,7 +11,7 @@ function Header() {
             </div>
             <nav>
                 <ul className="nav-links">
-                    <li><Link to="/profilesogin">Login</Link></li>   
+                    <li><Link to="/profiles/login">Login</Link></li>   
                     <li><Link to="/users/signup">Signup</Link></li>  
                     <LogoutButton />
                     <li><Link to="/products">Products</Link></li> 
