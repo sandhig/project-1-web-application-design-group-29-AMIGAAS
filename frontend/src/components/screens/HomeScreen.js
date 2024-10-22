@@ -25,7 +25,7 @@ function HomeScreen() {
       .then((data) => {
         setProfiles(data);
       })
-    }, []);
+    }, [currentUser]);
 
     if (!currentUser) {
         return <p>Loading...</p>;
