@@ -1,0 +1,13 @@
+.column-container {
+    display: flex;
+    flex-direction: column; /* Arrange children in a column */
+    align-items: center;    /* Center items horizontally (optional) */
+}
+  
+.column-item {
+    margin: 10px; /* Space between items */
+}
+  
+.space-right {
+    margin-right: 10px;
+}

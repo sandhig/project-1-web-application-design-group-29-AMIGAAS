@@ -4,7 +4,8 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
 import UserProfile from './components/UserProfile';
 import PrivateMessage from './components/PrivateMessaging';
-import Products from "./components/screens/Products";
+import Products from './components/Products';
+import CreateListing from './components/CreateListing';
 import UsersSignUp from "./components/screens/UsersSignUp";
 import UsersLogin from './components/screens/UsersLogin';
 import HomeScreen from "./components/screens/HomeScreen"; 
