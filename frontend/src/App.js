@@ -31,6 +31,7 @@ function App() {
               {/* Protected pages */}
               <Route path = "/" element={<PrivateRoute element={<HomeScreen />} />}></Route>
               <Route path="/products" element={<PrivateRoute element={<Products />} />} />
+              <Route path="/products/create" element={<PrivateRoute element={<CreateListing />} />} />
               <Route path="/user/:userId" element={<PrivateRoute element={<UserProfile />} />} />
               <Route path="/messages" element={<PrivateRoute element={<PrivateMessage />} />} />
             </Routes>

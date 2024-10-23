@@ -4,7 +4,7 @@ import './CreateListing.css'
 import './UploadAndDisplayImage.js'
 import UploadAndDisplayImage from "./UploadAndDisplayImage.js";
 
-const Products = () => {
+const CreateListing = () => {
   const [products, setProducts] = useState([]);
   const [newProduct, setNewProduct] = useState({
     title: "",
@@ -17,6 +17,7 @@ const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedCondition, setSelectedCondition] = useState('');
   const [selectedPickupLocation, setSelectedPickupLocation] = useState('');
+  const token = localStorage.getItem('authToken');
 
   const categories = [
     { id: 1, name: 'Category 1' },
@@ -80,7 +81,7 @@ const Products = () => {
     e.preventDefault();
 
     const formData = new FormData();
-    formData.append("userId", 1); // Example user ID, replace with dynamic value
+    formData.append("user", 1); // Example user ID, replace with dynamic value
     formData.append("name", newProduct.title); 
     formData.append("price", newProduct.price); 
     formData.append("category", newProduct.category); 
@@ -91,8 +92,9 @@ const Products = () => {
     if (newProduct.size) formData.append("size", newProduct.size); // optional
     if (newProduct.colour) formData.append("colour", newProduct.colour);
 
-    axios.post("http://localhost:8000/api/products/", formData, {
+    axios.post("http://3.87.240.14:8000/api/products/", formData, {
       headers: {
+        'Authorization': `Token ${token}`,
         "Content-Type": "multipart/form-data",
       },
     })
@@ -136,7 +138,7 @@ const Products = () => {
             <select value={selectedCategory} onChange={handleCategoryChange}>
               <option value="" disabled>Select an option</option>
               {categories.map(category => (
-                <option value={`${category.id}`}>{category.name}</option>
+                <option key={category.id} value={`${category.id}`}>{category.name}</option>
               ))}
             </select>
           </label>
@@ -145,7 +147,7 @@ const Products = () => {
             <select value={selectedCondition} onChange={handleConditionChange}>
               <option value="" disabled>Select an option</option>
               {condition.map(condition => (
-                <option value={`${condition.id}`}>{condition.name}</option>
+                <option key={condition.id} value={`${condition.id}`}>{condition.name}</option>
               ))}
             </select>
           </label>
@@ -154,7 +156,7 @@ const Products = () => {
             <select value={selectedPickupLocation} onChange={handlePickupLocationChange}>
               <option value="" disabled>Select an option</option>
               {pickupLocation.map(location => (
-                <option value={`${location.id}`}>{location.name}</option>
+                <option key={location.id} value={`${location.id}`}>{location.name}</option>
               ))}
             </select>
           </label>
@@ -172,4 +174,4 @@ const Products = () => {
   );
 };
 
-export default Products;
+export default CreateListing;

@@ -7,7 +7,7 @@ import { useUser } from '../context/UserContext';
 function Header() {
     const { currentUser } = useUser();
     const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
-
+    /*
     useEffect(() => {
         const token = localStorage.getItem('authToken');
         
@@ -33,7 +33,7 @@ function Header() {
             return () => clearInterval(intervalId);
         }
     }, [currentUser]);
-
+    */
     return (
         <header className="header">
             <div className="logo">
@@ -45,6 +45,8 @@ function Header() {
                     <li><Link to="/users/signup">Signup</Link></li>  
                     <LogoutButton />
                     <li><Link to="/products">Products</Link></li> 
+                    <li><Link to="/messages">Messages</Link></li> 
+                    {/*
                     <li><Link to="/messages">
                     {unreadMessagesCount > 0? (
                         <div className="messages-title">
@@ -53,6 +55,7 @@ function Header() {
                         </div>
                     ) : (<div>Messages</div>)}
                     </Link></li>
+                    */}
                 </ul>
             </nav>
         </header>   

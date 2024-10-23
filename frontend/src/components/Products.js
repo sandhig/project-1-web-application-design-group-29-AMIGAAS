@@ -4,11 +4,17 @@ import { Link } from 'react-router-dom';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
+  const token = localStorage.getItem('authToken');
 
   // Fetch products from the backend
   useEffect(() => {
     axios
-      .get("http://localhost:8000/api/products/")
+      .get("http://3.87.240.14:8000/api/products/", {
+        headers: {
+          'Authorization': `Token ${token}`,
+          'Content-Type': 'application/json',
+        }
+      })
       .then((response) => {
         setProducts(response.data);
       })

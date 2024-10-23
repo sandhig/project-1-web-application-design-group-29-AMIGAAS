@@ -1,16 +1,9 @@
 from django.db import models
-
-# Mock user model for now
-class User(models.Model):
-    id = models.AutoField(primary_key=True)
-    name = models.CharField(max_length=255)
-
-    def __str__(self):
-        return self.name
+from django.contrib.auth.models import User
 
 class Product(models.Model):
     # required fields
-    userId = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     name = models.CharField(max_length=255)
     photo = models.ImageField(upload_to='products/') #tentative path, might change later
     category = models.CharField(max_length=255)
