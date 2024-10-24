@@ -60,6 +60,9 @@ function Header() {
           </IconButton>
         </div>
         <div className="profile-container">
+          <Link to="/products/create">
+              <button className="create-listing">Create Listing</button>
+          </Link>
           <Link to="/messages">
             <IconButton aria-label="message">
               <MessageIcon style={{ fill: "white", fontSize: "larger" }} />

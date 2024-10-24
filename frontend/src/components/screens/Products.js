@@ -18,19 +18,6 @@ const Products = () => {
 
   return (
     <div className="products-container">
-      {/*
-      <h2>Products</h2>
-      <Link to="/products/create">
-            <button className="button">Create Listing</button>
-      </Link>
-      <ul>
-        {products.map(product => (
-          <li key={product.id}>
-            {product.name} - ${product.price}
-          </li>
-        ))}
-      </ul>
-        */}
         <div className="filters">
           filters
         </div>
