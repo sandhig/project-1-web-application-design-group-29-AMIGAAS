@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
 import './Products.css';
-import { Link } from 'react-router-dom';
-
-import IconButton from "@mui/material/IconButton";
-import SearchIcon from "@mui/icons-material/Search";
-import MessageIcon from '@mui/icons-material/Message';
-import TextField from "@mui/material/TextField";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -41,7 +35,14 @@ const Products = () => {
           filters
         </div>
         <div className="products">
-          products
+        <div className="product-grid">
+          {products.map(product => (
+            <div key={product.id} className="product-item">
+              <h3>{product.name}</h3>
+              <p>${product.price}</p>
+            </div>
+          ))}
+        </div>
         </div>
     </div>
   );
