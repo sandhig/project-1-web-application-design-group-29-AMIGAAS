@@ -84,15 +84,12 @@ function CreateListing() {
       payload.append('image', formData.image);
     }
 
-    console.log(formData.image)
-
     axios.post('http://3.87.240.14:8000/api/products/', payload, {
       headers: {
         'Authorization': `Token ${token}`
       }
     })
       .then(response => {
-        console.log('Product added:', response.data, formData.image);
         navigate('/products');
       })
       .catch(error => console.error('Error adding product:', error));

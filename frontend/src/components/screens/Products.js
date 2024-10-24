@@ -1,13 +1,43 @@
 import React, { useState, useEffect } from "react";
 import './Products.css';
 import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import axios from 'axios';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
+  const [categories, setCategories] = useState([]);
+  const [conditions, setConditions] = useState([]);
+  const [locations, setLocations] = useState([]);
   const [sortOption, setSortOption] = useState('');
+  const [selectedCategory, setSelectedCategory] = useState('');
+  const [selectedCondition, setSelectedCondition] = useState('');
+  const [selectedLocation, setSelectedLocation] = useState('');
   const token = localStorage.getItem('authToken');
 
-  const sortedProducts = [...products].sort((a, b) => {
+  const filteredProducts = products
+
+  .filter(product => {
+    if (selectedCategory) {
+      return product.category === selectedCategory.value;
+    }
+    return true;
+  })
+
+  .filter(product => {
+    if (selectedCondition) {
+      return product.condition === selectedCondition.value;
+    }
+    return true;
+  })
+
+  .filter(product => {
+    if (selectedLocation) {
+      return product.pickup_location === selectedLocation.value;
+    }
+    return true;
+  })
+
+  .sort((a, b) => {
     if (sortOption === 'priceAsc') {
       return a.price - b.price;
     } else if (sortOption === 'priceDesc') {
@@ -27,18 +57,81 @@ const Products = () => {
       .then(response => response.json())
       .then(data => setProducts(data))
       .catch(error => console.error('Error fetching products:', error));
+      axios.get('http://3.87.240.14:8000/api/product-choices/', {
+        headers: {
+          'Authorization': `Token ${token}`,
+        }
+    })
+      .then(response => {
+        const { categories, conditions, locations } = response.data;
+        setCategories(categories);
+        setConditions(conditions);
+        setLocations(locations);
+      })
+      .catch(error => console.error('Error fetching preset values:', error));
   }, []);
 
   return (
     <div className="products-container">
         <div className="filters">
-          filters
+
+          <FormControl className="category-filter" variant="outlined">
+            <InputLabel id="category-label">Category</InputLabel>
+            <Select
+              labelId="category-label"
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+              label="Category"
+            >
+              <MenuItem value=""><em>None</em></MenuItem>
+              {categories.map((category, index) => (
+                <MenuItem key={index} value={category}>
+                  {category.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl className="condition-filter" variant="outlined">
+            <InputLabel id="condition-label">Condition</InputLabel>
+            <Select
+              labelId="condition-label"
+              value={selectedCondition}
+              onChange={(e) => setSelectedCondition(e.target.value)}
+              label="Condition"
+            >
+              <MenuItem value=""><em>None</em></MenuItem>
+              {conditions.map((condition, index) => (
+                <MenuItem key={index} value={condition}>
+                  {condition.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
+          <FormControl className="location-filter" variant="outlined">
+            <InputLabel id="location-label">Location</InputLabel>
+            <Select
+              labelId="location-label"
+              value={selectedLocation}
+              onChange={(e) => setSelectedLocation(e.target.value)}
+              label="Location"
+            >
+              <MenuItem value=""><em>None</em></MenuItem>
+              {locations.map((location, index) => (
+                <MenuItem key={index} value={location}>
+                  {location.label}
+                </MenuItem>
+              ))}
+            </Select>
+          </FormControl>
+
         </div>
         <div className="product-grid">
 
           <div className="title">
             <h1>Featured listings</h1>
-            <FormControl className="sort-by" variant="outlined" style={{ minWidth: 200, marginBottom: '20px' }}>
+            <FormControl className="sort-by" variant="outlined">
               <InputLabel id="sort-label">Sort By</InputLabel>
               <Select
                 labelId="sort-label"
@@ -54,7 +147,7 @@ const Products = () => {
           </div>
 
           <div className="products">
-            {sortedProducts.map(product => (
+            {filteredProducts.map(product => (
               <div key={product.id} className="product-item">
                 <img className="product-image" src={product.image_url}></img>
                 <div className="product-text">
