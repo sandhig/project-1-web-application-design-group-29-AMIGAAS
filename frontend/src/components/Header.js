@@ -1,17 +1,27 @@
 import React, { useEffect, useState } from 'react';
 import {Link} from 'react-router-dom'; 
 import './Header.css'
-import LogoutButton from './UsersLogOut';
 import { useUser } from '../context/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 import IconButton from "@mui/material/IconButton";
 import SearchIcon from "@mui/icons-material/Search";
 import MessageIcon from '@mui/icons-material/Message';
 import TextField from "@mui/material/TextField";
+import LogoutIcon from '@mui/icons-material/Logout';
 
 function Header() {
     const { currentUser } = useUser();
+    const { setCurrentUser } = useUser();
     const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
+    const navigate = useNavigate();
+
+    const handleLogout = () => {
+      localStorage.removeItem('authToken');
+      setCurrentUser(null);
+      navigate('/profiles/login');
+    };
+
     /*
     useEffect(() => {
         const token = localStorage.getItem('authToken');
@@ -41,9 +51,11 @@ function Header() {
     */
     return (
       <div className="header">
-        <Link to="/products">
-          <img className="header-logo" src="images/logo-white.png"></img>
-        </Link>
+        <div className="logo-container">
+          <Link to="/products">
+            <img className="header-logo" src="images/logo-white.png"></img>
+          </Link>
+        </div>
         <div className="search-container">
           <TextField
             id="search-bar"
@@ -68,6 +80,9 @@ function Header() {
               <MessageIcon style={{ fill: "white", fontSize: "larger" }} />
             </IconButton>
           </Link>
+          <IconButton aria-label="message" onClick={handleLogout}>
+              <LogoutIcon style={{ fill: "white", fontSize: "larger" }} />
+            </IconButton>
           <img className="header-profile" src="images/profile.png"></img>
         </div>
       </div>
