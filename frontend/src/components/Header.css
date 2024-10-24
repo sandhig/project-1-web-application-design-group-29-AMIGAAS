@@ -10,10 +10,20 @@
 
 .logo-container {
     flex-shrink: 0;
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
 }
 
 .header-logo {
     height: 60px;
+}
+
+.site-title {
+    font-size: larger;
+    color: white;
+    font-weight: 800;
 }
 
 .search-container {

@@ -9,13 +9,13 @@ const Products = () => {
 
   const sortedProducts = [...products].sort((a, b) => {
     if (sortOption === 'priceAsc') {
-      return a.price - b.price;  // Sort by price ascending
+      return a.price - b.price;
     } else if (sortOption === 'priceDesc') {
-      return b.price - a.price;  // Sort by price descending
+      return b.price - a.price;
     } else if (sortOption === 'nameAsc') {
-      return a.name.localeCompare(b.name);  // Sort by name alphabetically
+      return a.name.localeCompare(b.name);
     }
-    return 0; // Default (no sorting)
+    return 0;
   });
 
   useEffect(() => {

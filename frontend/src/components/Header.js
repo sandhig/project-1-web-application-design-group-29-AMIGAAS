@@ -55,6 +55,7 @@ function Header() {
           <Link to="/products">
             <img className="header-logo" src="images/logo-white.png"></img>
           </Link>
+          <div className="site-title">Too Good To Throw</div>
         </div>
         <div className="search-container">
           <TextField
