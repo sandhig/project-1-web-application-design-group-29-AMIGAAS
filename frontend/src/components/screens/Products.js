@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import './Products.css';
-import { Select, MenuItem, FormControl, InputLabel } from '@mui/material';
+import { Select, MenuItem, FormControl, InputLabel, Slider, Typography } from '@mui/material';
 import axios from 'axios';
 
 const Products = () => {
@@ -8,10 +8,13 @@ const Products = () => {
   const [categories, setCategories] = useState([]);
   const [conditions, setConditions] = useState([]);
   const [locations, setLocations] = useState([]);
+
   const [sortOption, setSortOption] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedCondition, setSelectedCondition] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('');
+  const [maxPrice, setMaxPrice] = useState(100);
+
   const token = localStorage.getItem('authToken');
 
   const filteredProducts = products
@@ -35,6 +38,13 @@ const Products = () => {
       return product.pickup_location === selectedLocation.value;
     }
     return true;
+  })
+
+  .filter(product => {
+    if (maxPrice === 500) {
+      return true;
+    }
+    return product.price <= maxPrice;
   })
 
   .sort((a, b) => {
@@ -124,6 +134,22 @@ const Products = () => {
                 </MenuItem>
               ))}
             </Select>
+          </FormControl>
+
+          <FormControl className="price-filter" variant="outlined">
+            <Typography id="max-price-slider" gutterBottom>
+              Max Price
+            </Typography>
+            <Slider
+              value={maxPrice}
+              onChange={(e, newValue) => setMaxPrice(newValue)}
+              valueLabelDisplay="auto"
+              aria-labelledby="max-price-slider"
+              min={0}
+              max={500}
+              step={10}
+              valueLabelFormat={(value) => (value === 500 ? '500+' : value)}
+            />
           </FormControl>
 
         </div>
