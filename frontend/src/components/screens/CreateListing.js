@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { TextField, MenuItem, Select, InputLabel, FormControl, Button, Box, InputAdornment } from '@mui/material';
 import axios from 'axios';
 import { useUser } from '../../context/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 function CreateListing() {
+  const navigate = useNavigate();
+  
   const [formData, setFormData] = useState({
     name: '',
     price: '',
@@ -57,7 +60,7 @@ function CreateListing() {
     if (type === 'file') {
       setFormData({
         ...formData,
-        image: files[0]  // Ensure this is capturing the file
+        image: files[0]
       });
     } else {
       setFormData({
@@ -71,14 +74,14 @@ function CreateListing() {
     event.preventDefault();
 
     const payload = new FormData();
-    payload.append('name', formData.name);  // Make sure formData.name is not empty
-    payload.append('price', parseFloat(formData.price));  // Make sure it's a valid number
-    payload.append('category', formData.category.value);  // Ensure formData.category is valid
-    payload.append('condition', formData.condition.value);  // Ensure formData.condition is valid
-    payload.append('pickup_location', formData.location.value);  // Ensure formData.location is valid
-    payload.append('description', formData.description);  // Optional, but should be provided
+    payload.append('name', formData.name);
+    payload.append('price', parseFloat(formData.price));
+    payload.append('category', formData.category.value);
+    payload.append('condition', formData.condition.value);
+    payload.append('pickup_location', formData.location.value);
+    payload.append('description', formData.description);
     if (formData.image) {
-      payload.append('image', formData.image);  // Add the image file if it exists
+      payload.append('image', formData.image);
     }
 
     console.log(formData.image)
@@ -90,6 +93,7 @@ function CreateListing() {
     })
       .then(response => {
         console.log('Product added:', response.data, formData.image);
+        navigate('/products');
       })
       .catch(error => console.error('Error adding product:', error));
   };

@@ -56,9 +56,10 @@
 .product-image {
     display: block;
     background-color: grey;
-    border-radius: 15px;
+    border-radius: 10px;
     width: 100%;
     aspect-ratio: 1 / 1;
+    object-fit: cover;
 }
 
 .product-text {

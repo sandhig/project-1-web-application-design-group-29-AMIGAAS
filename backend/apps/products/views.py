@@ -54,8 +54,8 @@ class ProductAPIView(APIView):
                 serializer.save(user=request.user)
 
                 if 'image' not in request.FILES:
-                    logger.error("No image file found in request.")
-                    return Response({"error": "No image file provided."}, status=400)
+                    logger.debug('Product upload with no image successful')
+                    return Response(serializer.data, status=status.HTTP_201_CREATED)
                 
                 image_file = request.FILES['image']
                 logger.debug(f'Image file size: {image_file.size} bytes')
