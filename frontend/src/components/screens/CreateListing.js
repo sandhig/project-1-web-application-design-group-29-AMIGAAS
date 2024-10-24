@@ -10,7 +10,8 @@ function CreateListing() {
     category: '',
     condition: '',
     location: '',
-    description: ''
+    description: '',
+    image: null
   });
 
   const { currentUser } = useUser();
@@ -36,7 +37,7 @@ function CreateListing() {
   }, []);
 
   const handleInputChange = (event) => {
-    const { name, value } = event.target;
+    const { name, value, type, files } = event.target;
 
     if (name === 'price') {
       const validPrice = value.match(/^\d*(\.\d{0,2})?$/);
@@ -52,28 +53,43 @@ function CreateListing() {
         [name]: value
       });
     }
+
+    if (type === 'file') {
+      setFormData({
+        ...formData,
+        image: files[0]  // Ensure this is capturing the file
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    const payload = {
-      name: formData.name,
-      price: parseFloat(formData.price),
-      category: formData.category.value,
-      condition: formData.condition.value,
-      pickup_location: formData.location.value,
-      description: formData.description
-    };
+    const payload = new FormData();
+    payload.append('name', formData.name);  // Make sure formData.name is not empty
+    payload.append('price', parseFloat(formData.price));  // Make sure it's a valid number
+    payload.append('category', formData.category.value);  // Ensure formData.category is valid
+    payload.append('condition', formData.condition.value);  // Ensure formData.condition is valid
+    payload.append('pickup_location', formData.location.value);  // Ensure formData.location is valid
+    payload.append('description', formData.description);  // Optional, but should be provided
+    if (formData.image) {
+      payload.append('image', formData.image);  // Add the image file if it exists
+    }
+
+    console.log(formData.image)
 
     axios.post('http://3.87.240.14:8000/api/products/', payload, {
       headers: {
-        'Authorization': `Token ${token}`,
-        'Content-Type': 'application/json',
+        'Authorization': `Token ${token}`
       }
     })
       .then(response => {
-        console.log('Product added:', response.data);
+        console.log('Product added:', response.data, formData.image);
       })
       .catch(error => console.error('Error adding product:', error));
   };
@@ -82,6 +98,7 @@ function CreateListing() {
     <Box
       component="form"
       onSubmit={handleSubmit}
+      encType="multipart/form-data"
       sx={{
         display: 'flex',
         flexDirection: 'column',
@@ -175,6 +192,13 @@ function CreateListing() {
         variant="outlined"
         multiline
         rows={4}
+      />
+
+      <input
+        type="file"
+        name="image"
+        accept="image/*"
+        onChange={handleInputChange}
       />
 
       <Button type="submit" variant="contained" color="primary">

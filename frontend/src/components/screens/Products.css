@@ -3,6 +3,7 @@
     flex-direction: row;
     width: 100%;
     overflow: hidden;
+    height: -webkit-fill-available;
 }
 
 /* Filters */
@@ -46,6 +47,10 @@
     text-align: left;
     display: flex;
     flex-direction: column;
+}
+
+.product-item:hover {
+    cursor: pointer;
 }
 
 .product-image {

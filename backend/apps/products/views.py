@@ -7,6 +7,14 @@ from .serializers import ProductSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
+from django.core.files.storage import default_storage
+from django.core.files.base import ContentFile
+import boto3
+from django.conf import settings
+
+import logging
+
+logger = logging.getLogger('django')
 
 @api_view(['GET'])
 def get_product_choices(request):
@@ -34,12 +42,43 @@ class ProductAPIView(APIView):
             serializer = ProductSerializer(products, many=True)
             return Response(serializer.data)
 
+
     def post(self, request):
-        serializer = ProductSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save(user=request.user)
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        logger.debug('Received request for image upload')
+        
+        try:
+            logger.debug(f'Files: {request.FILES}')
+            serializer = ProductSerializer(data=request.data)
+
+            if serializer.is_valid():
+                serializer.save(user=request.user)
+
+                if 'image' not in request.FILES:
+                    logger.error("No image file found in request.")
+                    return Response({"error": "No image file provided."}, status=400)
+                
+                image_file = request.FILES['image']
+                logger.debug(f'Image file size: {image_file.size} bytes')
+            
+                s3 = boto3.client(
+                    's3',
+                    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+                    region_name=settings.AWS_S3_REGION_NAME
+                )
+                
+                image_file.seek(0)
+                s3.upload_fileobj(image_file, settings.AWS_STORAGE_BUCKET_NAME, f'images/{image_file.name}')
+
+                logger.debug('Image upload successful')
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            else:
+                logger.error(f'Serializer errors: {serializer.errors}')
+                return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+        except Exception as e:
+            logger.error(f'Error during image upload: {str(e)}')
+            return Response({'error': 'Failed to upload image'}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
     def put(self, request, pk=None):
         product = get_object_or_404(Product, pk=pk)

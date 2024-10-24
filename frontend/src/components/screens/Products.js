@@ -56,7 +56,7 @@ const Products = () => {
           <div className="products">
             {sortedProducts.map(product => (
               <div key={product.id} className="product-item">
-                <span className="product-image"></span>
+                <img className="product-image" src={product.image_url}></img>
                 <div className="product-text">
                   <div className="product-price">${product.price}</div>
                   <div className="product-title">{product.name}</div>

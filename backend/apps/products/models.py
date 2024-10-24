@@ -36,6 +36,11 @@ class Product(models.Model):
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     edited_at = models.DateTimeField(auto_now=True)
+    image = models.ImageField(upload_to='images/', null=True, blank=True)
 
     def __str__(self):
         return self.name
+    
+    @property
+    def image_url(self):
+        return self.image.url if self.image else None

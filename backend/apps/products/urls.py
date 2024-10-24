@@ -11,5 +11,5 @@ urlpatterns = [
 urlpatterns = [
     path('products/', ProductAPIView.as_view()),
     path('products/<int:pk>/', ProductAPIView.as_view()),
-    path('product-choices/', get_product_choices, name='get_product_choices'),
+    path('product-choices/', get_product_choices, name='get_product_choices')
 ]
