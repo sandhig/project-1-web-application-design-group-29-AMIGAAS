@@ -274,7 +274,7 @@ function PrivateMessage() {
                     <div key={conversation.id} onClick={() => setSelectedConversationId(conversation.id)}
                         className={conversation.id === selectedConversationId ? 'selected' : '' || !conversation.is_read ? 'unread' : ''}>
                         <span className={!conversation.is_read ? 'dot' : ''}></span>
-                        <span className="title">
+                        <span className="message-title">
                             {conversation.name}
                             <p>{conversation.last_sender_id == currentUser.id ? 'You' : conversation.last_sender_name}: {conversation.last_message}</p>
                         </span>
