@@ -1,0 +1,24 @@
+.products-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    height: 100%;
+}
+
+/* Filters */
+
+.filters {
+    background-color: blue;
+    width: 20%;
+    min-width: 200px;
+}
+
+/* Products */
+
+.products {
+    background-color: green;
+    flex-grow: 1;
+}
+
+
+

@@ -4,6 +4,11 @@ import './Header.css'
 import LogoutButton from './UsersLogOut';
 import { useUser } from '../context/UserContext';
 
+import IconButton from "@mui/material/IconButton";
+import SearchIcon from "@mui/icons-material/Search";
+import MessageIcon from '@mui/icons-material/Message';
+import TextField from "@mui/material/TextField";
+
 function Header() {
     const { currentUser } = useUser();
     const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
@@ -35,30 +40,34 @@ function Header() {
     }, [currentUser]);
     */
     return (
-        <header className="header">
-            <div className="logo">
-                <Link to="/">UofT's Too Good To Throw</Link>  
-            </div>
-            <nav>
-                <ul className="nav-links">
-                    <li><Link to="/profiles/login">Login</Link></li>   
-                    <li><Link to="/users/signup">Signup</Link></li>  
-                    <LogoutButton />
-                    <li><Link to="/products">Products</Link></li> 
-                    <li><Link to="/messages">Messages</Link></li> 
-                    {/*
-                    <li><Link to="/messages">
-                    {unreadMessagesCount > 0? (
-                        <div className="messages-title">
-                            Messages
-                            <span className="bubble">{unreadMessagesCount}</span>
-                        </div>
-                    ) : (<div>Messages</div>)}
-                    </Link></li>
-                    */}
-                </ul>
-            </nav>
-        </header>   
+      <div className="header">
+        <Link to="/products">
+          <img className="header-logo" src="images/logo-white.png"></img>
+        </Link>
+        <div className="search-container">
+          <TextField
+            id="search-bar"
+            className="search-bar"
+            onInput={(e) => {
+              return;
+            }}
+            variant="outlined"
+            placeholder="Search..."
+            size="small"
+          />
+          <IconButton type="submit" aria-label="search">
+            <SearchIcon style={{ fill: "white" }} />
+          </IconButton>
+        </div>
+        <div className="profile-container">
+          <Link to="/messages">
+            <IconButton aria-label="message">
+              <MessageIcon style={{ fill: "white", fontSize: "larger" }} />
+            </IconButton>
+          </Link>
+          <img className="header-profile" src="images/profile.png"></img>
+        </div>
+      </div>
     );
 };
 

@@ -20,7 +20,9 @@ function App() {
       <div className="App">
         <UserProvider>
           <Router>
+            
             <Header/>
+            
     
             <Routes>
               {/* Public pages */}

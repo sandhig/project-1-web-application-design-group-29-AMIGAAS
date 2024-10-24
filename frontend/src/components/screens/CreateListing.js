@@ -20,7 +20,6 @@ function CreateListing() {
   const [conditions, setConditions] = useState([]);
   const [locations, setLocations] = useState([]);
 
-  // Fetch preset options for category, condition, and location
   useEffect(() => {
     axios.get('http://3.87.240.14:8000/api/product-choices/', {
       headers: {
@@ -29,7 +28,6 @@ function CreateListing() {
     })
       .then(response => {
         const { categories, conditions, locations } = response.data;
-        console.log(response.data)
         setCategories(categories);
         setConditions(conditions);
         setLocations(locations);
@@ -41,7 +39,6 @@ function CreateListing() {
     const { name, value } = event.target;
 
     if (name === 'price') {
-      // Allow only numbers with up to two decimal places
       const validPrice = value.match(/^\d*(\.\d{0,2})?$/);
       if (validPrice) {
         setFormData({
@@ -63,15 +60,12 @@ function CreateListing() {
     const payload = {
       name: formData.name,
       price: parseFloat(formData.price),
-      category: formData.category.value, // Extracting value from the category object
-      condition: formData.condition.value, // Extracting value from the condition object
-      pickup_location: formData.location.value, // Extracting value from the location object
+      category: formData.category.value,
+      condition: formData.condition.value,
+      pickup_location: formData.location.value,
       description: formData.description
     };
 
-    console.log(payload);
-
-    // Submit the form data to the backend
     axios.post('http://3.87.240.14:8000/api/products/', payload, {
       headers: {
         'Authorization': `Token ${token}`,
@@ -80,7 +74,6 @@ function CreateListing() {
     })
       .then(response => {
         console.log('Product added:', response.data);
-        // Handle success (e.g., redirect or reset form)
       })
       .catch(error => console.error('Error adding product:', error));
   };

@@ -1,13 +1,17 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import './Products.css';
 import { Link } from 'react-router-dom';
+
+import IconButton from "@mui/material/IconButton";
+import SearchIcon from "@mui/icons-material/Search";
+import MessageIcon from '@mui/icons-material/Message';
+import TextField from "@mui/material/TextField";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
   const token = localStorage.getItem('authToken');
 
   useEffect(() => {
-    // Fetch products from the API
     fetch('http://3.87.240.14:8000/api/products/', {
       headers: {
         'Authorization': `Token ${token}`,
@@ -19,7 +23,8 @@ const Products = () => {
   }, []);
 
   return (
-    <div>
+    <div className="products-container">
+      {/*
       <h2>Products</h2>
       <Link to="/products/create">
             <button className="button">Create Listing</button>
@@ -31,6 +36,13 @@ const Products = () => {
           </li>
         ))}
       </ul>
+        */}
+        <div className="filters">
+          filters
+        </div>
+        <div className="products">
+          products
+        </div>
     </div>
   );
 };
