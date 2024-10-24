@@ -148,7 +148,9 @@ const Products = () => {
               min={0}
               max={500}
               step={10}
-              valueLabelFormat={(value) => (value === 500 ? '500+' : value)}
+              marks={[
+                { value: 500, label: '500+' }
+              ]}
             />
           </FormControl>
 
