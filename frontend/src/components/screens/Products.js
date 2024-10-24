@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import './Products.css';
-import { Select, MenuItem, FormControl, InputLabel, Slider, Typography } from '@mui/material';
+import { Select, MenuItem, FormControl, InputLabel, Slider, Typography, Button } from '@mui/material';
 import axios from 'axios';
 
 const Products = () => {
@@ -18,45 +18,47 @@ const Products = () => {
   const token = localStorage.getItem('authToken');
 
   const filteredProducts = products
-
-  .filter(product => {
-    if (selectedCategory) {
-      return product.category === selectedCategory.value;
-    }
-    return true;
-  })
-
-  .filter(product => {
-    if (selectedCondition) {
-      return product.condition === selectedCondition.value;
-    }
-    return true;
-  })
-
-  .filter(product => {
-    if (selectedLocation) {
-      return product.pickup_location === selectedLocation.value;
-    }
-    return true;
-  })
-
-  .filter(product => {
-    if (maxPrice === 500) {
+    .filter(product => {
+      if (selectedCategory) {
+        return product.category === selectedCategory.value;
+      }
       return true;
-    }
-    return product.price <= maxPrice;
-  })
-
-  .sort((a, b) => {
-    if (sortOption === 'priceAsc') {
-      return a.price - b.price;
-    } else if (sortOption === 'priceDesc') {
-      return b.price - a.price;
-    } else if (sortOption === 'nameAsc') {
-      return a.name.localeCompare(b.name);
-    }
-    return 0;
+    })
+    .filter(product => {
+      if (selectedCondition) {
+        return product.condition === selectedCondition.value;
+      }
+      return true;
+    })
+    .filter(product => {
+      if (selectedLocation) {
+        return product.pickup_location === selectedLocation.value;
+      }
+      return true;
+    })
+    .filter(product => {
+      if (maxPrice === 500) {
+        return true;
+      }
+      return product.price <= maxPrice;
+    })
+    .sort((a, b) => {
+      if (sortOption === 'priceAsc') {
+        return a.price - b.price;
+      } else if (sortOption === 'priceDesc') {
+        return b.price - a.price;
+      } else if (sortOption === 'nameAsc') {
+        return a.name.localeCompare(b.name);
+      }
+      return 0;
   });
+
+  const clearFilters = () => {
+    setSelectedCategory('');
+    setSelectedCondition('');
+    setSelectedLocation('');
+    setMaxPrice(500);
+  }
 
   useEffect(() => {
     fetch('http://3.87.240.14:8000/api/products/', {
@@ -151,8 +153,15 @@ const Products = () => {
               marks={[
                 { value: 500, label: '500+' }
               ]}
+              sx={{
+                color: "#001f3f"
+              }}
             />
           </FormControl>
+
+          <Button onClick={() => {clearFilters()}} variant="outlined">
+            Clear Filters
+          </Button>
 
         </div>
         <div className="product-grid">
