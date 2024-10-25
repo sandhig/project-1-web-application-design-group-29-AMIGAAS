@@ -53,7 +53,7 @@ function Header() {
       <div className="header">
         <div className="logo-container">
           <Link to="/products">
-            <img className="header-logo" src="images/logo-white.png"></img>
+            <img className="header-logo" src="/images/logo-white.png"></img>
           </Link>
           <div className="site-title">Too Good To Throw</div>
         </div>
@@ -84,7 +84,7 @@ function Header() {
           <IconButton aria-label="message" onClick={handleLogout}>
               <LogoutIcon style={{ fill: "white", fontSize: "larger" }} />
             </IconButton>
-          <img className="header-profile" src="images/profile.png"></img>
+          <img className="header-profile" src="/images/profile.png"></img>
         </div>
       </div>
     );

@@ -21,8 +21,6 @@ const ProductListing = () => {
         setIsFavorited(prev => !prev);
     };
 
-    console.log(product)
-
     return (
         <div className="listing-page-container">
             <Link to="/products" style={{ width: "fit-content" }}>
@@ -38,7 +36,7 @@ const ProductListing = () => {
                     <span className="listing-details">
                         <div className="listing-header">
                             <div className="listing-title">{product.name}</div>
-                            <IconButton aria-label="favourite" onClick={handleToggleFavorite}>
+                            <IconButton aria-label="favourite" onClick={handleToggleFavorite} style={{height: "fit-content", width: "fit-content" }}>
                                 {isFavorited ? <FavoriteIcon /> : <FavoriteBorderIcon />}
                             </IconButton>
                         </div>
@@ -55,8 +53,7 @@ const ProductListing = () => {
                         </div>
                         <hr></hr>
                         <h2>Seller information</h2>
-                        <div>{product.user.first_name} {product.user.last_name}</div>
-                        <div>{product.user.email}</div>
+                        <div>{product.user.first_name} {product.user.last_name} ({product.user.email})</div>
                     </span>
                 </div>
             ) : (
