@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import {Link} from 'react-router-dom'; 
 import './Header.css'
-import LogoutButton from './UsersLogOut';
+import LogoutButton from './screens/UsersLogOut';
 import { useUser } from '../context/UserContext';
 
 function Header() {

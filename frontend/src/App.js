@@ -2,10 +2,10 @@ import './App.css';
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 
-import UserProfile from './components/UserProfile';
-import PrivateMessage from './components/PrivateMessaging';
-import Products from './components/Products';
-import CreateListing from './components/CreateListing';
+import UserProfile from './components/screens/UserProfile';
+import PrivateMessage from './components/screens/PrivateMessaging';
+import Products from './components/screens/Products';
+import CreateListing from './components/screens/CreateListing';
 import UsersSignUp from "./components/screens/UsersSignUp";
 import UsersLogin from './components/screens/UsersLogin';
 import HomeScreen from "./components/screens/HomeScreen"; 

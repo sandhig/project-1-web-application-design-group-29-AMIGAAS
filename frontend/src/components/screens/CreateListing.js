@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import './CreateListing.css'
-import './UploadAndDisplayImage.js'
-import UploadAndDisplayImage from "./UploadAndDisplayImage.js";
+import '../UploadAndDisplayImage.js'
+import UploadAndDisplayImage from "../UploadAndDisplayImage.js";
 
 const CreateListing = () => {
   const [products, setProducts] = useState([]);
