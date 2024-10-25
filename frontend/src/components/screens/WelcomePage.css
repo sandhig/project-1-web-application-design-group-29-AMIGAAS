@@ -15,8 +15,9 @@
 }
 
 .website-name {
-    font-size: 2rem;
-    color: navy;  /* Navy blue for consistency with your theme */
+    font-family: 'Georgia', 'Times New Roman', serif;
+    font-size: 2.5rem;
+    color: #00204E;  /* Navy blue for consistency with your theme */
     margin-bottom: 40px;
 }
 
@@ -29,13 +30,14 @@
     padding: 10px 20px;
     font-size: 1rem;
     color: #fff;
-    background-color: navy;
+    background-color:  #00204E;
     border: none;
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s ease;
+    font-family:Georgia, 'Times New Roman', serif;
 }
 
 .welcome-button:hover {
-    background-color: #003366;  /* Darker shade of navy on hover */
+    background-color:#001737;  /* Darker shade of navy on hover */
 }

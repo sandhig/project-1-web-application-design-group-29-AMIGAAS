@@ -83,13 +83,13 @@ def get_current_user(request):
         'last_name': user.last_name,
     })
 
-# @api_view(['GET'])
-# @authentication_classes([TokenAuthentication])
-# @permission_classes([IsAuthenticated])
-# def get_profile (request, userId):
-#     profile = get_object_or_404(Profile, user__id=userId)
-#     serializer = ProfilesSerializer(profile)
-#     return Response(serializer.data)
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_profile (request, userId):
+    profile = get_object_or_404(Profile, user__id=userId)
+    serializer = ProfilesSerializer(profile)
+    return Response(serializer.data)
 
 
 @api_view(['POST'])
