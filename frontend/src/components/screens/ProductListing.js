@@ -25,7 +25,7 @@ const ProductListing = () => {
 
     return (
         <div className="listing-page-container">
-            <Link to="/products">
+            <Link to="/products" style={{ width: "fit-content" }}>
                 <IconButton type="submit" aria-label="back" className="back-to-listings">
                     <ArrowBackIcon style={{ fill: "grey", fontSize: "medium" }} />
                     <div>Back to listings</div>
