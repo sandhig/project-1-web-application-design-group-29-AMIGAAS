@@ -188,7 +188,10 @@ const Products = () => {
             {filteredProducts.map(product => (
               <div key={product.id} className="product-item">
                 <Link to="/products/listing" state={{ product }}>
-                  <img className="product-image" src={product.image_url}></img>
+                  {product.image_url ? 
+                  (<img className="product-image" src={product.image_url}></img>) 
+                  : <img className="product-image" src="/images/no-image-icon.png"></img>}
+                  
                   <div className="product-text">
                     <div className="product-price">${product.price}</div>
                     <div className="product-title">{product.name}</div>
