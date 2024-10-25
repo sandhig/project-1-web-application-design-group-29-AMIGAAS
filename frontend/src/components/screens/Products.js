@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import './Products.css';
 import { Select, MenuItem, FormControl, InputLabel, Slider, Typography, Button } from '@mui/material';
 import axios from 'axios';
+import {Link} from 'react-router-dom'; 
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -13,7 +14,7 @@ const Products = () => {
   const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedCondition, setSelectedCondition] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('');
-  const [maxPrice, setMaxPrice] = useState(100);
+  const [maxPrice, setMaxPrice] = useState(500);
 
   const token = localStorage.getItem('authToken');
 
@@ -186,12 +187,14 @@ const Products = () => {
           <div className="products">
             {filteredProducts.map(product => (
               <div key={product.id} className="product-item">
-                <img className="product-image" src={product.image_url}></img>
-                <div className="product-text">
-                  <div className="product-price">${product.price}</div>
-                  <div className="product-title">{product.name}</div>
-                  <div className="product-location">{product.pickup_location}</div>
-                </div>
+                <Link to="/products/listing" state={{ product }}>
+                  <img className="product-image" src={product.image_url}></img>
+                  <div className="product-text">
+                    <div className="product-price">${product.price}</div>
+                    <div className="product-title">{product.name}</div>
+                    <div className="product-location">{product.pickup_location}</div>
+                  </div>
+                </Link>
               </div>
             ))}
           </div>

@@ -13,6 +13,7 @@ import EmailVerification from './components/screens/EmailVerification';
 import Header from "./components/Header"; 
 import PrivateRoute from './components/PrivateRoute';
 import { UserProvider } from './context/UserContext';
+import ProductListing from './components/screens/ProductListing';
 
 function App() {
 
@@ -33,6 +34,7 @@ function App() {
               {/* Protected pages */}
               <Route path = "/" element={<PrivateRoute element={<HomeScreen />} />}></Route>
               <Route path="/products" element={<PrivateRoute element={<Products />} />} />
+              <Route path="/products/listing" element={<PrivateRoute element={<ProductListing />} />} />
               <Route path="/products/create" element={<PrivateRoute element={<CreateListing />} />} />
               <Route path="/user/:userId" element={<PrivateRoute element={<UserProfile />} />} />
               <Route path="/messages" element={<PrivateRoute element={<PrivateMessage />} />} />

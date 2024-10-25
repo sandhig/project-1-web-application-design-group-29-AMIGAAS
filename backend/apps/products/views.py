@@ -34,11 +34,11 @@ def get_product_choices(request):
 class ProductAPIView(APIView):
     def get(self, request, key=None):
         if key:
-            product = get_object_or_404(Product, key=key)
+            product = get_object_or_404(Product.objects.select_related('user'), key=key)
             serializer = ProductSerializer(product)
             return Response(serializer.data)
         else:
-            products = Product.objects.all()
+            products = Product.objects.select_related('user').all()
             serializer = ProductSerializer(products, many=True)
             return Response(serializer.data)
 
