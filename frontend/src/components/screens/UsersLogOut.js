@@ -9,7 +9,7 @@ const LogoutButton = () => {
   const handleLogout = () => {
     localStorage.removeItem('authToken');
     setCurrentUser(null);
-    navigate('/profiles/login');
+    navigate('/');
   };
 
   return (

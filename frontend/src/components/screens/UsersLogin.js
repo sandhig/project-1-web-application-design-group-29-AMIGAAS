@@ -1,15 +1,18 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 const UsersLogin = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
+
   
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
     setFormData({
@@ -32,6 +35,9 @@ const UsersLogin = () => {
         
         setSuccessMessage('Login successful!');
         setErrorMessage('');
+        setTimeout(() => {
+          navigate('/homepage');  // Redirects to verify-email page
+        }, 2000);  // Adjust the timeout duration as needed
         // Optionally, you could store a token or session data here
       }
     } catch (error) {
