@@ -3,6 +3,7 @@ import './Products.css';
 import { Select, MenuItem, FormControl, InputLabel, Slider, Typography, Button } from '@mui/material';
 import axios from 'axios';
 import {Link} from 'react-router-dom'; 
+import { useUser } from '../../context/UserContext';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -17,6 +18,7 @@ const Products = () => {
   const [maxPrice, setMaxPrice] = useState(500);
 
   const token = localStorage.getItem('authToken');
+  const { currentUser } = useUser();
 
   const filteredProducts = products
     .filter(product => {
@@ -59,6 +61,18 @@ const Products = () => {
     setSelectedCondition('');
     setSelectedLocation('');
     setMaxPrice(500);
+  }
+
+  const hour = parseInt(new Date().getHours());
+  let greeting = '';
+  if (5 <= hour && hour <= 11) {
+    greeting = 'Good morning';
+  } else if (12 <= hour && hour <= 17) {
+    greeting = 'Good afternoon';
+  } else if (18 <= hour && hour <= 20) {
+    greeting = 'Good evening';
+  } else if ((21 <= hour && hour <= 23) || hour <= 4) {
+    greeting = 'Welcome back';
   }
 
   useEffect(() => {
@@ -166,9 +180,11 @@ const Products = () => {
 
         </div>
         <div className="product-grid">
+          {currentUser ? (<h1 style={{textAlign: "left", padding: "0 45px", margin: "35px 0 0 0"}}>{greeting}, {currentUser.first_name}</h1>) : null}
+          
 
           <div className="title">
-            <h1>Featured listings</h1>
+            <h2>Featured listings</h2>
             <FormControl className="sort-by" variant="outlined">
               <InputLabel id="sort-label">Sort By</InputLabel>
               <Select
@@ -183,7 +199,6 @@ const Products = () => {
               </Select>
             </FormControl>
           </div>
-
           <div className="products">
             {filteredProducts.map(product => (
               <div key={product.id} className="product-item">

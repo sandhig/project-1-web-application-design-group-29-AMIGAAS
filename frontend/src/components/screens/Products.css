@@ -31,11 +31,13 @@
 .title {
     display: flex;
     flex-direction: row;
+    align-items: center;
     padding: 10px 30px 0 45px;
 }
 
 .sort-by {
     width: 200px;
+    height: 55px;
     margin: 20px !important;
     margin-left: auto !important;
     background-color: white;

@@ -44,7 +44,7 @@ const ProductListing = () => {
                         <div className="listing-price">${product.price}</div>
                         {days === 0 ? (<p>Listed today</p>) : <p>Listed {days} days ago</p>}
                         <hr></hr>
-                        <h2>Product details</h2>
+                        <h2 style={{margin: "0"}}>Product details</h2>
                         <div className="listing-description">{product.description}</div>
                         <div className="listing-categories">
                             <div className="listing-category">{product.category}</div>
@@ -52,7 +52,7 @@ const ProductListing = () => {
                             <div><span style={{ fontWeight: "bold" }}>Pickup location:</span> {product.pickup_location}</div>
                         </div>
                         <hr></hr>
-                        <h2>Seller information</h2>
+                        <h2 style={{margin: "0"}}>Seller information</h2>
                         <div>{product.user.first_name} {product.user.last_name} ({product.user.email})</div>
                     </span>
                 </div>
