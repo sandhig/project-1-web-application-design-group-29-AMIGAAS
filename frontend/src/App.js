@@ -1,6 +1,7 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
 
 import UserProfile from './components/screens/UserProfile';
 import PrivateMessage from './components/screens/PrivateMessaging';
@@ -32,7 +33,8 @@ function App() {
               <Route path = "/profiles/login" element={<UsersLogin/>}></Route>
 
               {/* Protected pages */}
-              <Route path = "/" element={<PrivateRoute element={<HomeScreen />} />}></Route>
+              {/*<Route path = "/" element={<PrivateRoute element={<HomeScreen />} />}></Route>*/}
+              <Route path="/" element={<Navigate to="/products" replace />} />
               <Route path="/products" element={<PrivateRoute element={<Products />} />} />
               <Route path="/products/listing" element={<PrivateRoute element={<ProductListing />} />} />
               <Route path="/products/create" element={<PrivateRoute element={<CreateListing />} />} />
