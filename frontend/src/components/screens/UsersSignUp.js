@@ -48,7 +48,7 @@ const UsersSignUp = () => {
         setErrorMessage('');
 
         setTimeout(() => {
-          navigate('/users/verify-email');  // Redirects to verify-email page
+          navigate('/profiles/verify-email');  // Redirects to verify-email page
         }, 2000);  // Adjust the timeout duration as needed
       }
     } catch (error) {

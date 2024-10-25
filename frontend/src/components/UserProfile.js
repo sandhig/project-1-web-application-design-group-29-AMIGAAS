@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useUser } from '../context/UserContext';
+//import placeholderImage from '../public/profile-icon.jpg';
+
 
 function UserProfile() {
     const { userId } = useParams();
@@ -8,7 +10,6 @@ function UserProfile() {
     const navigate = useNavigate();
 
     const { currentUser } = useUser();
-
     const token = localStorage.getItem('authToken');
 
     useEffect(() => {
@@ -23,10 +24,16 @@ function UserProfile() {
             .then(response => response.json())
             .then(data => setUser(data));
         }
-    }, [userId]);
+    }, [userId, currentUser, token]);
+    
+    console.log(userId, currentUser.id)
 
     const handleMessageMe = () => {
         navigate(`/messages?userId=${userId}`);
+    };
+
+    const handleEditProfile = () => {
+        navigate(`/profiles/edit-profile`);
     };
 
     if (!user) {
@@ -34,11 +41,34 @@ function UserProfile() {
     }
 
     return (
-        <div>
-            <h1>{user.first_name}</h1>
-            {parseInt(currentUser.id) !== parseInt(user.id) && (
-                <button onClick={handleMessageMe}>Message Me</button>
-            )}
+        <div className="profile-container">
+            
+            <div className="profile-header">
+                <div className="profile-icon">
+                    <img src = "/profile-icon.jpg"></img>
+                </div>
+                <div className="profile-info">
+                    <h2>{user.first_name} {user.last_name}</h2>
+                    <p>{user.email}</p>
+                </div>
+            </div>
+
+            <div className="profile-bio">
+                <h3>Bio</h3>
+                <p>{user.bio || "This user hasn't added a bio yet."}</p>
+            </div>
+
+            <div>  
+                {parseInt(currentUser.id) !== parseInt(userId) && (
+                    <button onClick={handleMessageMe}>Message Me</button>
+                )}
+            </div>
+            
+            <div>
+                {parseInt(currentUser.id) == parseInt(userId) && (
+                    <button onClick={handleEditProfile}>Edit Profile</button>
+                )}
+            </div>
         </div>
     );
 }
