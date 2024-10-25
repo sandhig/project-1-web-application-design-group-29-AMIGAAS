@@ -13,6 +13,7 @@ import EmailVerification from './components/screens/EmailVerification';
 import Header from "./components/Header"; 
 import PrivateRoute from './components/PrivateRoute';
 import { UserProvider } from './context/UserContext';
+import WelcomePage from './components/screens/WelcomePage';
 
 function App() {
 
@@ -24,12 +25,13 @@ function App() {
     
             <Routes>
               {/* Public pages */}
+              <Route path = "/" element={<WelcomePage/>}></Route>
               <Route path = "/profiles/signup" element={<UsersSignUp/>}></Route>
               <Route path = "/profiles/verify-email" element={<EmailVerification/>}></Route>
               <Route path = "/profiles/login" element={<UsersLogin/>}></Route>
 
               {/* Protected pages */}
-              <Route path = "/" element={<PrivateRoute element={<HomeScreen />} />}></Route>
+              <Route path = "/homepage" element={<PrivateRoute element={<HomeScreen />} />}></Route>
               <Route path="/products" element={<PrivateRoute element={<Products />} />} />
               <Route path="/products/create" element={<PrivateRoute element={<CreateListing />} />} />
               <Route path="/user/:userId" element={<PrivateRoute element={<UserProfile />} />} />

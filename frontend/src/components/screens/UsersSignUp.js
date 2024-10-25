@@ -102,7 +102,7 @@ const UsersSignUp = () => {
             required
           />
         </div>
-        <button type="submit">Sign In</button>
+        <button type="submit">Sign Up</button>
       </form>
       <p> 
           Already User? 

@@ -37,7 +37,7 @@ function Header() {
     return (
         <header className="header">
             <div className="logo">
-                <Link to="/">UofT's Too Good To Throw</Link>  
+                <Link to="/homepage">UofT's Too Good To Throw</Link>  
             </div>
             <nav>
                 <ul className="nav-links">
