@@ -11,10 +11,11 @@ class ProfilesSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(source='user.first_name')
     last_name = serializers.CharField(source='user.last_name')
     password = serializers.CharField(write_only=True, source='user.password')
+    bio = serializers.CharField()
 
     class Meta:
         model = Profile
-        fields = ['user_id', 'email', 'first_name', 'last_name', 'password']
+        fields = ['user_id', 'email', 'first_name', 'last_name', 'password', 'bio']
 
     def validate_email(self, value):
         if '@mail.utoronto.ca' not in value:

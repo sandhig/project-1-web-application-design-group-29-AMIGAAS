@@ -9,6 +9,7 @@ class Profile(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     is_verified = models.BooleanField(default=False)
     verification_code = models.CharField(max_length=6, null=True, blank=True)
+    bio = models.CharField(max_length=500,null=True, blank=True)
 
     def __str__(self):
         return self.user.email
