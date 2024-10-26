@@ -8,6 +8,7 @@ function EditProfile() {
         last_name: '',
         bio: '',
     });
+    const [successMessage, setSuccessMessage] = useState('');
     const navigate = useNavigate();
     const { currentUser } = useUser();
     const token = localStorage.getItem('authToken');
@@ -25,9 +26,9 @@ function EditProfile() {
             .then(response => response.json())
             .then(data => {
                 setProfile({
-                    first_name: data.first_name,
-                    last_name: data.last_name,
-                    bio: data.bio,
+                    first_name: data.first_name || '',
+                    last_name: data.last_name || '',
+                    bio: data.bio || '',
                 });
             })
             .catch(error => console.error('Error fetching profile:', error));
@@ -55,6 +56,8 @@ function EditProfile() {
         })
         .then(response => {
             if (response.ok) {
+                setSuccessMessage('Profile saved successfully!'); // Set success message
+                setTimeout(() => setSuccessMessage(''), 3000); // Clear message after 3 seconds
                 navigate(`/profile/${currentUser.id}`);
             } else {
                 console.error('Error saving profile:', response.statusText);
