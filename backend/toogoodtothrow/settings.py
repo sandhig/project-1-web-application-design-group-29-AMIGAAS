@@ -40,7 +40,8 @@ INSTALLED_APPS = [
     'corsheaders',
     'channels',
     'apps.private_messaging',
-    'rest_framework'
+    'rest_framework',
+    'apps.products'  # the products app here
 ]
 
 MIDDLEWARE = [

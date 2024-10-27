@@ -2,19 +2,17 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import UserProfile from './components/UserProfile';
 import PrivateMessage from './components/PrivateMessaging';
+import Products from './components/Products';
+
 
 function App() {
-    const currentUserId = 1; // Hardcoded for now
 
     return (
-        <Router>
-            <Routes>
-                <Route path="/" element={<HomePage currentUserId={currentUserId} />} />
-                <Route path="/user/:userId" element={<UserProfile currentUserId={currentUserId} />} />
-                <Route path="/messages" element={<PrivateMessage currentUserId={currentUserId} />} />
-            </Routes>
-        </Router>
-    );
+        <div className="App">
+          <Products />
+        </div>
+      );
+
 }
 
 function HomePage({ currentUserId }) {
