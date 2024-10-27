@@ -94,7 +94,7 @@ class ProductModeltests(TestCase):
     
 
     def test_name_max_length_over_limit(self):
-        name = 'Random Long Input - Fcgjhkbcxfghkbvgfgyihbgxfgb hvhcxbcguhkbhvchgjvhjlbvguh dfguhjkcftuhkhgxdtygihibvcgxf gyhbhvhcfdtyygkjbhvghljnbvjghkj cfghbjhgvfcgvkbhjvcgxddygvofhbmb cghkjbmnfcghlcfgchygftyvgujbva Cgvhkjbmvgvhkjbhcfhgyujbvgiggvh jhkjbhcgyhkjbmvghjkhvguhjvhjkm'
+        name = 'Long Input' + 'x' * 255
         self.assertLessEqual(255, len(name))
         product = self.create_invalid_product_inavlid_choice('name', name)
         with self.assertRaises(ValidationError):
@@ -103,14 +103,14 @@ class ProductModeltests(TestCase):
 
 
     # Pricing values and decimal tests
-    def test_invalid_price_decimals(self):
-        product = self.create_invalid_product_inavlid_choice('price', Decimal("12345123456.12"))
+    def test_invalid_price_range(self):
+        product = self.create_invalid_product_inavlid_choice('price', Decimal("123456789.10"))
         with self.assertRaises(ValidationError):
             product.full_clean() #Triggers validation
         print("Test: Invalid Price Decimals - PASS")
 
 
-    def test_invalid_price_range(self):
+    def test_invalid_price_decimals(self):
         product = self.create_invalid_product_inavlid_choice('price', Decimal("1234.567"))
         with self.assertRaises(ValidationError):
             product.full_clean() #Triggers validation
@@ -249,6 +249,52 @@ class ProductModeltests(TestCase):
             except ValidationError:
                 self.fail(f"{location} should be a valid choice for category")
         print('Test: Valid Location Choice - PASS')
+
+    
+    def test_duplicate_product_name_coexists(self):
+        product = self.create_valid_product()
+        duplicate_product = Product(
+            user=self.user,
+            name=product.name,
+            category="Furniture",
+            price=Decimal("70.00"),
+            condition="Good",
+            pickup_location="Bahen"
+        )
+        duplicate_product.save()
+        self.assertEqual(Product.objects.filter(name=product.name).count(), 2)
+        print('Test: Duplicate Product Name Coexists - PASS')
+
+    
+    # Edge Case Tests
+    def test_name_max_length_boundary(self):
+        product = self.create_valid_product()
+        product.name = 'x' * 255
+        try:
+            product.full_clean()  # Should not raise errors
+        except ValidationError:
+            self.fail("Product name of 255 characters should be valid")
+        print('Test: Edge Case - Name Boundary - PASS')
+        
+    
+    def test_price_boundary_values(self):
+        product = self.create_valid_product()
+
+        # Test minimum price
+        product.price = Decimal("0.01")
+        try:
+            product.full_clean()  # Should not raise errors
+        except ValidationError:
+            self.fail("Price of 0.01 should be valid")
+
+        # Test maximum price
+        product.price = Decimal("99999999.99")
+        try:
+            product.full_clean()  # Should not raise errors
+        except ValidationError:
+            self.fail("Price of 99999999.99 should be valid")
+        
+        print('Test: Edge Case - Price Boundary - PASS')
 
 
 
