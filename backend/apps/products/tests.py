@@ -6,7 +6,6 @@ from django.core.exceptions import ValidationError
 
 # Create your tests here.
 class ProductModeltests(TestCase):
-    INVALID_LENGTH_INPUT = 'Awsexfcgjhkbcxfghkbvgfgyihbgxfgb hvhcxfgbfgbcguhkbhvchgjvhjlbvguh dfguhjkbhjvhcftuhkhgxdtygihibvcgxf gyhbhvhcfdtyfuygkjbhvghljnbvjghkj cfghbjhgvfcgvkbhjvcgxddygvofhbmb cghkjbmnfcghlcfgchygftyvgujbva Cgvhkjbmvgvhkjbhcfhgyujbvgiggvh jhkjbhcgyhkjbmvghjkhvguhjvhjkm'
     MISSING_FIELDS_ALLOWED = ['description', 'image']
     MISSING_FIELDS_NOT_ALLOWED = ['user', 'name', 'category', 'price', 'condition', 'pickup_location']
     
@@ -74,13 +73,34 @@ class ProductModeltests(TestCase):
         print("Test: Invalid Product Missing Field Allowed - ", result)
 
 
-    # Max Length Tests 
-    def test_name_max_length_within_limit(self):
+    # Name Max Length Tests 
+    def test_name_max_length(self):
         product = self.create_valid_product()
         max_length = product._meta.get_field('name').max_length
         self.assertEqual(max_length, 255)
         print("Test: Name Max Length Within Limit - PASS")
     
+
+    def test_name_max_length_within_limit(self):
+        product = self.create_valid_product()
+        name = 'Within Limit Test Name'
+        self.assertLessEqual(len(name), 255)
+        product.name = name
+        try:
+            product.full_clean()  # Should not raise errors
+        except ValidationError:
+            self.fail(f"{name} should be a within max length limit")
+        print('Test: Name Within Maximum Length')
+    
+
+    def test_name_max_length_over_limit(self):
+        name = 'Random Long Input - Fcgjhkbcxfghkbvgfgyihbgxfgb hvhcxbcguhkbhvchgjvhjlbvguh dfguhjkcftuhkhgxdtygihibvcgxf gyhbhvhcfdtyygkjbhvghljnbvjghkj cfghbjhgvfcgvkbhjvcgxddygvofhbmb cghkjbmnfcghlcfgchygftyvgujbva Cgvhkjbmvgvhkjbhcfhgyujbvgiggvh jhkjbhcgyhkjbmvghjkhvguhjvhjkm'
+        self.assertLessEqual(255, len(name))
+        product = self.create_invalid_product_inavlid_choice('name', name)
+        with self.assertRaises(ValidationError):
+            product.full_clean() # Triggers validation
+        print("Test: Name Over Maximum Limit - PASS")
+
 
     # Pricing values and decimal tests
     def test_invalid_price_decimals(self):
@@ -90,7 +110,7 @@ class ProductModeltests(TestCase):
         print("Test: Invalid Price Decimals - PASS")
 
 
-    def test_invalid_price_decimals(self):
+    def test_invalid_price_range(self):
         product = self.create_invalid_product_inavlid_choice('price', Decimal("1234.567"))
         with self.assertRaises(ValidationError):
             product.full_clean() #Triggers validation
@@ -192,7 +212,46 @@ class ProductModeltests(TestCase):
         # Verify that edited_at value is updated
         self.assertNotEqual(product.edited_at, original_edited_at)
         print('Test: Edited At Automatically Updated - PASS')
+    
+
+    # Database Integrity and Constraint Tests
+    def test_valid_category_choices(self):
+        product = self.create_valid_product()
+        valid_categories = [choice[0] for choice in Product.CATEGORY_CHOICES]
+        for category in valid_categories:
+            product.category = category
+            try:
+                product.full_clean()  # Should not raise errors
+            except ValidationError:
+                self.fail(f"{category} should be a valid choice for category")
+        print('Test: Valid Category Choice - PASS')
+    
+
+    def test_valid_condition_choices(self):
+        product = self.create_valid_product()
+        valid_conditions = [choice[0] for choice in Product.CONDITION_CHOICES]
+        for condition in valid_conditions:
+            product.condition = condition
+            try:
+                product.full_clean()  # Should not raise errors
+            except ValidationError:
+                self.fail(f"{condition} should be a valid choice for condition")
+        print('Test: Valid Condition Choice - PASS')
 
     
+    def test_valid_pickup_location_choices(self):
+        product = self.create_valid_product()
+        valid_locations = [choice[0] for choice in Product.LOCATION_CHOICES]
+        for location in valid_locations:
+            product.pickup_location = location
+            try:
+                product.full_clean()  # Should not raise errors
+            except ValidationError:
+                self.fail(f"{location} should be a valid choice for category")
+        print('Test: Valid Location Choice - PASS')
+
+
+
     
+
     
