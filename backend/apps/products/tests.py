@@ -9,6 +9,7 @@ class ProductModeltests(TestCase):
     INVALID_LENGTH_INPUT = 'Awsexfcgjhkbcxfghkbvgfgyihbgxfgb hvhcxfgbfgbcguhkbhvchgjvhjlbvguh dfguhjkbhjvhcftuhkhgxdtygihibvcgxf gyhbhvhcfdtyfuygkjbhvghljnbvjghkj cfghbjhgvfcgvkbhjvcgxddygvofhbmb cghkjbmnfcghlcfgchygftyvgujbva Cgvhkjbmvgvhkjbhcfhgyujbvgiggvh jhkjbhcgyhkjbmvghjkhvguhjvhjkm'
     MISSING_FIELDS_ALLOWED = ['description', 'image']
     MISSING_FIELDS_NOT_ALLOWED = ['user', 'name', 'category', 'price', 'condition', 'pickup_location']
+    
     # set up a new product object
     def setUp(self):
         # Create a user for ForeignKey relation
@@ -23,16 +24,6 @@ class ProductModeltests(TestCase):
             'description' : ' Description for valid test product',
             'image' : ''
         }
-        # self.product = None
-        # self.product = Product.objects.create(
-        #     user=  self.user,
-        #     name = 'Test Valid Product',
-        #     category = 'Textbook',
-        #     price = Decimal('50.00'),
-        #     condition = 'New',
-        #     pickup_location = 'Robarts',
-        #     description = ' Description for valid test product'
-        # )
     
 
     def create_valid_product(self):
@@ -58,7 +49,7 @@ class ProductModeltests(TestCase):
     def test_valid_product_creation(self):
         product = self.create_valid_product()
         self.assertIsNotNone(product.pk)
-        print("Test Case 1 : Test Valid Product Creation - PASS")
+        print("Test: Valid Product Creation - PASS")
     
 
     # Testing for invalid object creations (missing fields)
@@ -67,17 +58,20 @@ class ProductModeltests(TestCase):
             product = self.create_invalid_product_missing_fields(field=field)
             with self.assertRaises(ValidationError):
                 product.full_clean()  # Triggers validation
-        print("Test Case 2 : Test Invalid Product Missing Field Not Allowed - PASS")
+        print("Test: Invalid Product Missing Field Not Allowed - PASS")
     
 
     def test_inavlid_product_missing_field_allowed(self):
         for field in self.MISSING_FIELDS_ALLOWED:
+            result = ""
             try:
                 product = self.create_invalid_product_missing_fields(field=field)
                 product.full_clean() # should pass without raising validation
+                result = "PASS"
             except ValidationError:
                 self.fail("full_clean() raised Validation Error unexpectedly")
-        print("Test Case 3 : Test Invalid Product Missing Field Allowed - PASS")
+                result = "FAIl"
+        print("Test: Invalid Product Missing Field Allowed - ", result)
 
 
     # Max Length Tests 
@@ -85,7 +79,22 @@ class ProductModeltests(TestCase):
         product = self.create_valid_product()
         max_length = product._meta.get_field('name').max_length
         self.assertEqual(max_length, Product.CHAR_MAX_LENGTH)
-        print("Test Case 4 : Test Name Max Length Within Limit - PASS")
+        print("Test: Name Max Length Within Limit - PASS")
+    
+
+    # Pricing values and decimal tests
+    def test_invalid_price_decimals(self):
+        product = self.create_invalid_product_inavlid_choice('price', Decimal("12345123456.12"))
+        with self.assertRaises(ValidationError):
+            product.full_clean() #Triggers validation
+        print("Test: Invalid Price Decimals - PASS")
+
+
+    def test_invalid_price_decimals(self):
+        product = self.create_invalid_product_inavlid_choice('price', Decimal("1234.567"))
+        with self.assertRaises(ValidationError):
+            product.full_clean() #Triggers validation
+        print("Test: Invalid Price Decimals - PASS")
 
 
     # Invalid Choices Tests
@@ -93,19 +102,55 @@ class ProductModeltests(TestCase):
         product = self.create_invalid_product_inavlid_choice(field='category', invalid_choice="Invalid Category")
         with self.assertRaises(ValidationError):
             product.full_clean() # Triggers validation
-        print("Test Case 5 : Test Invalid Category Choice - PASS")
+        print("Test: Invalid Category Choice - PASS")
         
     
-
     def test_invalid_condition_choice(self):
         product = self.create_invalid_product_inavlid_choice(field='condition', invalid_choice="Invalid Condition")
         with self.assertRaises(ValidationError):
             product.full_clean() # Triggers validation
-        print("Test Case 6 : Test Invalid Condition Choice - PASS")
+        print("Test: Invalid Condition Choice - PASS")
             
 
     def test_invalid_pickup_location_choice(self):
         product = self.create_invalid_product_inavlid_choice(field='pickup_location', invalid_choice="Invalid Pick-up Location")
         with self.assertRaises(ValidationError):
             product.full_clean() # Triggers validation
-        print("Test Case 7 : Test Invalid Pick-up Location Choice - PASS")
+        print("Test : Invalid Pick-up Location Choice - PASS")
+    
+    # Blank and Null Fields Tests
+    def test_description_is_blank(self):
+        product = self.create_valid_product()
+        product.description = ""
+        try: 
+            product.full_clean() # Should pass without errors
+            print("Test: Description is Blank - PASS")
+        except ValidationError:
+            self.fail("Product description should allow blank values")
+    
+
+    def test_image_is_null(self):
+        product = self.create_valid_product()
+        product.image = None
+        try: 
+            product.full_clean() # Should pass without errors
+            print("Test: Description is Blank - PASS")
+        except ValidationError:
+            self.fail("Product image should allow null values")
+
+    
+    # Model Relationship Tests
+    def test_product_user_relationship(self):
+        product = self.create_valid_product()
+        self.assertEqual(product.user, self.user)
+        print("Test: Product User Relationship - PASS")
+    
+    
+    def test_product_deletion_on_user_delete(self):
+        product = self.create_valid_product()
+        self.assertTrue(Product.objects.filter(id=product.id).exists())  # verify product exists in database
+        self.user.delete()  # Delete the user
+        self.assertFalse(Product.objects.filter(id=product.id).exists(), "Product should be deleted when the user is deleted")
+        print('Test: Product Deletion on User Deletion - PASS')
+
+    
