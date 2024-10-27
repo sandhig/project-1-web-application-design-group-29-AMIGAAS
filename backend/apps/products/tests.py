@@ -23,7 +23,7 @@ class ProductModeltests(TestCase):
             'description' : ' Description for valid test product',
             'image' : ''
         }
-        self.product = None
+        # self.product = None
         # self.product = Product.objects.create(
         #     user=  self.user,
         #     name = 'Test Valid Product',
@@ -34,31 +34,42 @@ class ProductModeltests(TestCase):
         #     description = ' Description for valid test product'
         # )
     
+
     def create_valid_product(self):
         """ Helper method to create a valid product"""
         return Product.objects.create(**self.valid_product_data)
     
+
     def create_invalid_product_missing_fields(self, field):
         """ Helper method to create a product with missing required fields """
         data = self.valid_product_data.copy()
         data.pop(field) # Remove field to simulate a missing field
         return Product(**data) # Avoid changes to skip validation errors
     
+
+    def create_invalid_product_inavlid_choice(self, field, invalid_choice):
+        """ Helper method to create a product with invalid choice for a given field """
+        data = self.valid_product_data.copy()
+        data[field] = invalid_choice 
+        return Product(**data) # Avoid changes to skip validation errors
+    
+
     # Testing for valid object creation
     def test_valid_product_creation(self):
         product = self.create_valid_product()
         self.assertIsNotNone(product.pk)
         print("Test Case 1 : Test Valid Product Creation - PASS")
     
+
     # Testing for invalid object creations (missing fields)
     def test_invalid_product_missing_field_not_allowed(self):
         for field in self.MISSING_FIELDS_NOT_ALLOWED:
-            print('-- Testing on ', field)
             product = self.create_invalid_product_missing_fields(field=field)
             with self.assertRaises(ValidationError):
                 product.full_clean()  # Triggers validation
         print("Test Case 2 : Test Invalid Product Missing Field Not Allowed - PASS")
     
+
     def test_inavlid_product_missing_field_allowed(self):
         for field in self.MISSING_FIELDS_ALLOWED:
             try:
@@ -66,7 +77,8 @@ class ProductModeltests(TestCase):
                 product.full_clean() # should pass without raising validation
             except ValidationError:
                 self.fail("full_clean() raised Validation Error unexpectedly")
-            print("Test Case 3 : Test Invalid Product Missing Field Allowed - PASS")
+        print("Test Case 3 : Test Invalid Product Missing Field Allowed - PASS")
+
 
     # Max Length Tests 
     def test_name_max_length_within_limit(self):
@@ -75,4 +87,25 @@ class ProductModeltests(TestCase):
         self.assertEqual(max_length, Product.CHAR_MAX_LENGTH)
         print("Test Case 4 : Test Name Max Length Within Limit - PASS")
 
-    # Field Type Tests
+
+    # Invalid Choices Tests
+    def test_invalid_category_choice(self):
+        product = self.create_invalid_product_inavlid_choice(field='category', invalid_choice="Invalid Category")
+        with self.assertRaises(ValidationError):
+            product.full_clean() # Triggers validation
+        print("Test Case 5 : Test Invalid Category Choice - PASS")
+        
+    
+
+    def test_invalid_condition_choice(self):
+        product = self.create_invalid_product_inavlid_choice(field='condition', invalid_choice="Invalid Condition")
+        with self.assertRaises(ValidationError):
+            product.full_clean() # Triggers validation
+        print("Test Case 6 : Test Invalid Condition Choice - PASS")
+            
+
+    def test_invalid_pickup_location_choice(self):
+        product = self.create_invalid_product_inavlid_choice(field='pickup_location', invalid_choice="Invalid Pick-up Location")
+        with self.assertRaises(ValidationError):
+            product.full_clean() # Triggers validation
+        print("Test Case 7 : Test Invalid Pick-up Location Choice - PASS")
