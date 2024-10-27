@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 
 class Product(models.Model):
+    # Constant values
+    CHAR_MAX_LENGTH = 255
+
     CATEGORY_CHOICES = [
         ('Textbook', 'Textbook'),
         ('Clothing', 'Clothing'),
@@ -28,11 +31,11 @@ class Product(models.Model):
     ]
 
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    name = models.CharField(max_length=255)
-    category = models.CharField(max_length=255, choices=CATEGORY_CHOICES)
+    name = models.CharField(max_length=CHAR_MAX_LENGTH)
+    category = models.CharField(max_length=CHAR_MAX_LENGTH, choices=CATEGORY_CHOICES)
     price = models.DecimalField(max_digits=10, decimal_places=2)
-    condition = models.CharField(max_length=255, choices=CONDITION_CHOICES)
-    pickup_location = models.CharField(max_length=255, choices=LOCATION_CHOICES)
+    condition = models.CharField(max_length=CHAR_MAX_LENGTH, choices=CONDITION_CHOICES)
+    pickup_location = models.CharField(max_length=CHAR_MAX_LENGTH, choices=LOCATION_CHOICES)
     description = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     edited_at = models.DateTimeField(auto_now=True)
