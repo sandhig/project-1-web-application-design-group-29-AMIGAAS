@@ -78,7 +78,7 @@ class ProductModeltests(TestCase):
     def test_name_max_length_within_limit(self):
         product = self.create_valid_product()
         max_length = product._meta.get_field('name').max_length
-        self.assertEqual(max_length, Product.CHAR_MAX_LENGTH)
+        self.assertEqual(max_length, 255)
         print("Test: Name Max Length Within Limit - PASS")
     
 
@@ -145,7 +145,7 @@ class ProductModeltests(TestCase):
         self.assertEqual(product.user, self.user)
         print("Test: Product User Relationship - PASS")
     
-    
+
     def test_product_deletion_on_user_delete(self):
         product = self.create_valid_product()
         self.assertTrue(Product.objects.filter(id=product.id).exists())  # verify product exists in database
@@ -153,4 +153,46 @@ class ProductModeltests(TestCase):
         self.assertFalse(Product.objects.filter(id=product.id).exists(), "Product should be deleted when the user is deleted")
         print('Test: Product Deletion on User Deletion - PASS')
 
+
+    # Custom Methods and Properties Tests
+    def test_product_str_method(self):
+        product = self.create_valid_product()
+        self.assertEqual(str(product), "Test Valid Product")
+        print('Test: Product __str__ Method - PASS')
+    
+    # TODO add test_image.jpg to AWS S3 bucket
+    # def test_image_url_properly_with_image(self):
+    #     product = self.create_valid_product()
+    #     product.image = 'images/test_image.jpg'
+    #     self.assertEqual(product.image_url, '/media/images/test_image.jpg')
+    #     print('Test: Image URL Property with Image - PASS')
+    
+    def test_image_url_property_without_image(self):
+        product = self.create_valid_product()
+        product.image = None
+        self.assertIsNone(product.image_url)
+        print('Test: Image URL Property without Image - PASS')
+
+
+    # Auto generated Date and Time Field Tests
+    def test_created_at_auto(self):
+        product = self.create_valid_product()
+        self.assertIsNotNone(product.created_at)
+        print('Test: Created At Automatically Generated - PASS')
+    
+
+    def test_edited_at_auto(self):
+        product=self.create_valid_product()
+        original_edited_at = product.edited_at 
+        
+        # Update the product to trigger a change in edited_at value
+        product.name = "Updated Test Product Name"
+        product.save()
+
+        # Verify that edited_at value is updated
+        self.assertNotEqual(product.edited_at, original_edited_at)
+        print('Test: Edited At Automatically Updated - PASS')
+
+    
+    
     
