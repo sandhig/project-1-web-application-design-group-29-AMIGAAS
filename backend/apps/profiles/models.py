@@ -3,6 +3,8 @@ from django.contrib.auth.models import User
 from django.contrib.auth.hashers import make_password, check_password
 from django.utils.crypto import get_random_string
 from django.contrib.auth.hashers import make_password, check_password
+from django.dispatch import receiver
+from django.db.models.signals import post_save
 
 
 class Profile(models.Model):
@@ -20,3 +22,4 @@ class Profile(models.Model):
         self.verification_code = code
         self.save()
         return code
+    

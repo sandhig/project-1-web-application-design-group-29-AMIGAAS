@@ -95,8 +95,8 @@ def get_profile (request, userId):
 @api_view(['POST'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def edit_profile(request, userId):
-    profile = get_object_or_404(Profile, user__id=userId)
+def edit_profile(request):
+    profile = get_object_or_404(Profile, user=request.user)
 
     if request.user.id != profile.user.id:
         return Response({'error': 'You are not authorized to edit this profile.'}, status=status.HTTP_403_FORBIDDEN)
