@@ -153,7 +153,7 @@ class ProductModeltests(TestCase):
         product = self.create_invalid_product_inavlid_choice(field='pickup_location', invalid_choice="Invalid Pick-up Location")
         with self.assertRaises(ValidationError):
             product.full_clean() # Triggers validation
-        print("Test : Invalid Pick-up Location Choice - PASS")
+        print("Test: Invalid Pick-up Location Choice - PASS")
     
     # Blank and Null Fields Tests
     def test_description_is_blank(self):
@@ -202,13 +202,14 @@ class ProductModeltests(TestCase):
         self.assertEqual(str(product), "Test Valid Product")
         print('Test: Product __str__ Method - PASS')
     
-    # # TODO add test_image.jpg to AWS S3 bucket
-    # """ Test that the correct url is returned for the image of a product """
-    # def test_image_url_properly_with_image(self):
-    #     product = self.create_valid_product()
-    #     product.image = 'images/test_image.jpg'
-    #     self.assertEqual(product.image_url, '/media/images/test_image.jpg')
-    #     print('Test: Image URL Property with Image - PASS')
+    # TODO add test_image.jpg to AWS S3 bucket
+    """ Test that the correct url is returned for the image of a product """
+    def test_image_url_properly_with_image(self):
+        media_root = 'https://ece444-s3-2.s3.amazonaws.com/'
+        product = self.create_valid_product()
+        product.image = 'images/test_image.jpg'
+        self.assertEqual(product.image_url, media_root + 'images/test_image.jpg')
+        print('Test: Image URL Property with Image - PASS')
     
     def test_image_url_property_without_image(self):
         """ Test that a null url is returned for an null image of a product """
@@ -379,13 +380,12 @@ class ProductUrlTests(TestCase):
         print('Test: Authenticated Users can access Product List - PASS')
 
 
-    # # TODO this test produces erors for url, "ProductAPIView.get() got an unexpected keyword argument 'pk'"
-    # def test_product_detail_authenticated_access(self):
-    #     """ Test that authenticated users can access 'product_detail' """
-    #     response = self.client.get(reverse('product_detail', kwargs={'pk' : self.product.id}))
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(response.data['name', self.product.name])
-    #     print('Test: Authenticated Users can access Product Detail - PASS')
+    def test_product_detail_authenticated_access(self):
+        """ Test that authenticated users can access 'product_detail' """
+        response = self.client.get(reverse('product_detail', kwargs={'pk' : self.product.id}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['name'], self.product.name)
+        print('Test: Authenticated Users can access Product Detail - PASS')
 
 
     def test_product_choices_authenticated_access(self):
@@ -459,13 +459,12 @@ class ProductViewTests(TestCase):
         print('Test: Get Product List Authenticated - PASS')
     
 
-    # # TODO: raises error - ProductAPIView.get() got an unexpected keyword argument 'pk'
-    # def test_get_product_detail_authenticated(self):
-    #     """Test that an authenticated user can get a product detail"""
-    #     response = self.client.get(self.product_detail_url)
-    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
-    #     self.assertEqual(response.data["name"], self.product.name)
-    #     print('Test: Get Product Detail Authenticated - PASS')
+    def test_get_product_detail_authenticated(self):
+        """Test that an authenticated user can get a product detail"""
+        response = self.client.get(self.product_detail_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data["name"], self.product.name)
+        print('Test: Get Product Detail Authenticated - PASS')
 
 
     def test_create_product_authenticated(self):
@@ -517,15 +516,14 @@ class ProductViewTests(TestCase):
         print('Test: Update Product with Image Authenticated - PASS')
 
 
-    # TODO: raises error -  ProductAPIView.get() got an unexpected keyword argument 'pk'
-    # def test_delete_product_authenticated(self):
-    #     """Test that an authenticated user can delete a product"""
-    #     response = self.client.delete(self.product_detail_url)
-    #     self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-    #     # Confirm product deletion
-    #     response = self.client.get(self.product_detail_url)
-    #     self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-    #     print('Test: Delete Product Authenticated - PASS')
+    def test_delete_product_authenticated(self):
+        """Test that an authenticated user can delete a product"""
+        response = self.client.delete(self.product_detail_url)
+        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
+        # Confirm product deletion
+        response = self.client.get(self.product_detail_url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        print('Test: Delete Product Authenticated - PASS')
 
 
     def test_unauthorized_access_denied(self):
