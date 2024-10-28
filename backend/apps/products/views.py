@@ -11,7 +11,6 @@ from .models import Product
 from .serializers import ProductSerializer
 
 @api_view(['GET', 'POST'])
-@parser_classes([MultiPartParser, FormParser])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def product_list(request):
@@ -25,4 +24,21 @@ def product_list(request):
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+@api_view(['POST'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def create_listing(request):
+    # Extract the user from the token
+    user = request.user.profile
+
+    # Create a serializer instance with the request data
+    serializer = ProductSerializer(data=request.data)
+
+    if serializer.is_valid():
+        # Save the product with the associated user
+        serializer.save(user=user)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+    else:
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
