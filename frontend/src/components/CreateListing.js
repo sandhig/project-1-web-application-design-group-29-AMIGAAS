@@ -19,7 +19,7 @@ const CreateListing = () => {
   const [selectedPickupLocation, setSelectedPickupLocation] = useState('');
   const token = localStorage.getItem('authToken');
 
-  const categories = [
+  const category = [
     { id: 1, name: 'Category 1' },
     { id: 2, name: 'Category 2' },
     { id: 3, name: 'Category 3' },
@@ -54,25 +54,32 @@ const CreateListing = () => {
 
   const handleCategoryChange = (e) => {
     setSelectedCategory(e.target.value);
+
+    const selectedCat = category.find(cat => cat.id === parseInt(e.target.value, 10)).id.toString(); 
+    console.log(e.target.value);
     setNewProduct({
       ...newProduct,
-      category: e.target.value,
+      category: selectedCat,
     });
   };
 
   const handleConditionChange = (e) => {
     setSelectedCondition(e.target.value);
+
+    const selectedCond = condition.find(cond => cond.id === parseInt(e.target.value, 10)).id.toString();
     setNewProduct({
       ...newProduct,
-      condition: e.target.value,
+      condition: selectedCond,
     });
   };
 
   const handlePickupLocationChange = (e) => {
     setSelectedPickupLocation(e.target.value);
+
+    const selectedLoc = pickupLocation.find(cond => cond.id === parseInt(e.target.value, 10)).id.toString();
     setNewProduct({
       ...newProduct,
-      pickupLocation: e.target.value,
+      pickupLocation: selectedLoc,
     });
   };
 
@@ -84,9 +91,9 @@ const CreateListing = () => {
     formData.append("user", 1); // Example user ID, replace with dynamic value
     formData.append("name", newProduct.title); 
     formData.append("price", newProduct.price); 
-    formData.append("category", newProduct.category); 
-    formData.append("condition", newProduct.condition); 
-    formData.append("pickup_location", newProduct.pickupLocation); 
+    formData.append("category", String(newProduct.category)); 
+    formData.append("condition", String(newProduct.condition)); 
+    formData.append("pickup_location", String(newProduct.pickupLocation)); 
     formData.append("photo", newProduct.photo); // Add photo to form data
     if (newProduct.description) formData.append("description", newProduct.description); 
     if (newProduct.size) formData.append("size", newProduct.size); // optional
@@ -137,7 +144,7 @@ const CreateListing = () => {
             Category:
             <select value={selectedCategory} onChange={handleCategoryChange}>
               <option value="" disabled>Select an option</option>
-              {categories.map(category => (
+              {category.map(category => (
                 <option key={category.id} value={`${category.id}`}>{category.name}</option>
               ))}
             </select>
