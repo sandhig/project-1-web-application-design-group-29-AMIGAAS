@@ -9,7 +9,7 @@ urlpatterns = [
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 """
 urlpatterns = [
-    path('products/', ProductAPIView.as_view()),
-    path('products/<int:pk>/', ProductAPIView.as_view()),
+    path('products/', ProductAPIView.as_view(), name='product_list'),
+    path('products/<int:pk>/', ProductAPIView.as_view(), name='product_detail'),
     path('product-choices/', get_product_choices, name='get_product_choices')
 ]

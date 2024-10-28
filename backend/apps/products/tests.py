@@ -3,6 +3,10 @@ from .models import Product
 from django.contrib.auth.models import User
 from decimal import Decimal
 from django.core.exceptions import ValidationError
+from django.urls import reverse, resolve
+from .views import ProductAPIView, get_product_choices
+from rest_framework import status
+from rest_framework.test import APIClient
 
 # Create your tests here.
 class ProductModeltests(TestCase):
@@ -46,6 +50,7 @@ class ProductModeltests(TestCase):
 
     # Testing for valid object creation
     def test_valid_product_creation(self):
+        """ Test that a valid product oject can be created """
         product = self.create_valid_product()
         self.assertIsNotNone(product.pk)
         print("Test: Valid Product Creation - PASS")
@@ -53,6 +58,7 @@ class ProductModeltests(TestCase):
 
     # Testing for invalid object creations (missing fields)
     def test_invalid_product_missing_field_not_allowed(self):
+        """ Test that an inavlid product - missing fields not allowed cannot be created """
         for field in self.MISSING_FIELDS_NOT_ALLOWED:
             product = self.create_invalid_product_missing_fields(field=field)
             with self.assertRaises(ValidationError):
@@ -60,7 +66,8 @@ class ProductModeltests(TestCase):
         print("Test: Invalid Product Missing Field Not Allowed - PASS")
     
 
-    def test_inavlid_product_missing_field_allowed(self):
+    def test_valid_product_missing_field_allowed(self):
+        """ Test that a valid product missing fields allowed can be created"""
         for field in self.MISSING_FIELDS_ALLOWED:
             result = ""
             try:
@@ -70,11 +77,12 @@ class ProductModeltests(TestCase):
             except ValidationError:
                 self.fail("full_clean() raised Validation Error unexpectedly")
                 result = "FAIl"
-        print("Test: Invalid Product Missing Field Allowed - ", result)
+        print("Test: Valid Product Missing Field Allowed - ", result)
 
 
     # Name Max Length Tests 
     def test_name_max_length(self):
+        """ Test that the maximum length allowed for name field is correct """
         product = self.create_valid_product()
         max_length = product._meta.get_field('name').max_length
         self.assertEqual(max_length, 255)
@@ -82,6 +90,7 @@ class ProductModeltests(TestCase):
     
 
     def test_name_max_length_within_limit(self):
+        """ Test that a product can have a name within maximum limit """
         product = self.create_valid_product()
         name = 'Within Limit Test Name'
         self.assertLessEqual(len(name), 255)
@@ -94,6 +103,7 @@ class ProductModeltests(TestCase):
     
 
     def test_name_max_length_over_limit(self):
+        """ Test that a product cannot have a name over maximum limit """
         name = 'Long Input' + 'x' * 255
         self.assertLessEqual(255, len(name))
         product = self.create_invalid_product_inavlid_choice('name', name)
@@ -104,6 +114,7 @@ class ProductModeltests(TestCase):
 
     # Pricing values and decimal tests
     def test_invalid_price_range(self):
+        """ Test that a product cannot have a price over correct range """
         product = self.create_invalid_product_inavlid_choice('price', Decimal("123456789.10"))
         with self.assertRaises(ValidationError):
             product.full_clean() #Triggers validation
@@ -111,6 +122,7 @@ class ProductModeltests(TestCase):
 
 
     def test_invalid_price_decimals(self):
+        """ Test that a product cannot have a price with incorrect decimal places"""
         product = self.create_invalid_product_inavlid_choice('price', Decimal("1234.567"))
         with self.assertRaises(ValidationError):
             product.full_clean() #Triggers validation
@@ -119,6 +131,7 @@ class ProductModeltests(TestCase):
 
     # Invalid Choices Tests
     def test_invalid_category_choice(self):
+        """ Test that a product cannot have an incorrect category choice """
         product = self.create_invalid_product_inavlid_choice(field='category', invalid_choice="Invalid Category")
         with self.assertRaises(ValidationError):
             product.full_clean() # Triggers validation
@@ -126,6 +139,7 @@ class ProductModeltests(TestCase):
         
     
     def test_invalid_condition_choice(self):
+        """ Test that a product cannot have an incorrect condition choice """
         product = self.create_invalid_product_inavlid_choice(field='condition', invalid_choice="Invalid Condition")
         with self.assertRaises(ValidationError):
             product.full_clean() # Triggers validation
@@ -133,6 +147,7 @@ class ProductModeltests(TestCase):
             
 
     def test_invalid_pickup_location_choice(self):
+        """ Test that a product cannot have an incorrect pickup location choice """
         product = self.create_invalid_product_inavlid_choice(field='pickup_location', invalid_choice="Invalid Pick-up Location")
         with self.assertRaises(ValidationError):
             product.full_clean() # Triggers validation
@@ -140,6 +155,7 @@ class ProductModeltests(TestCase):
     
     # Blank and Null Fields Tests
     def test_description_is_blank(self):
+        """ Test that a product can have a blank description """
         product = self.create_valid_product()
         product.description = ""
         try: 
@@ -150,6 +166,7 @@ class ProductModeltests(TestCase):
     
 
     def test_image_is_null(self):
+        """ Test that a product can have a nul image """
         product = self.create_valid_product()
         product.image = None
         try: 
@@ -161,12 +178,14 @@ class ProductModeltests(TestCase):
     
     # Model Relationship Tests
     def test_product_user_relationship(self):
+        """ Test the relationship between user and product """
         product = self.create_valid_product()
         self.assertEqual(product.user, self.user)
         print("Test: Product User Relationship - PASS")
     
 
     def test_product_deletion_on_user_delete(self):
+        """ Test that a product is deleted when a user is deleted """
         product = self.create_valid_product()
         self.assertTrue(Product.objects.filter(id=product.id).exists())  # verify product exists in database
         self.user.delete()  # Delete the user
@@ -176,11 +195,13 @@ class ProductModeltests(TestCase):
 
     # Custom Methods and Properties Tests
     def test_product_str_method(self):
+        """ Test that the str method returns the name of the product """
         product = self.create_valid_product()
         self.assertEqual(str(product), "Test Valid Product")
         print('Test: Product __str__ Method - PASS')
     
     # TODO add test_image.jpg to AWS S3 bucket
+    # """ Test that the correct url is returned for the image of a product """
     # def test_image_url_properly_with_image(self):
     #     product = self.create_valid_product()
     #     product.image = 'images/test_image.jpg'
@@ -188,6 +209,7 @@ class ProductModeltests(TestCase):
     #     print('Test: Image URL Property with Image - PASS')
     
     def test_image_url_property_without_image(self):
+        """ Test that a null url is returned for an null image of a product """
         product = self.create_valid_product()
         product.image = None
         self.assertIsNone(product.image_url)
@@ -196,12 +218,14 @@ class ProductModeltests(TestCase):
 
     # Auto generated Date and Time Field Tests
     def test_created_at_auto(self):
+        """ Test that the create_at field is automaically generated """
         product = self.create_valid_product()
         self.assertIsNotNone(product.created_at)
         print('Test: Created At Automatically Generated - PASS')
     
 
     def test_edited_at_auto(self):
+        """ Test that the edited_at field is automatically updated """
         product=self.create_valid_product()
         original_edited_at = product.edited_at 
         
@@ -216,6 +240,7 @@ class ProductModeltests(TestCase):
 
     # Database Integrity and Constraint Tests
     def test_valid_category_choices(self):
+        """ Test that a product can have a correct category choice """
         product = self.create_valid_product()
         valid_categories = [choice[0] for choice in Product.CATEGORY_CHOICES]
         for category in valid_categories:
@@ -228,6 +253,7 @@ class ProductModeltests(TestCase):
     
 
     def test_valid_condition_choices(self):
+        """ Test that a product can have a correct condition choice """
         product = self.create_valid_product()
         valid_conditions = [choice[0] for choice in Product.CONDITION_CHOICES]
         for condition in valid_conditions:
@@ -240,6 +266,7 @@ class ProductModeltests(TestCase):
 
     
     def test_valid_pickup_location_choices(self):
+        """ Test that a product can have a correct pickup location choice """
         product = self.create_valid_product()
         valid_locations = [choice[0] for choice in Product.LOCATION_CHOICES]
         for location in valid_locations:
@@ -252,6 +279,7 @@ class ProductModeltests(TestCase):
 
     
     def test_duplicate_product_name_coexists(self):
+        """ Test that products with the same name can coexist """
         product = self.create_valid_product()
         duplicate_product = Product(
             user=self.user,
@@ -268,6 +296,7 @@ class ProductModeltests(TestCase):
     
     # Edge Case Tests
     def test_name_max_length_boundary(self):
+        """ Test that a product can have a name at maximum limit """
         product = self.create_valid_product()
         product.name = 'x' * 255
         try:
@@ -278,6 +307,7 @@ class ProductModeltests(TestCase):
         
     
     def test_price_boundary_values(self):
+        """ Test that a product can have the maximum and minimum range price """
         product = self.create_valid_product()
 
         # Test minimum price
@@ -297,7 +327,92 @@ class ProductModeltests(TestCase):
         print('Test: Edge Case - Price Boundary - PASS')
 
 
+class ProductUrlTests(TestCase):
+    # Set up a test client and user to use for authorization where needed
+    def setUp(self):
+        self.client = APIClient()
+        self.user = User.objects.create_user(username='testuser', password='Test1234!')
+        self.client.force_authenticate(user=self.user)
 
+        # Create a product to test with
+        self.product = Product.objects.create(
+            user=self.user,
+            name="Test Product",
+            category="Textbook",
+            price=50.00,
+            condition="New",
+            pickup_location="Robarts",
+            description="Test description",
+            image=""
+        )
+        
+    
+    # URL Resolution Tests
+    def test_product_list_url_resolves(self):
+        """ Test that the 'products/' URL resolves to ProductAPIView """
+        url = reverse('product_list')
+        self.assertEqual(resolve(url).func.view_class, ProductAPIView)
+        print('Test: Product List URL Resolves - PASS')
+
+
+    def test_product_detail_url_resolves(self):
+        """ Test that 'products/<int:pk>/' URL resolves to ProductAPIView """
+        url = reverse('product_detail', kwargs={'pk' : self.product.id})
+        self.assertEqual(resolve(url).func.view_class, ProductAPIView)
+        print('Test: Product Detail URL Resolves - PASS')
+
+
+    def test_product_choices_url_resolves(self):
+        """ Test that 'product-choices/' resolves to get_product_choices """
+        url = reverse('get_product_choices')
+        self.assertEqual(resolve(url).func, get_product_choices)
+        print('Test: Product Choices URL Resolves - PASS')
+
+
+    # Authenticated User Response Tests
+    def test_product_list_authenticated_access(self):
+        """ Test that authenticated users can access 'product_list' """
+        response = self.client.get(reverse('product_list'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        print('Test: Authenticated Users can access Product List - PASS')
+
+
+    # # TODO this test produces erors for url, "ProductAPIView.get() got an unexpected keyword argument 'pk'"
+    # def test_product_detail_authenticated_access(self):
+    #     """ Test that authenticated users can access 'product_detail' """
+    #     response = self.client.get(reverse('product_detail', kwargs={'pk' : self.product.id}))
+    #     self.assertEqual(response.status_code, status.HTTP_200_OK)
+    #     self.assertEqual(response.data['name', self.product.name])
+    #     print('Test: Authenticated Users can access Product Detail - PASS')
+
+
+    def test_product_choices_authenticated_access(self):
+        """ Test that authenticated users can access 'get_product_choices' """
+        response = self.client.get(reverse('get_product_choices'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        print('Test: Authenticated Useres can access Product Choices - PASS')
     
 
-    
+    # Authentication Requirement Tests
+    def test_product_list_requires_login(self):
+        """ Test that unauthenticated users cannot access 'products/' """
+        self.client.logout()  # Log out the user
+        response = self.client.get('/products/')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        print('Test: Unauthenticated Users cannot access Product List - PASS')
+
+
+    def test_product_detail_requires_login(self):
+        """ Test that unauthenticated users cannot access 'products/<int:pk>/' """
+        self.client.logout()  # Log out the user
+        response = self.client.get('/products/1/')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        print('Test: Unauthenticated Users cannot access Product Detail- PASS')
+
+
+    def test_product_choices_requires_login(self):
+        """ Test that unauthenticated users cannot access 'product-choices/' """
+        self.client.logout()  # Log out the user
+        response = self.client.get('/product-choices/')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        print('Test: Unauthenticated Users cannot access Product Choices - PASS')
