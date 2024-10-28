@@ -14,7 +14,22 @@ function Header() {
     const { currentUser } = useUser();
     const { setCurrentUser } = useUser();
     const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
+    const [searchTerm, setSearchTerm] = useState("");
     const navigate = useNavigate();
+
+    const handleInputChange = (e) => {
+      setSearchTerm(e.target.value);
+    };
+  
+    const handleSearch = () => {
+      navigate(`/search?query=${searchTerm}`);
+    };
+
+    const handleKeyPress = (e) => {
+      if (e.key === "Enter") {
+        handleSearch();
+      }
+    };
 
     const handleLogout = () => {
       localStorage.removeItem('authToken');
@@ -61,14 +76,13 @@ function Header() {
           <TextField
             id="search-bar"
             className="search-bar"
-            onInput={(e) => {
-              return;
-            }}
+            onInput={handleInputChange}
+            onKeyPress={handleKeyPress}
             variant="outlined"
             placeholder="Search..."
             size="small"
           />
-          <IconButton type="submit" aria-label="search">
+          <IconButton type="submit" aria-label="search" onClick={handleSearch}>
             <SearchIcon style={{ fill: "white" }} />
           </IconButton>
         </div>
@@ -84,6 +98,7 @@ function Header() {
           <IconButton aria-label="message" onClick={handleLogout}>
               <LogoutIcon style={{ fill: "white", fontSize: "larger" }} />
             </IconButton>
+          {currentUser ? (<p style={{color: "white"}}>Hi, {currentUser.first_name}</p>) : null}
           <img className="header-profile" src="/images/profile.png"></img>
         </div>
       </div>
