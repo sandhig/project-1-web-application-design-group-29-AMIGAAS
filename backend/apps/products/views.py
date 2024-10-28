@@ -32,13 +32,18 @@ def get_product_choices(request):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 class ProductAPIView(APIView):
-    def get(self, request, key=None):
-        if key:
-            product = get_object_or_404(Product.objects.select_related('user'), key=key)
+    def get(self, request, pk=None):
+        search_term = request.query_params.get('search', None)
+        
+        if pk:
+            product = get_object_or_404(Product, id=pk)
             serializer = ProductSerializer(product)
             return Response(serializer.data)
         else:
             products = Product.objects.select_related('user').all()
+            if search_term:
+                products = products.filter(name__icontains=search_term)
+
             serializer = ProductSerializer(products, many=True)
             return Response(serializer.data)
 
