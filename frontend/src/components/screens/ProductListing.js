@@ -9,7 +9,7 @@ import './ProductListing.css';
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useUser } from '../../context/UserContext';
-import { TextField, Button } from '@mui/material';
+import { TextField, Button, Snackbar } from '@mui/material';
 import { IoSend } from "react-icons/io5";
 
 const ProductListing = () => {
@@ -18,10 +18,11 @@ const ProductListing = () => {
     const [product, setProduct] = useState([]);
     const token = localStorage.getItem('authToken');
     const { currentUser } = useUser();
+    const [confirmation, setConfirmation] = useState(false);
     
     const navigate = useNavigate();
     const [isFavorited, setIsFavorited] = useState(false);
-    const [message, setMessage] = useState('Hello, I’m interested in this item.')
+    const [message, setMessage] = useState('');
 
     const timestamp = new Date(product.created_at);
     const currentDate = new Date();
@@ -73,12 +74,25 @@ const ProductListing = () => {
                       'Content-Type': 'application/json',
                     },
                 })
-                .then(response => console.log('Message sent:', response.data))
+                .then(response => {
+                    console.log('Message sent:', response.data);
+                    setConfirmation(true);
+                })
                 .catch(error => console.error('Error sending message:', error));
  
             });
         }
     }
+
+    const handleCloseConfirmation = () => {
+        setConfirmation(false);
+    };
+
+    useEffect(() => {
+        if (product.user && currentUser) {
+          setMessage(`Hi ${product.user.first_name}, my name is ${currentUser.first_name} and I'm interested in purchasing ${product.name}. Is it still available?`);
+        }
+    }, [product, currentUser]);
     
     return (
         <div className="listing-page-container">
@@ -137,11 +151,17 @@ const ProductListing = () => {
                         <button onClick={() => sendMessageToSeller()}><IoSend /></button>
                         </div>
                     </span>
+                    <Snackbar
+                        open={confirmation}
+                        autoHideDuration={3000}
+                        onClose={handleCloseConfirmation}
+                        message="Message sent successfully!"
+                        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    />
                 </div>
             ) : (
                 <p>No product info</p>
             )}
-            
 
         </div>
     )

@@ -68,8 +68,11 @@
         flex-direction: column;
         gap: 5px;
         margin-bottom: 10px;
-        overflow: scroll;
+        overflow-y: auto;
+        overflow-x: hidden;
         height: 100%;
+        padding-right: 10px;
+        box-sizing: content-box;
     } 
 
     .timestamp {
@@ -182,4 +185,21 @@
             }
         }
     }
+}
+
+.message-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.message-list::-webkit-scrollbar-track {
+    background: #d3d3d3;
+}
+
+.message-list::-webkit-scrollbar-thumb {
+    background: darkgray;
+    border-radius: 4px;
+}
+
+.message-list::-webkit-scrollbar-thumb:hover {
+    background: gray;
 }
