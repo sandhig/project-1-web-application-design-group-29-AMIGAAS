@@ -7,23 +7,26 @@ import FavoriteBorderIcon from '@mui/icons-material/FavoriteBorder';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 import './ProductListing.css';
 import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { useUser } from '../../context/UserContext';
+import { TextField, Button } from '@mui/material';
 
 const ProductListing = () => {
-    console.log('ProductListing component rendered');
+
     const { id } = useParams();
     const [product, setProduct] = useState([]);
     const token = localStorage.getItem('authToken');
+    const { currentUser } = useUser();
     
     const navigate = useNavigate();
     const [isFavorited, setIsFavorited] = useState(false);
+    const [message, setMessage] = useState('Hello, I’m interested in this item.')
 
     const timestamp = new Date(product.created_at);
     const currentDate = new Date();
     const days = Math.floor((currentDate - timestamp) / (1000 * 60 * 60 * 24));
     
     useEffect(() => {
-        console.log('useEffect triggered');
-        console.log('id:', id)
         fetch(`http://3.87.240.14:8000/api/products/${id}`, {
             headers: {
             'Authorization': `Token ${token}`,
@@ -34,8 +37,6 @@ const ProductListing = () => {
         .catch(error => console.error('Error fetching products:', error));
     }, [id]);
     
-    console.log(product);
-    
     const handleToggleFavorite = () => {
         setIsFavorited(prev => !prev);
     };
@@ -43,6 +44,44 @@ const ProductListing = () => {
     const handleBack = () => {
         navigate(-1); // This navigates back to the previous page
     };
+
+    const handleClickOnSeller = () => {
+        return;
+    };
+
+    const handleInputChange = (event) => {
+        setMessage(event.target.value);
+    }
+
+    const sendMessageToSeller = () => {
+        if (product.user) {
+
+            // Fetch or create conversation with seller
+            fetch(`http://3.87.240.14:8000/api/conversation/start/${product.user.id}/`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                
+                axios.post('http://3.87.240.14:8000/api/send_message/', {
+                    conversation_id: data.conversation_id,
+                    content: message,
+                }, {
+                    headers: {
+                      'Authorization': `Token ${token}`,
+                      'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => console.log('Message sent:', response.data))
+                .catch(error => console.error('Error sending message:', error));
+ 
+            });
+        }
+    }
     
     return (
         <div className="listing-page-container">
@@ -85,8 +124,22 @@ const ProductListing = () => {
                         <hr></hr>
                         <h2 style={{margin: "0"}}>Seller information</h2>
                         {product.user ? (
-                        <div>{product.user.first_name} {product.user.last_name} ({product.user.email})</div>)
+                        <div className="seller-info" onClick={handleClickOnSeller}>
+                            <img className="header-profile" src="/images/profile.png"></img>
+                            {product.user.first_name} {product.user.last_name} ({product.user.email})
+                            </div>)
                         : (<p>Loading user info...</p>)}
+                        <TextField
+                            label="message"
+                            name="inputMessage"
+                            value={message}
+                            onChange={handleInputChange}
+                            variant="outlined"
+                            required
+                        />
+                        <Button onClick={() => sendMessageToSeller()} variant="contained" color="primary">
+                            Submit
+                        </Button>
                     </span>
                 </div>
             ) : (

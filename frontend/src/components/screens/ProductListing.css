@@ -78,3 +78,15 @@ hr {
     padding: 5px;
     border-radius: 5px;
 }
+
+.seller-info {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    width: fit-content;
+}
+
+.seller-info:hover {
+    cursor: pointer;
+}
