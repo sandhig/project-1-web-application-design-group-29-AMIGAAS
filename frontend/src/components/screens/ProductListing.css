@@ -90,3 +90,31 @@ hr {
 .seller-info:hover {
     cursor: pointer;
 }
+
+.text-input {
+    width: 100%;
+    display: flex;
+
+    input {
+        width: calc(100% - 40px);
+        background-color: rgba(255, 255, 255, 0.5);
+        border: 1px solid #ccc;
+        border-radius: 10px;
+        padding: 10px;
+        font-size: 16px;
+    }
+
+    button {
+        width: 30px;
+        border: none;
+        background-color: transparent;
+
+        svg {
+            height: 100%;
+        }
+
+        &:hover {
+            cursor: pointer;
+        }
+    }
+}

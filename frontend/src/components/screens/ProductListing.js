@@ -10,6 +10,7 @@ import { useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useUser } from '../../context/UserContext';
 import { TextField, Button } from '@mui/material';
+import { IoSend } from "react-icons/io5";
 
 const ProductListing = () => {
 
@@ -48,10 +49,6 @@ const ProductListing = () => {
     const handleClickOnSeller = () => {
         return;
     };
-
-    const handleInputChange = (event) => {
-        setMessage(event.target.value);
-    }
 
     const sendMessageToSeller = () => {
         if (product.user) {
@@ -129,17 +126,16 @@ const ProductListing = () => {
                             {product.user.first_name} {product.user.last_name} ({product.user.email})
                             </div>)
                         : (<p>Loading user info...</p>)}
-                        <TextField
-                            label="message"
-                            name="inputMessage"
-                            value={message}
-                            onChange={handleInputChange}
-                            variant="outlined"
-                            required
-                        />
-                        <Button onClick={() => sendMessageToSeller()} variant="contained" color="primary">
-                            Submit
-                        </Button>
+                        <div className="text-input">
+                        <input type="text" value={message} onChange={e => setMessage(e.target.value)}
+                                        onKeyPress={e => {
+                                            if (e.key === 'Enter') {
+                                                sendMessageToSeller()
+                                            }
+                                        }}
+                                    />
+                        <button onClick={() => sendMessageToSeller()}><IoSend /></button>
+                        </div>
                     </span>
                 </div>
             ) : (
