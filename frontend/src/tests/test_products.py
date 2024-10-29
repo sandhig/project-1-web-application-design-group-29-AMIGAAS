@@ -18,10 +18,12 @@ LOGIN = 'Login'
 CATEGORY = 'Category'
 CONDITION = 'Condition'
 LOCATION = 'Location'
+SORT_BY = 'Sort By'
 LOGIN_MSG = 'Login successful!'
 PRODUCTS_CONTAINER = '.products-container'
 PRODUCT_GRID = '.products'
 PRODUCT_ITEM = '.product-item'
+PRODUCT_PRICE = '.product-price'
 PRICE_SLIDER_TRACK = ".MuiSlider-track"
 CLEAR_FILTERS = 'Clear Filters'
 
@@ -32,6 +34,7 @@ ROLE_OPTION = 'option'
 CATEGORY_CHOICES = ['Textbook', 'Clothing', 'Furniture', 'Electronics', 'Stationary', 'Miscellaneous', 'None']
 CONDITION_CHOICES = ['New', 'Used - Like New', 'Used - Good', 'Used - Fair', 'None']
 LOCATION_CHOICES = ['Robarts', 'Gerstein', 'Computer Science Library', 'Bahen', 'Galbraith', 'Sanford Fleming', 'None']
+SORT_BY_CHOICES = ['Price: Low to High', 'Price: High to Low', 'Name: A-Z']
 
 
 
@@ -352,5 +355,50 @@ def test_clear_all_filters(page):
     print("..After clearing all filtering -- Product Count:", unfiltered_product_count)
     assert unfiltered_product_count == original_product_count
     print("Test: All filters can be cleared")
+
+
+def test_sort_by_price_ascending(page):
+    """ Test to products can be sorted by price from low to high """
+    page.goto(PRODUCTS_PAGE_URL)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG) 
+    assert page.locator(PRODUCTS_CONTAINER).is_visible()
+
+    # Find the unfiltered, unsorted prices list
+    unsorted_prices = page.locator(PRODUCT_PRICE).all_text_contents()
+
+    # Sort the unsorted prices, this is what we expect it to look like later
+    sorted_prices_expected = sorted(unsorted_prices, key=lambda x: float(x.replace("$", "")))
+
+    # Apply sorting by price: low to high on the UI
+    page.get_by_label("Sort By").click()
+    page.get_by_role(ROLE_OPTION, name=SORT_BY_CHOICES[0]).click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    after_sorting_prices = page.locator(PRODUCT_PRICE).all_text_contents()
+    assert after_sorting_prices == sorted_prices_expected
+    print("Test: Sorting by price in ascending order works as expected")
+
+
+def test_sort_by_price_descending(page):
+    """ Test to products can be sorted by price from high to low """
+    page.goto(PRODUCTS_PAGE_URL)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG) 
+    assert page.locator(PRODUCTS_CONTAINER).is_visible()
+
+    # Find the unfiltered, unsorted prices list
+    unsorted_prices = page.locator(PRODUCT_PRICE).all_text_contents()
+
+    # Sort the unsorted prices, this is what we expect it to look like later
+    sorted_prices_expected = sorted(unsorted_prices, key=lambda x: float(x.replace("$", "")), reverse=True)
+
+    # Apply sorting by price: low to high on the UI
+    page.get_by_label("Sort By").click()
+    page.get_by_role(ROLE_OPTION, name=SORT_BY_CHOICES[1]).click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    after_sorting_prices = page.locator(PRODUCT_PRICE).all_text_contents()
+    assert after_sorting_prices == sorted_prices_expected
+    print("Test: Sorting by price in descending order works as expected")
+
 
 
