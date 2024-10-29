@@ -1,10 +1,13 @@
 import pytest
 from playwright.sync_api import sync_playwright
 from playwright.sync_api import expect
+import random
 
+# CONSTANT TIMES
 WAIT_TO_LOAD_LONG = 5000  # 5000 milliseconds = 5 sec
 WAIT_TO_LOAD_SHORT = 1000  # 1000 milliseconds = 1 sec
 
+# CONSTANT URL PATHS
 LOGIN_PAGE_URL = 'http://localhost:3000/profiles/login'
 PRODUCTS_PAGE_URL = 'http://localhost:3000/products'
 
@@ -15,12 +18,11 @@ LOGIN = 'Login'
 CATEGORY = 'Category'
 CONDITION = 'Condition'
 LOCATION = 'Location'
-
 LOGIN_MSG = 'Login successful!'
 PRODUCTS_CONTAINER = '.products-container'
 PRODUCT_GRID = '.products'
 PRODUCT_ITEM = '.product-item'
-
+PRICE_SLIDER_TRACK = ".MuiSlider-track"
 
 ROLE_BUTTON = 'button'
 ROLE_OPTION = 'option'
@@ -186,3 +188,60 @@ def test_filter_by_location(page):
             assert filtered_product_count <= original_product_count
     print("Test: Filter by Location works as expected")
 
+
+def test_price_slider_halfway(page):
+    """ Test to ensure price slider can be dragged to halfway"""
+    page.goto(PRODUCTS_PAGE_URL)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG) 
+    assert page.locator(PRODUCTS_CONTAINER).is_visible()
+
+    # Count original products
+    original_product_count = page.locator(PRODUCT_GRID).locator(PRODUCT_ITEM).count() # count original products listed in the grid
+    print(".Original count:", original_product_count)
+
+    # Find the slider position
+    price_slider = page.locator(PRICE_SLIDER_TRACK)
+    price_slider_position = price_slider.bounding_box()
+
+    # Slider will be dragged halfway for this test
+    target_x = price_slider_position['x'] + price_slider_position['width'] * 0.5
+    target_y = price_slider_position['y'] + price_slider_position['height'] / 2 
+    page.mouse.click(target_x, target_y)
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    # Locate the products container
+    filtered_product_count = page.locator(PRODUCT_GRID).locator(PRODUCT_ITEM).count() # count filtered products listed in the grid
+    print("..Slider is dragged halfway -- Filtered count:", filtered_product_count)
+    assert filtered_product_count <= original_product_count
+    print("Test: Slider can be dragged to halfway")
+
+
+def test_price_slider_random(page):
+    """ Test to ensure price slider can be dragged to any length of the slider chosen randomly"""
+    page.goto(PRODUCTS_PAGE_URL)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG) 
+    assert page.locator(PRODUCTS_CONTAINER).is_visible()
+
+    # Count original products
+    original_product_count = page.locator(PRODUCT_GRID).locator(PRODUCT_ITEM).count() # count original products listed in the grid
+    print(".Original count:", original_product_count)
+
+    # Find the slider position
+    price_slider = page.locator(PRICE_SLIDER_TRACK)
+    price_slider_position = price_slider.bounding_box()
+
+    # Generate a random percentage where we want to drag the slider
+    random_number = random.randint(1, 100)
+    random_width_percentage = random_number / 100
+
+    # Slider will be dragged halfway for this test
+    target_x = price_slider_position['x'] + price_slider_position['width'] * random_width_percentage
+    target_y = price_slider_position['y'] + price_slider_position['height'] / 2 
+    page.mouse.click(target_x, target_y)
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    # Locate the products container
+    filtered_product_count = page.locator(PRODUCT_GRID).locator(PRODUCT_ITEM).count() # count filtered products listed in the grid
+    print("..Slider is dragged to", random_number, "% width -- Filtered count:", filtered_product_count)
+    assert filtered_product_count <= original_product_count
+    print("Test: Slider can be dragged to any length of the slider generated randomly")
