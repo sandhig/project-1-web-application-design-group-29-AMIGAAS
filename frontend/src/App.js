@@ -39,7 +39,7 @@ function App() {
               <Route path="/products/create" element={<PrivateRoute element={<CreateListing />} />} />
               <Route path="/user/:userId" element={<PrivateRoute element={<UserProfile />} />} /> {/* Why is it user/userId and profiles/userId????*/}
               <Route path="/messages" element={<PrivateRoute element={<PrivateMessage />} />} />
-              <Route path="/profile/:userId" element={<UserProfile />} />
+              <Route path="/profile/:userId" element={<UserProfile />} /> {/* Why is it user/userId and profiles/userId????*/}
               <Route path="/profiles/edit-profile" element={<EditProfile />} />
             </Routes>
     

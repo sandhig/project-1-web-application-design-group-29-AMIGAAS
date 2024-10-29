@@ -37,14 +37,20 @@ function Header() {
       navigate('/profiles/login');
     };
 
+    const handleProfileCheck = (e) => {
+        navigate(`/user/${currentUser.id}`);
+    }
+    
     return (
       <div className="header">
+        
         <div className="logo-container">
           <Link to="/products">
             <img className="header-logo" src="/images/logo-white.png"></img>
           </Link>
           <div className="site-title">Too Good To Throw</div>
         </div>
+
         <div className="search-container">
           <TextField
             id="search-bar"
@@ -59,20 +65,37 @@ function Header() {
             <SearchIcon style={{ fill: "white" }} />
           </IconButton>
         </div>
+
         <div className="profile-container">
           <Link to="/products/create">
               <button className="create-listing">Create Listing</button>
           </Link>
+
           <Link to="/messages">
             <IconButton aria-label="message">
               <MessageIcon style={{ fill: "white", fontSize: "larger" }} />
             </IconButton>
           </Link>
-          <IconButton aria-label="message" onClick={handleLogout}>
+
+            <IconButton aria-label="message" onClick={handleLogout}>
               <LogoutIcon style={{ fill: "white", fontSize: "larger" }} />
             </IconButton>
-          {currentUser ? (<p style={{color: "white"}}>Hi, {currentUser.first_name}</p>) : null}
+          
+          {currentUser ? (
+            <>
+                <p style={{color: "white"}}>Hi, {currentUser.first_name}</p>
+                    {/*<img
+                    className="header-profile"
+                    src="/images/profile.png"
+                    alt="profile"
+                    onClick={handleProfileCheck}
+                    style={{ cursor: "pointer" }}
+                />*/}
+            </>) : null}
+
           <img className="header-profile" src="/images/profile.png"></img>
+          
+        
         </div>
       </div>
     );
