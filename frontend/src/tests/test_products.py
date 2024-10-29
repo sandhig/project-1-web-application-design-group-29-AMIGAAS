@@ -1,6 +1,5 @@
 import pytest
 from playwright.sync_api import sync_playwright
-from playwright.sync_api import expect
 import random
 
 # CONSTANT TIMES
@@ -105,7 +104,7 @@ def create_random_combination_of_filters(page):
     page.get_by_label(CATEGORY).click()
     page.get_by_role(ROLE_OPTION, name=CATEGORY_CHOICES[random_category_index]).click()  # Choose a random category
     page.get_by_label(CONDITION).click()
-    page.get_by_role(ROLE_OPTION, name=CONDITION_CHOICES[random_condtion_index]).click()  # Choose a random condition
+    page.get_by_role(ROLE_OPTION, name=CONDITION_CHOICES[random_condtion_index], exact=True).click()  # Choose a random condition
     page.get_by_label(LOCATION).click()
     page.get_by_role(ROLE_OPTION, name=LOCATION_CHOICES[random_location_index]).click()  # Choose a random location
     page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
@@ -357,7 +356,7 @@ def test_all_filter_combinations(page):
 
     # Click on the Condition chosen randomly
     page.get_by_label(CONDITION).click()
-    page.get_by_role(ROLE_OPTION, name=CONDITION_CHOICES[random_condtion_index]).click()
+    page.get_by_role(ROLE_OPTION, name=CONDITION_CHOICES[random_condtion_index], exact=True).click()
     page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
 
     # Count number of products returned after two filters
