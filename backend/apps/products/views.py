@@ -63,7 +63,7 @@ class ProductAPIView(APIView):
                     return Response(serializer.data, status=status.HTTP_201_CREATED)
                 
                 image_file = request.FILES['image']
-                logger.debug(f'Image file size: {image_file.size} bytes')
+                filename = image_file.name.replace(" ", "_")
             
                 s3 = boto3.client(
                     's3',
@@ -73,7 +73,7 @@ class ProductAPIView(APIView):
                 )
                 
                 image_file.seek(0)
-                s3.upload_fileobj(image_file, settings.AWS_STORAGE_BUCKET_NAME, f'images/{image_file.name}')
+                s3.upload_fileobj(image_file, settings.AWS_STORAGE_BUCKET_NAME, f'images/{filename}')
 
                 logger.debug('Image upload successful')
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
