@@ -19,6 +19,7 @@ CATEGORY = 'Category'
 CONDITION = 'Condition'
 LOCATION = 'Location'
 SORT_BY = 'Sort By'
+SEARCH_BAR = 'Search...'
 LOGIN_MSG = 'Login successful!'
 PRODUCTS_CONTAINER = '.products-container'
 PRODUCT_GRID = '.products'
@@ -260,9 +261,9 @@ def test_all_filter_combinations(page):
     print(".Original count:", original_product_count)
 
     # Generate a random category, condition, location and random percentage where we want to drag the slider
-    random_category_index = random.randint(0, len(CATEGORY_CHOICES))
-    random_condtion_index = random.randint(0, len(CONDITION_CHOICES))
-    random_location_index = random.randint(0, len(LOCATION_CHOICES))
+    random_category_index = random.randint(0, len(CATEGORY_CHOICES)-1)
+    random_condtion_index = random.randint(0, len(CONDITION_CHOICES)-1)
+    random_location_index = random.randint(0, len(LOCATION_CHOICES)-1)
     random_number_slider = random.randint(1, 100)
     random_width_percentage = random_number_slider / 100
 
@@ -322,9 +323,9 @@ def test_clear_all_filters(page):
     print(".Original count:", original_product_count)
 
     # Generate a random category, condition, location and random percentage where we want to drag the slider
-    random_category_index = random.randint(0, len(CATEGORY_CHOICES))
-    random_condtion_index = random.randint(0, len(CONDITION_CHOICES))
-    random_location_index = random.randint(0, len(LOCATION_CHOICES))
+    random_category_index = random.randint(0, len(CATEGORY_CHOICES)-1)
+    random_condtion_index = random.randint(0, len(CONDITION_CHOICES)-1)
+    random_location_index = random.randint(0, len(LOCATION_CHOICES)-1)
     random_number_slider = random.randint(1, 100)
     random_width_percentage = random_number_slider / 100
     
@@ -392,7 +393,7 @@ def test_sort_by_price_descending(page):
     # Sort the unsorted prices, this is what we expect it to look like later
     sorted_prices_expected = sorted(unsorted_prices, key=lambda x: float(x.replace("$", "")), reverse=True)
 
-    # Apply sorting by price: low to high on the UI
+    # Apply sorting by price: high to low on the UI
     page.get_by_label("Sort By").click()
     page.get_by_role(ROLE_OPTION, name=SORT_BY_CHOICES[1]).click()
     page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
@@ -408,21 +409,50 @@ def test_sort_by_name_alphabetically(page):
     page.wait_for_timeout(WAIT_TO_LOAD_LONG) 
     assert page.locator(PRODUCTS_CONTAINER).is_visible()
 
-    # Find the unfiltered, unsorted prices list
+    # Find the unfiltered, unsorted nams list
     unsorted_names = page.locator(PRODUCT_TITLE).all_text_contents()
-    print(unsorted_names)
 
     # Sort the unsorted names, this is what we expect it to look like later
     # Sorting is not uppder case senstivie in our app
     sorted_names_expected = sorted(unsorted_names, key=lambda x: x.lower())
-    print(sorted_names_expected)
 
-    # Apply sorting by price: low to high on the UI
+    # Apply sorting by name: A - Z in the UI
     page.get_by_label("Sort By").click()
     page.get_by_role(ROLE_OPTION, name=SORT_BY_CHOICES[2]).click()
     page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
 
     after_sorting_names = page.locator(PRODUCT_TITLE).all_text_contents()
-    print(after_sorting_names)
     assert after_sorting_names == sorted_names_expected
     print("Test: Sorting by price in ascending order works as expected")
+
+
+def test_search_a_product(page):
+    """ Test to search for a product """
+    page.goto(PRODUCTS_PAGE_URL)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG) 
+    assert page.locator(PRODUCTS_CONTAINER).is_visible()
+
+    # Find the unfiltered, unsorted prices list
+    unfiltered_names = page.locator(PRODUCT_TITLE).all_text_contents()
+
+    # This is the string we want to search with
+    search_string = "book"
+
+    # Find the names which have the search string in them, this is the expected result
+    # Searching is not upper case sensitive in our app
+    searched_names_expected = []
+    for name in unfiltered_names:
+        if search_string.lower() in name.lower():
+            searched_names_expected.append(name)
+
+    # Locate the searchbar and search something
+    search_bar = page.get_by_placeholder("Search...")
+    search_bar.click()
+    search_bar.fill(search_string)
+    search_bar.press("Enter")
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG) 
+
+    after_searching_names = page.locator(PRODUCT_TITLE).all_text_contents()
+    assert after_searching_names == searched_names_expected
+    print("Test: Search by name works as expected")
+
