@@ -24,6 +24,7 @@ PRODUCTS_CONTAINER = '.products-container'
 PRODUCT_GRID = '.products'
 PRODUCT_ITEM = '.product-item'
 PRODUCT_PRICE = '.product-price'
+PRODUCT_TITLE = '.product-title'
 PRICE_SLIDER_TRACK = ".MuiSlider-track"
 CLEAR_FILTERS = 'Clear Filters'
 
@@ -401,4 +402,27 @@ def test_sort_by_price_descending(page):
     print("Test: Sorting by price in descending order works as expected")
 
 
+def test_sort_by_name_alphabetically(page):
+    """ Test to products can be sorted by name from A - Z """
+    page.goto(PRODUCTS_PAGE_URL)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG) 
+    assert page.locator(PRODUCTS_CONTAINER).is_visible()
 
+    # Find the unfiltered, unsorted prices list
+    unsorted_names = page.locator(PRODUCT_TITLE).all_text_contents()
+    print(unsorted_names)
+
+    # Sort the unsorted names, this is what we expect it to look like later
+    # Sorting is not uppder case senstivie in our app
+    sorted_names_expected = sorted(unsorted_names, key=lambda x: x.lower())
+    print(sorted_names_expected)
+
+    # Apply sorting by price: low to high on the UI
+    page.get_by_label("Sort By").click()
+    page.get_by_role(ROLE_OPTION, name=SORT_BY_CHOICES[2]).click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    after_sorting_names = page.locator(PRODUCT_TITLE).all_text_contents()
+    print(after_sorting_names)
+    assert after_sorting_names == sorted_names_expected
+    print("Test: Sorting by price in ascending order works as expected")
