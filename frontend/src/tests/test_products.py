@@ -29,6 +29,7 @@ PRODUCT_TITLE = '.product-title'
 PRICE_SLIDER_TRACK = ".MuiSlider-track"
 CLEAR_FILTERS = 'Clear Filters'
 
+# ROLES
 ROLE_BUTTON = 'button'
 ROLE_OPTION = 'option'
 
@@ -37,7 +38,6 @@ CATEGORY_CHOICES = ['Textbook', 'Clothing', 'Furniture', 'Electronics', 'Station
 CONDITION_CHOICES = ['New', 'Used - Like New', 'Used - Good', 'Used - Fair', 'None']
 LOCATION_CHOICES = ['Robarts', 'Gerstein', 'Computer Science Library', 'Bahen', 'Galbraith', 'Sanford Fleming', 'None']
 SORT_BY_CHOICES = ['Price: Low to High', 'Price: High to Low', 'Name: A-Z']
-
 
 
 @pytest.fixture(scope="session")
@@ -86,6 +86,84 @@ def page(authenticated_context):
     page = authenticated_context.new_page()
     yield page
     page.close()
+
+
+def create_random_combination_of_filters(page):
+    """ Helper function to create a random combination of filters"""
+    # Count original products
+    original_product_count = page.locator(PRODUCT_GRID).locator(PRODUCT_ITEM).count() # count original products listed in the grid
+    print(".Original count:", original_product_count)
+
+    # Generate a random category, condition, location and random percentage where we want to drag the slider
+    random_category_index = random.randint(0, len(CATEGORY_CHOICES)-1)
+    random_condtion_index = random.randint(0, len(CONDITION_CHOICES)-1)
+    random_location_index = random.randint(0, len(LOCATION_CHOICES)-1)
+    random_number_slider = random.randint(1, 100)
+    random_width_percentage = random_number_slider / 100
+    
+    # Set up a random combination of filters
+    page.get_by_label(CATEGORY).click()
+    page.get_by_role(ROLE_OPTION, name=CATEGORY_CHOICES[random_category_index]).click()  # Choose a random category
+    page.get_by_label(CONDITION).click()
+    page.get_by_role(ROLE_OPTION, name=CONDITION_CHOICES[random_condtion_index]).click()  # Choose a random condition
+    page.get_by_label(LOCATION).click()
+    page.get_by_role(ROLE_OPTION, name=LOCATION_CHOICES[random_location_index]).click()  # Choose a random location
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    # Set up the price slider
+    price_slider = page.locator(PRICE_SLIDER_TRACK)
+    price_slider_position = price_slider.bounding_box()
+    target_x = price_slider_position['x'] + price_slider_position['width'] * random_width_percentage
+    target_y = price_slider_position['y'] + price_slider_position['height'] / 2 
+    page.mouse.click(target_x, target_y)
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    # Count number of products returned after single filter
+    filtered_product_count = page.locator(PRODUCT_GRID).locator(PRODUCT_ITEM).count() # count filtered products listed in the grid
+    print("..After all filtering -- Filtered count:", filtered_product_count)
+    print("..Created random filter combination")
+    return original_product_count, filtered_product_count, page
+
+
+def create_random_sort_by_choice(page):
+    """ Helper function to choose a random sort by order choice"""
+    random_sort_by_index = random.randint(0, len(SORT_BY_CHOICES)-1)
+    if random_sort_by_index in [0, 1]:
+        # Find the unfiltered, unsorted prices list
+        unsorted = page.locator(PRODUCT_PRICE).all_text_contents()
+
+        if random_sort_by_index == 0:
+            # Sort the unsorted prices, this is what we expect it to look like later
+            sorted_expected = sorted(unsorted, key=lambda x: float(x.replace("$", "")))
+        elif random_sort_by_index == 1:
+            # Sort the unsorted prices, this is what we expect it to look like later
+            sorted_expected = sorted(unsorted, key=lambda x: float(x.replace("$", "")), reverse=True)
+
+        # Apply sorting by price: low to high on the UI
+        page.get_by_label("Sort By").click()
+        page.get_by_role(ROLE_OPTION, name=SORT_BY_CHOICES[random_sort_by_index]).click()
+        page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+        after_sorting = page.locator(PRODUCT_PRICE).all_text_contents()
+        
+    elif random_sort_by_index == 2 :
+        # Find the unfiltered, unsorted nams list
+        unsorted = page.locator(PRODUCT_TITLE).all_text_contents()
+
+        # Sort the unsorted names, this is what we expect it to look like later
+        # Sorting is not uppder case senstivie in our app
+        sorted_expected = sorted(unsorted, key=lambda x: x.lower())
+
+        # Apply sorting by name: A - Z in the UI
+        page.get_by_label("Sort By").click()
+        page.get_by_role(ROLE_OPTION, name=SORT_BY_CHOICES[random_sort_by_index]).click()
+        page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+        after_sorting = page.locator(PRODUCT_TITLE).all_text_contents()
+        
+    print("..Create random sort by order choice")
+    return sorted_expected, after_sorting, page
+
 
 def test_product_list_displays_correctly(page):
     """ Test to ensure multiple products can be seen on the product grid """
@@ -318,43 +396,13 @@ def test_clear_all_filters(page):
     page.wait_for_timeout(WAIT_TO_LOAD_LONG) 
     assert page.locator(PRODUCTS_CONTAINER).is_visible()
 
-    # Count original products
-    original_product_count = page.locator(PRODUCT_GRID).locator(PRODUCT_ITEM).count() # count original products listed in the grid
-    print(".Original count:", original_product_count)
-
-    # Generate a random category, condition, location and random percentage where we want to drag the slider
-    random_category_index = random.randint(0, len(CATEGORY_CHOICES)-1)
-    random_condtion_index = random.randint(0, len(CONDITION_CHOICES)-1)
-    random_location_index = random.randint(0, len(LOCATION_CHOICES)-1)
-    random_number_slider = random.randint(1, 100)
-    random_width_percentage = random_number_slider / 100
+    original_product_count, filtered_product_count, page = create_random_combination_of_filters(page)
     
-    # Set up a random combination of filters
-    page.get_by_label(CATEGORY).click()
-    page.get_by_role(ROLE_OPTION, name=CATEGORY_CHOICES[random_category_index]).click()  # Choose a random category
-    page.get_by_label(CONDITION).click()
-    page.get_by_role(ROLE_OPTION, name=CONDITION_CHOICES[random_condtion_index]).click()  # Choose a random condition
-    page.get_by_label(LOCATION).click()
-    page.get_by_role(ROLE_OPTION, name=LOCATION_CHOICES[random_location_index]).click()  # Choose a random location
-    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
-
-    # Set up the price slider
-    price_slider = page.locator(PRICE_SLIDER_TRACK)
-    price_slider_position = price_slider.bounding_box()
-    target_x = price_slider_position['x'] + price_slider_position['width'] * random_width_percentage
-    target_y = price_slider_position['y'] + price_slider_position['height'] / 2 
-    page.mouse.click(target_x, target_y)
-    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
-
-    # Count number of products returned after single filter
-    filtered_product_count = page.locator(PRODUCT_GRID).locator(PRODUCT_ITEM).count() # count filtered products listed in the grid
-    print("..After all filtering -- Filtered count:", filtered_product_count)
-    assert filtered_product_count <= original_product_count
-
     # Locate "Clear Filters" button and click
     page.get_by_role(ROLE_BUTTON, name=CLEAR_FILTERS).click()
     unfiltered_product_count = page.locator(PRODUCT_GRID).locator(PRODUCT_ITEM).count() # count filtered products listed in the grid
     print("..After clearing all filtering -- Product Count:", unfiltered_product_count)
+    assert unfiltered_product_count >= filtered_product_count
     assert unfiltered_product_count == original_product_count
     print("Test: All filters can be cleared")
 
@@ -456,3 +504,35 @@ def test_search_a_product(page):
     assert after_searching_names == searched_names_expected
     print("Test: Search by name works as expected")
 
+
+def test_sort_by_and_filtering(page):
+    page.goto(PRODUCTS_PAGE_URL)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG) 
+    assert page.locator(PRODUCTS_CONTAINER).is_visible()
+    
+    # add a random combination of filters, ensure it's applied properly
+    original_product_count, filtered_product_count, page = create_random_combination_of_filters(page)
+    assert filtered_product_count <= original_product_count
+
+    # ensure that after sorting and filter results are as expected
+    # choose a random sort by option
+    sorted_expected, after_sorting, page = create_random_sort_by_choice(page)
+    assert after_sorting == sorted_expected
+
+    print("Test: Random combination of sort by and filtering works as expected")
+
+
+def test_search_sort_by_filter(page):
+    # Carry out a search first
+    test_search_a_product(page)
+
+    # ensure sorting and filtering works after a search is made
+    # add a random combination of filters, ensure it's applied properly
+    original_product_count, filtered_product_count, page = create_random_combination_of_filters(page)
+    assert filtered_product_count <= original_product_count
+
+    # ensure that after sorting and filter results are as expected
+    # choose a random sort by option
+    sorted_expected, after_sorting, page = create_random_sort_by_choice(page)
+    assert after_sorting == sorted_expected
+    print("Test: Random combination of search, sort by and filtering works as expected")
