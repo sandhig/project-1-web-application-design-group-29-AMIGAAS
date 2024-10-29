@@ -22,7 +22,7 @@ class ProfilesModelTests(TestCase):
     
 
     def test_profile_str_method(self):
-        """ Test that the str method returns the email of the profile passed into it"""
+        """ Test that the str method returns the email of the profile passed into it """
         # Create a user with an email
         user = User.objects.create_user(username="testuser", password="Test1234!", email="test.user@mail.utoronto.ca")
         profile = Profile.objects.create(user=user)
@@ -32,7 +32,21 @@ class ProfilesModelTests(TestCase):
         print("Test: Profile __str__ Method -- PASS")
 
     
+    def test_generate_verification_code(self):
+        """ Test that the generate verification code function works as expected """
+        # Create a user and profile, then generate a verification code
+        user = User.objects.create_user(username="testuser", password="testpass")
+        profile = Profile.objects.create(user=user)
+        code = profile.generate_verification_code()
+
+        # Check code properties - within range and is numerical
+        self.assertEqual(len(code), 6)
+        self.assertTrue(code.isdigit())
+        self.assertEqual(profile.verification_code, code)
+        print("Test: Profile Generate Verification Code Method -- PASS")
+
     
+
     
 
 
