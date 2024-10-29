@@ -44,3 +44,14 @@ class Product(models.Model):
     @property
     def image_url(self):
         return self.image.url if self.image else None
+
+
+class Wishlist(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name='wishlist')
+    product = models.ForeignKey(Product, on_delete=models.CASCADE)
+
+    class Meta:
+        unique_together = ('user', 'product')  # Ensures each product is only added once per user
+
+    def __str__(self):
+        return f"{self.user.username}'s wishlist item: {self.product.name}"

@@ -11,7 +11,9 @@ from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 import boto3
 from django.conf import settings
-
+from .models import Product, Wishlist
+from rest_framework.authtoken.models import Token
+from django.contrib.auth.models import User
 import logging
 
 logger = logging.getLogger('django')
@@ -97,3 +99,31 @@ class ProductAPIView(APIView):
         product = get_object_or_404(Product, pk=pk)
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def wishlist_view(request):
+    wishlist_items = Wishlist.objects.filter(user=request.user)
+    products = [item.product for item in wishlist_items]
+    serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def add_to_wishlist(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    wishlist_item, created = Wishlist.objects.get_or_create(user=request.user, product=product)
+    if created:
+        return Response({"status": "Product added to wishlist"}, status=status.HTTP_201_CREATED)
+    return Response({"status": "Product already in wishlist"}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def remove_from_wishlist(request, product_id):
+    product = get_object_or_404(Product, id=product_id)
+    wishlist_item = Wishlist.objects.filter(user=request.user, product=product).first()
+    if wishlist_item:
+        wishlist_item.delete()
+        return Response({"status": "Product removed from wishlist"}, status=status.HTTP_200_OK)
+    return Response({"status": "Product not found in wishlist"}, status=status.HTTP_404_NOT_FOUND)

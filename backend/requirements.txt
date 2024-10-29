@@ -13,3 +13,4 @@ daphne
 boto3 
 django-storages
 whitenoise
+Pillow

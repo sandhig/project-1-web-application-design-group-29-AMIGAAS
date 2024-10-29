@@ -16,11 +16,17 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.views.generic import RedirectView
+from rest_framework.authtoken.views import obtain_auth_token
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('apps.products.urls')),
     path('api/', include('apps.private_messaging.urls')),
     path('api/', include('apps.products.urls')),
-    path('api/', include('apps.profiles.urls'))
+    path('api/', include('apps.profiles.urls')),
+    path('api-token-auth/', obtain_auth_token, name='api_token_auth'),
+    path('', RedirectView.as_view(url='/api/products/', permanent=False)),
 ]
