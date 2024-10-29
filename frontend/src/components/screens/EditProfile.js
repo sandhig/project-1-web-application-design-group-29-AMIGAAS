@@ -46,13 +46,22 @@ function EditProfile() {
     const handleSave = (e) => {
         e.preventDefault();
 
+        // Structure data to match what the serializer expects
+        const updatedProfile = {
+            user: {
+                first_name: profile.first_name,
+                last_name: profile.last_name,
+           },
+           bio: profile.bio,
+        };
+
         fetch(`http://3.87.240.14:8000/api/profiles/edit-profile/`, {
-            method: 'PUT',
+            method: 'POST',
             headers: {
                 'Authorization': `Token ${token}`,
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(profile),
+            body: JSON.stringify(updatedProfile),
         })
         .then(response => {
             if (response.ok) {
