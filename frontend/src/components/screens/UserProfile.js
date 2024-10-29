@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useUser } from '../../context/UserContext';
+import Header from "../../components/Header";
 
 
 function UserProfile() {
@@ -41,6 +42,7 @@ function UserProfile() {
 
     return (
         <div className="profile-container">
+            <Header/>
             
             <div className="profile-header">
                 <div className="profile-icon">
