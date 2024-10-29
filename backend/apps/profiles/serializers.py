@@ -25,6 +25,22 @@ class ProfilesSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Email already exists.")
         
         return value 
+
+    def update(self, instance, validated_data):
+        # Handle user-related fields
+        user_data = validated_data.get('user', {})
+        user = instance.user  # Access the related User instance
+
+        # Update first name and last name if they are in validated data
+        user.first_name = user_data.get('first_name', user.first_name)
+        user.last_name = user_data.get('last_name', user.last_name)
+        user.save()
+
+        # Update profile-related field (e.g., bio)
+        instance.bio = validated_data.get('bio', instance.bio)
+        instance.save()
+
+        return instance
     
     def create(self, validated_data):
         verification_code=get_random_string(length=6, allowed_chars='0123456789')
