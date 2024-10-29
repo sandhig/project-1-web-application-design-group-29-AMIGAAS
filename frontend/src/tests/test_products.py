@@ -12,6 +12,10 @@ PRODUCTS_PAGE_URL = 'http://localhost:3000/products'
 EMAIL = 'input[name="email"]'
 PASSWORD = 'input[name="password"]'
 LOGIN = 'Login'
+CATEGORY = 'Category'
+CONDITION = 'Condition'
+LOCATION = 'Location'
+
 LOGIN_MSG = 'Login successful!'
 PRODUCTS_CONTAINER = '.products-container'
 PRODUCT_GRID = '.products'
@@ -19,9 +23,12 @@ PRODUCT_ITEM = '.product-item'
 
 
 ROLE_BUTTON = 'button'
+ROLE_OPTION = 'option'
 
 # CHOICES
 CATEGORY_CHOICES = ['Textbook', 'Clothing', 'Furniture', 'Electronics', 'Stationary', 'Miscellaneous', 'None']
+CONDITION_CHOICES = ['New', 'Used - Like New', 'Used - Good', 'Used - Fair', 'None']
+LOCATION_CHOICES = ['Robarts', 'Gerstein', 'Computer Science Library', 'Bahen', 'Galbraith', 'Sanford Fleming', 'None']
 
 
 
@@ -83,6 +90,7 @@ def test_product_list_displays_correctly(page):
     assert product_grid.locator(PRODUCT_ITEM).count() > 0 # count that more than 1 product is listed in the grid
     print("Test: Product List Grid is displayed properly")
 
+
 def test_filter_by_category(page):
     """ Test to ensure filter by category works as expected """
     page.goto(PRODUCTS_PAGE_URL)
@@ -91,20 +99,20 @@ def test_filter_by_category(page):
 
     # Count original products
     original_product_count = page.locator(PRODUCT_GRID).locator(PRODUCT_ITEM).count() # count original products listed in the grid
-    print("Original count:", original_product_count)
+    print(".Original count:", original_product_count)
 
     for choice in CATEGORY_CHOICES:
         # Click on the Category label or dropdown
-        page.get_by_label('Category').click()
+        page.get_by_label(CATEGORY).click()
         page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
         
         # Select the option with the name 'Textbook'
-        page.get_by_role('option', name=choice).click()
+        page.get_by_role(ROLE_OPTION, name=choice).click()
         page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
 
         # Locate the products container
         filtered_product_count = page.locator(PRODUCT_GRID).locator(PRODUCT_ITEM).count() # count filtered products listed in the grid
-        print("Choice is:", choice, " -- Filtered count:", filtered_product_count)
+        print("..Choice is:", choice, " -- Filtered count:", filtered_product_count)
 
         # filtered items must be less than or equal to original for each individual choice
         # filtered items must be equal to original when filter is 'None'
@@ -112,7 +120,69 @@ def test_filter_by_category(page):
             assert filtered_product_count == original_product_count
         else: 
             assert filtered_product_count <= original_product_count
-        print("..")
     print("Test: Filter by Category works as expected")
 
+
+def test_filter_by_condition(page):
+    """ Test to ensure filter by condition works as expected """
+    page.goto(PRODUCTS_PAGE_URL)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG) 
+    assert page.locator(PRODUCTS_CONTAINER).is_visible()
+
+    # Count original products
+    original_product_count = page.locator(PRODUCT_GRID).locator(PRODUCT_ITEM).count() # count original products listed in the grid
+    print(".Original count:", original_product_count)
+
+    for choice in CONDITION_CHOICES:
+        # Click on the Condition label or dropdown
+        page.get_by_label(CONDITION).click()
+        page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+        
+        # Select the option with the name 'Textbook'
+        page.get_by_role(ROLE_OPTION, name=choice, exact=True).click()
+        page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+        # Locate the products container
+        filtered_product_count = page.locator(PRODUCT_GRID).locator(PRODUCT_ITEM).count() # count filtered products listed in the grid
+        print("..Choice is:", choice, " -- Filtered count:", filtered_product_count)
+
+        # filtered items must be less than or equal to original for each individual choice
+        # filtered items must be equal to original when filter is 'None'
+        if choice == 'None':
+            assert filtered_product_count == original_product_count
+        else: 
+            assert filtered_product_count <= original_product_count
+    print("Test: Filter by Condition works as expected")
+
+
+def test_filter_by_location(page):
+    """ Test to ensure filter by location works as expected """
+    page.goto(PRODUCTS_PAGE_URL)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG) 
+    assert page.locator(PRODUCTS_CONTAINER).is_visible()
+
+    # Count original products
+    original_product_count = page.locator(PRODUCT_GRID).locator(PRODUCT_ITEM).count() # count original products listed in the grid
+    print(".Original count:", original_product_count)
+
+    for choice in LOCATION_CHOICES:
+        # Click on the Condition label or dropdown
+        page.get_by_label(LOCATION).click()
+        page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+        
+        # Select the option with the name 'Textbook'
+        page.get_by_role(ROLE_OPTION, name=choice).click()
+        page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+        # Locate the products container
+        filtered_product_count = page.locator(PRODUCT_GRID).locator(PRODUCT_ITEM).count() # count filtered products listed in the grid
+        print("..Choice is:", choice, " -- Filtered count:", filtered_product_count)
+
+        # filtered items must be less than or equal to original for each individual choice
+        # filtered items must be equal to original when filter is 'None'
+        if choice == 'None':
+            assert filtered_product_count == original_product_count
+        else: 
+            assert filtered_product_count <= original_product_count
+    print("Test: Filter by Location works as expected")
 
