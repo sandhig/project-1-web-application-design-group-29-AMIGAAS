@@ -34,13 +34,14 @@ def get_product_choices(request):
 class ProductAPIView(APIView):
     def get(self, request, pk=None):
         search_term = request.query_params.get('search', None)
+        current_user = request.user.profile
         
         if pk:
             product = get_object_or_404(Product, id=pk)
             serializer = ProductSerializer(product)
             return Response(serializer.data)
         else:
-            products = Product.objects.select_related('user').all()
+            products = Product.objects.select_related('user').exclude(user=current_user.user)
             if search_term:
                 products = products.filter(name__icontains=search_term)
 
