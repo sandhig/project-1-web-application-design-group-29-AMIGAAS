@@ -4,6 +4,7 @@ import { Select, MenuItem, FormControl, InputLabel, Slider, Typography, Button }
 import axios from 'axios';
 import {Link} from 'react-router-dom'; 
 import { useUser } from '../../context/UserContext';
+import { useNavigate } from 'react-router-dom';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -19,6 +20,7 @@ const Products = () => {
 
   const token = localStorage.getItem('authToken');
   const { currentUser } = useUser();
+  const navigate = useNavigate();
 
   const filteredProducts = products
     .filter(product => {
@@ -97,6 +99,10 @@ const Products = () => {
       })
       .catch(error => console.error('Error fetching preset values:', error));
   }, []);
+
+  const handleOpenProduct = (id) => {
+    navigate(`/products/${id}`);
+  };
 
   return (
     <div className="products-container">
@@ -202,7 +208,7 @@ const Products = () => {
           <div className="products">
             {filteredProducts.map(product => (
               <div key={product.id} className="product-item">
-                <Link to="/products/listing" state={{ product }}>
+                <div onClick={() => handleOpenProduct(product.id)}>
                   {product.image_url ? 
                   (<img className="product-image" src={product.image_url}></img>) 
                   : <img className="product-image" src="/images/no-image-icon.png"></img>}
@@ -212,7 +218,7 @@ const Products = () => {
                     <div className="product-title">{product.name}</div>
                     <div className="product-location">{product.pickup_location}</div>
                   </div>
-                </Link>
+                </div>
               </div>
             ))}
           </div>
