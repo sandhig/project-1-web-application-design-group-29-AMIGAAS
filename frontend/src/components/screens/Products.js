@@ -2,12 +2,16 @@ import React, { useState, useEffect } from "react";
 import './Products.css';
 import { useUser } from '../../context/UserContext';
 import { useNavigate } from 'react-router-dom';
+import IconButton from "@mui/material/IconButton";
+import PauseIcon from '@mui/icons-material/Pause';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
+  const [isPlaying, setIsPlaying] = useState(true);
 
   const token = localStorage.getItem('authToken');
   const { currentUser } = useUser();
@@ -32,6 +36,10 @@ const Products = () => {
     },
   };
 
+  const handlePlayPause = () => {
+    setIsPlaying(!isPlaying);
+  };
+
   useEffect(() => {
     fetch('http://3.87.240.14:8000/api/products/', {
       headers: {
@@ -52,28 +60,33 @@ const Products = () => {
       <div className="product-grid">
           {currentUser ? (<h1 style={{textAlign: "left", padding: "0 45px", margin: "35px 0 0 0"}}>{greeting}, {currentUser.first_name}</h1>) : null} 
           
-          <Carousel
-            responsive={responsive}
-            swipeable={true}
-            draggable={true}
-            showDots={true}
-            infinite={true}
-            autoPlay={true}
-            autoPlaySpeed={4000}
-            keyBoardControl={true}
-            customTransition="all 0.5s"
-            transitionDuration={500}
-            containerClass="carousel-container"
-            removeArrowOnDeviceType={["tablet", "mobile"]}
-            dotListClass="line-dot-style"
-            itemClass="carousel-item-padding-40-px"
-          >
-            <div>Item 1</div>
-            <div>Item 2</div>
-            <div>Item 3</div>
-            <div>Item 4</div>
-            <div>Item 5</div>
-          </Carousel>
+          <div className="carousel-container">
+            <Carousel
+              responsive={responsive}
+              swipeable={true}
+              draggable={true}
+              showDots={true}
+              infinite={true}
+              autoPlay={isPlaying} 
+              autoPlaySpeed={4000}
+              keyBoardControl={true}
+              customTransition="all 0.5s"
+              transitionDuration={500}
+              containerClass="carousel-container"
+              removeArrowOnDeviceType={["tablet", "mobile"]}
+              dotListClass="line-dot-style"
+              itemClass="carousel-item-padding-40-px"
+            >
+              <div>Item 1</div>
+              <div>Item 2</div>
+              <div>Item 3</div>
+              <div>Item 4</div>
+              <div>Item 5</div>
+            </Carousel>
+            <IconButton onClick={handlePlayPause} className="play-pause-button">
+              {isPlaying ? (<PauseIcon style={{ fill: "white" }} />) : (<PlayArrowIcon style={{ fill: "white" }} />)}
+            </IconButton>
+          </div>
         
           <div className="title">
             <h2>Featured listings</h2>

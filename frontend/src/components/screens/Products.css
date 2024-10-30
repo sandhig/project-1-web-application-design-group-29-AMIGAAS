@@ -127,6 +127,7 @@ a:active {
 
 .carousel-container {
     height: 400px;
+    position: relative;
 }
 
 .carousel-item {
@@ -154,4 +155,18 @@ a:active {
 .line-dot-style li.react-multi-carousel-dot--active button {
     height: 6px;
     background-color: #333;
+}
+
+.play-pause-button {
+    position: absolute !important;
+    bottom: 10px;
+    right: calc(4% + 1px);
+    background-color: rgba(85, 85, 85, 0.8) !important;
+    border: none;
+    border-radius: 50% !important;
+    transition: background-color 0.3s !important;
+}
+  
+.play-pause-button:hover {
+    background-color: rgba(0, 0, 0, 0.8) !important;
 }
