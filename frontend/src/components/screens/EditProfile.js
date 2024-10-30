@@ -7,8 +7,9 @@ function EditProfile() {
         first_name: '',
         last_name: '',
         bio: '',
-        profilePic: ''
+        profilePic: null
     });
+
     const [successMessage, setSuccessMessage] = useState('');
     const navigate = useNavigate();
     const { currentUser } = useUser();
