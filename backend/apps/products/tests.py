@@ -1,5 +1,6 @@
 from django.test import TestCase
 from .models import Product
+from ..profiles.models import Profile
 from django.contrib.auth.models import User
 from decimal import Decimal
 from django.core.exceptions import ValidationError
@@ -202,7 +203,7 @@ class ProductModeltests(TestCase):
         self.assertEqual(str(product), "Test Valid Product")
         print('Test: Product __str__ Method - PASS')
     
-    # TODO add test_image.jpg to AWS S3 bucket
+
     """ Test that the correct url is returned for the image of a product """
     def test_image_url_properly_with_image(self):
         media_root = 'https://ece444-s3-2.s3.amazonaws.com/'
@@ -211,6 +212,7 @@ class ProductModeltests(TestCase):
         self.assertEqual(product.image_url, media_root + 'images/test_image.jpg')
         print('Test: Image URL Property with Image - PASS')
     
+
     def test_image_url_property_without_image(self):
         """ Test that a null url is returned for an null image of a product """
         product = self.create_valid_product()
@@ -336,6 +338,7 @@ class ProductUrlTests(TestCase):
         self.client = APIClient()
         self.user = User.objects.create_user(username='testuser', password='Test1234!')
         self.client.force_authenticate(user=self.user)
+        self.profile = Profile.objects.create(user=self.user)
 
         # Create a product to test with
         self.product = Product.objects.create(
@@ -348,8 +351,8 @@ class ProductUrlTests(TestCase):
             description="Test description",
             image=""
         )
-        
-    
+
+
     # URL Resolution Tests
     def test_product_list_url_resolves(self):
         """ Test that the 'products/' URL resolves to ProductAPIView """
@@ -419,12 +422,17 @@ class ProductUrlTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         print('Test: Unauthenticated Users cannot access Product Choices - PASS')
 
+
 class ProductViewTests(TestCase):
     def setUp(self):
         self.client = APIClient()
         self.user = User.objects.create_user(username="testuser", password="Test1234!")
         self.token = Token.objects.create(user=self.user)
         self.client.credentials(HTTP_AUTHORIZATION="Token " + self.token.key)
+        self.profile = Profile.objects.create(user=self.user)
+
+        self.other_user = User.objects.create_user(username = 'othertestuser', password='Test12345!')
+        self.other_profile = Profile.objects.create(user=self.other_user)
 
         # Create a sample product
         self.product = Product.objects.create(
@@ -436,9 +444,37 @@ class ProductViewTests(TestCase):
             pickup_location="Robarts",
             description="Sample description"
         )
+
+         # Create other products (i.e products by other users except current)
+        self.product_other1 = Product.objects.create(
+            user=self.other_user,
+            name="Test Product Other",
+            category="Furniture",
+            price=70.00,
+            condition="New",
+            pickup_location="Bahen",
+            description="Test description other",
+            image=""
+        )
+
+        self.product_other2 = Product.objects.create(
+            user=self.other_user,
+            name="Test Product Another",
+            category="Clothing",
+            price=40.00,
+            condition="New",
+            pickup_location="Robarts",
+            description="Test description another",
+            image=""
+        )
+
         self.product_detail_url = reverse("product_detail", kwargs={"pk": self.product.id})
         self.product_list_url = reverse("product_list")
         self.test_image_path = os.path.join(os.path.dirname(__file__), 'test_image_Textbook.jpg')
+
+        # for products by other users
+        self.product_other_1_detail_url = reverse("product_detail", kwargs={"pk": self.product_other1.id})
+        self.product_other_2_detail_url = reverse("product_detail", kwargs={"pk": self.product_other2.id})
 
 
     def test_get_product_choices(self):
@@ -536,5 +572,35 @@ class ProductViewTests(TestCase):
         response = self.client.get(self.product_detail_url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         print('Test: Unathorized Access Denied - PASS')
+
+    
+    def test_retrieve_all_products_except_current_users(self):
+        """Test to ensure current user's products are not shown in the product grid list."""
+        response = self.client.get(self.product_list_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Retrieve the names of the products shown in the list
+        product_names = [product['name'] for product in response.data]
+
+        # Current user should be able to find only the products listed by other user
+        self.assertIn(self.product_other1.name, product_names)
+        self.assertIn(self.product_other2.name, product_names)
+        self.assertNotIn(self.product.name, product_names)
+        print("Test: Retrieve All Products Except Curent User's - PASS")
+
+    
+    def test_search_product_functionality(self):
+        """Test searching for products with a search term."""
+        # adjust url to include the search term
+        url = self.product_list_url + '?search=other'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Retrieve the names of the products returned, ensure that only the matching ones are present
+        product_names = [product['name'] for product in response.data]
+        self.assertIn(self.product_other1.name, product_names)
+        self.assertIn(self.product_other2.name, product_names)
+        self.assertNotIn(self.product.name, product_names)
+        print("Test: Search Product Functionality - PASS")
 
     

@@ -13,3 +13,5 @@ daphne
 boto3 
 django-storages
 whitenoise
+pytest
+playwright
