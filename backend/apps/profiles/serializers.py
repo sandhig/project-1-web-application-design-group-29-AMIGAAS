@@ -12,10 +12,12 @@ class ProfilesSerializer(serializers.ModelSerializer):
     last_name = serializers.CharField(source='user.last_name')
     password = serializers.CharField(write_only=True, source='user.password')
     bio = serializers.CharField()
+    profilePic = serializers.ImageField(read_only=True)
+    profilePic_url = serializers.CharField(read_only=True)
 
     class Meta:
         model = Profile
-        fields = ['user_id', 'email', 'first_name', 'last_name', 'password', 'bio']
+        fields = ['user_id', 'email', 'first_name', 'last_name', 'password', 'bio', 'profilePic', 'profilePic_url']
 
     def validate_email(self, value):
         if '@mail.utoronto.ca' not in value:
@@ -41,6 +43,10 @@ class ProfilesSerializer(serializers.ModelSerializer):
         instance.save()
         
         return instance
+    
+    def post(self):
+        # placeholder for post function
+        return 
 
     def create(self, validated_data):
         verification_code=get_random_string(length=6, allowed_chars='0123456789')

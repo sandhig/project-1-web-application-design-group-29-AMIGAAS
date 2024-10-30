@@ -7,6 +7,7 @@ function EditProfile() {
         first_name: '',
         last_name: '',
         bio: '',
+        profilePic: ''
     });
     const [successMessage, setSuccessMessage] = useState('');
     const navigate = useNavigate();
@@ -29,6 +30,7 @@ function EditProfile() {
                     first_name: data.first_name || '',
                     last_name: data.last_name || '',
                     bio: data.bio || '',
+                    profilePic: data.profilePic || ''
                 });
             })
             .catch(error => console.error('Error fetching profile:', error));
