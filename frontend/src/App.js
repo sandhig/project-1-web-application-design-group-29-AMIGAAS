@@ -22,7 +22,7 @@ function App() {
       <div className="App">
         <UserProvider>
           <Router>
-            <Header/>
+            {/*<Header/>*/}
     
             <Routes>
               {/* Public pages */}

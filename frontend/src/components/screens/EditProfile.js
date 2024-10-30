@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../context/UserContext';
 import './EditProfile.css';
+import Header from "../../components/Header"
 
 function EditProfile() {
     
@@ -65,14 +66,23 @@ function EditProfile() {
         e.preventDefault();
 
         // Structure data to match what the serializer expects
-        const updatedProfile = {
+        const formData = new FormData();
+        formData.append('first_name', profile.first_name);
+        formData.append('last_name', profile.last_name); 
+        formData.append('bio', profile.bio); 
+        
+        if (profile.profilePic) {
+            formData.append('profilePic', profile.profilePic);
+        }
+    
+        /*const updatedProfile = {
             user: {
                 first_name: profile.first_name,
                 last_name: profile.last_name,
             },
             bio: profile.bio,
             profilePic: profile.profilePic,
-        };
+        };*/
 
         fetch(`http://3.87.240.14:8000/api/profiles/edit-profile/`, {
             method: 'POST',
@@ -80,13 +90,13 @@ function EditProfile() {
                 'Authorization': `Token ${token}`,
                 'Content-Type': 'application/json',
             },
-            body: JSON.stringify(updatedProfile),
+            body: formData //JSON.stringify(updatedProfile),
         })
         .then(response => {
             if (response.ok) {
                 setSuccessMessage('Profile saved successfully!'); // Set success message
                 setTimeout(() => setSuccessMessage(''), 3000); // Clear message after 3 seconds
-                navigate(`/profile/${currentUser.id}`);
+                navigate(`/user/${currentUser.id}`);
             } else {
                 console.error('Error saving profile:', response.statusText);
             }
@@ -96,6 +106,7 @@ function EditProfile() {
 
     return (
         <div className="edit-profile-container">
+            <Header />
             <h1>Edit Profile</h1>
             <form onSubmit={handleSave} className='profile-form'>
                 <label className="profile-label">
@@ -137,8 +148,12 @@ function EditProfile() {
                         accept="image/*"
                     />
                 </label>
+
                 {profilePicPreview && (
-                    <img src={profilePicPreview} alt="Profile Preview" style={{ width: '100px', height: '100px', borderRadius: '50%' }} />
+                    <img src={profilePicPreview} 
+                    alt="Profile Preview" 
+                    style={{ width: '100px', height: '100px', borderRadius: '50%' }} 
+                    />
                 )}
                 <button type="submit" className="profile-save-button">Save Changes</button>
                 {successMessage && <p className="success-message">{successMessage}</p>}

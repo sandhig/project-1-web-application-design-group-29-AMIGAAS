@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useUser } from '../../context/UserContext';
 import "./UserProfile.css"
+import Header from "../../components/Header"
 
 
 function UserProfile() {
@@ -39,9 +40,13 @@ function UserProfile() {
     }
 
     return (
+        <div>
+            <Header />
+        
         <div className="profile-container">
             
             <div className="profile-header">
+            
                 <div className="profile-icon">
                     {user.profilePic ? (
                         <img src={user.profilePic} alt="Profile" className="profile-pic" />
@@ -71,6 +76,7 @@ function UserProfile() {
                     <button onClick={handleEditProfile}>Edit Profile</button>
                 )}
             </div>
+        </div>
         </div>
     );
 }

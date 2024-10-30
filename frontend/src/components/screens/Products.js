@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from 'react-router-dom';
+import Header from "../../components/Header"
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -25,6 +26,7 @@ const Products = () => {
   
   return (
     <div>
+        <Header />
         <h2>Products</h2>
         <Link to="/products/create">
             <button className="button">Create Listing</button>
