@@ -10,13 +10,11 @@ import UsersSignUp from "./components/screens/UsersSignUp";
 import UsersLogin from './components/screens/UsersLogin';
 import HomeScreen from "./components/screens/HomeScreen"; 
 import EmailVerification from './components/screens/EmailVerification';
-//import Header from "./components/Header"; 
+import Header from "./components/Header"; 
 import PrivateRoute from './components/PrivateRoute';
 import { UserProvider } from './context/UserContext';
 import WelcomePage from './components/screens/WelcomePage';
 import EditProfile from './components/screens/EditProfile';
-
-
 
 function App() {
 
@@ -24,7 +22,7 @@ function App() {
       <div className="App">
         <UserProvider>
           <Router>
-            {/*<Header/>*/}
+            <Header/>
     
             <Routes>
               {/* Public pages */}
@@ -34,10 +32,10 @@ function App() {
               <Route path = "/profiles/login" element={<UsersLogin/>}></Route>
 
               {/* Protected pages */}
-              <Route path="/homepage" element={<PrivateRoute element={<HomeScreen />} />}></Route>
+              <Route path = "/homepage" element={<PrivateRoute element={<HomeScreen />} />}></Route>
               <Route path="/products" element={<PrivateRoute element={<Products />} />} />
               <Route path="/products/create" element={<PrivateRoute element={<CreateListing />} />} />
-              <Route path="/user/:userId" element={<PrivateRoute element={<UserProfile />} />} /> {/* Why is it user/userId and profiles/userId????*/}
+              <Route path="/user/:userId" element={<PrivateRoute element={<UserProfile />} />} />
               <Route path="/messages" element={<PrivateRoute element={<PrivateMessage />} />} />
               <Route path="/profile/:userId" element={<UserProfile />} />
               <Route path="/profiles/edit-profile" element={<EditProfile />} />

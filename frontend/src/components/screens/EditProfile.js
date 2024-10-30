@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../context/UserContext';
-import Header from "../../components/Header";
 
 function EditProfile() {
     const [profile, setProfile] = useState({
@@ -78,7 +77,6 @@ function EditProfile() {
 
     return (
         <div className="edit-profile-container">
-            <Header />
             <h1>Edit Profile</h1>
             <form onSubmit={handleSave}>
                 <label>

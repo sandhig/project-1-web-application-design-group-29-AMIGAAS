@@ -3,7 +3,6 @@ import axios from "axios";
 import './CreateListing.css'
 import '../UploadAndDisplayImage.js'
 import UploadAndDisplayImage from "../UploadAndDisplayImage.js";
-import Header from "../../components/Header";
 
 const CreateListing = () => {
   const [products, setProducts] = useState([]);
@@ -113,7 +112,6 @@ const CreateListing = () => {
   
   return (
     <div>
-      <Header />
       <h2 className="column-container">Products</h2>
       {/* Form to Add New Listing */}
       <form onSubmit={handleSubmit}>
