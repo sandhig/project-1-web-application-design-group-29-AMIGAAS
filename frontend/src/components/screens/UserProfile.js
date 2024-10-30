@@ -13,7 +13,7 @@ function UserProfile() {
 
     useEffect(() => {
         if (currentUser) {
-            fetch(`http://3.87.240.14:8000/api/profile/${userId}/`, {
+            fetch(`http://127.0.0.1:8000/api/profile/${userId}/`, {
                 method: 'GET',
                 headers: {
                   'Authorization': `Token ${token}`,

@@ -92,7 +92,7 @@ const CreateListing = () => {
     if (newProduct.size) formData.append("size", newProduct.size); // optional
     if (newProduct.colour) formData.append("colour", newProduct.colour);
 
-    axios.post("http://3.87.240.14:8000/api/products/", formData, {
+    axios.post("http://127.0.0.1:8000/api/products/", formData, {
       headers: {
         'Authorization': `Token ${token}`,
         "Content-Type": "multipart/form-data",

@@ -38,7 +38,7 @@ const UsersSignUp = () => {
     }
 
     try {
-      const response = await axios.post('http://3.87.240.14:8000/api/profiles/signup', formData, {
+      const response = await axios.post('http://127.0.0.1:8000/api/profiles/signup', formData, {
         headers: {
           'Content-Type': 'application/json',
         },

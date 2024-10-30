@@ -30,7 +30,7 @@ const EmailVerification = () => {
     };
 
     try {
-      const response = await axios.post('http://3.87.240.14:8000/api/profiles/verify-email', trimmedFormData, {
+      const response = await axios.post('http://127.0.0.1:8000/api/profiles/verify-email', trimmedFormData, {
         headers: {
           'Content-Type': 'application/json',
         },

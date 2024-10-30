@@ -19,3 +19,4 @@ class Profile(models.Model):
         self.verification_code = code
         self.save()
         return code
+    

@@ -9,7 +9,7 @@ const Products = () => {
   // Fetch products from the backend
   useEffect(() => {
     axios
-      .get("http://3.87.240.14:8000/api/products/", {
+      .get("http://127.0.0.1:8000/api/products/", {
         headers: {
           'Authorization': `Token ${token}`,
           'Content-Type': 'application/json',
