@@ -60,11 +60,13 @@ const Products = () => {
   const scrollContainerRef = useRef(null);
 
   const scrollLeft = () => {
-    scrollContainerRef.current.scrollBy({ left: -230, behavior: "smooth" });
+    const itemWidth = scrollContainerRef.current.children[0].offsetWidth;
+    scrollContainerRef.current.scrollBy({ left: -itemWidth, behavior: "smooth" });
   };
 
   const scrollRight = () => {
-    scrollContainerRef.current.scrollBy({ left: 230, behavior: "smooth" });
+    const itemWidth = scrollContainerRef.current.children[0].offsetWidth;
+    scrollContainerRef.current.scrollBy({ left: itemWidth, behavior: "smooth" });
   };
 
   return (
@@ -89,11 +91,9 @@ const Products = () => {
               dotListClass="line-dot-style"
               itemClass="carousel-item-padding-40-px"
             >
-              <div>Item 1</div>
-              <div>Item 2</div>
-              <div>Item 3</div>
-              <div>Item 4</div>
-              <div>Item 5</div>
+              <img src="/images/carousel/1.png"></img>
+              <img src="/images/carousel/2.png"></img>
+              <img src="/images/carousel/3.png"></img>
             </Carousel>
             <IconButton onClick={handlePlayPause} className="play-pause-button">
               {isPlaying ? (<PauseIcon style={{ fill: "white" }} />) : (<PlayArrowIcon style={{ fill: "white" }} />)}

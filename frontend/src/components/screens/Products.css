@@ -131,8 +131,11 @@ a:active {
 
 
 .carousel-container {
-    height: 400px;
     position: relative;
+    width: 100%;
+    min-height: 200px;
+    overflow: hidden;
+    padding: 20px 0;
 }
 
 .carousel-item {
@@ -141,6 +144,13 @@ a:active {
     align-items: center;
     justify-content: center;
 }
+
+.carousel-container img {
+    width: 100%;
+    height: auto;
+    object-fit: cover;
+    min-height: 200px;
+  }
 
 .line-dot-style {
     display: flex;
@@ -164,7 +174,7 @@ a:active {
 
 .play-pause-button {
     position: absolute !important;
-    bottom: 10px;
+    bottom: 60px;
     right: calc(4% + 1px);
     background-color: rgba(85, 85, 85, 0.8) !important;
     border: none;
