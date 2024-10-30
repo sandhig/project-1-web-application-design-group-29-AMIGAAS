@@ -122,3 +122,16 @@ a:active {
     color: grey;
     padding-top: 5px;
 }
+
+
+
+.carousel-container {
+    height: 400px;
+  }
+  
+  .carousel-item {
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }

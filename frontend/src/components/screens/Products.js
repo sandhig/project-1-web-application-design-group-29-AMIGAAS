@@ -6,6 +6,9 @@ import {Link} from 'react-router-dom';
 import { useUser } from '../../context/UserContext';
 import { useNavigate } from 'react-router-dom';
 
+import Carousel from "react-multi-carousel";
+import "react-multi-carousel/lib/styles.css";
+
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
@@ -77,6 +80,14 @@ const Products = () => {
     greeting = 'Welcome back';
   }
 
+  const responsive = {
+    allScreens: {
+      breakpoint: { max: 4000, min: 0 },
+      items: 1,
+    },
+  };
+
+
   useEffect(() => {
     fetch('http://3.87.240.14:8000/api/products/', {
       headers: {
@@ -105,105 +116,35 @@ const Products = () => {
   };
 
   return (
-    <div className="products-container">
-        <div className="filters">
-
-          <FormControl className="category-filter" variant="outlined">
-            <InputLabel id="category-label">Category</InputLabel>
-            <Select
-              labelId="category-label"
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              label="Category"
-            >
-              <MenuItem value=""><em>None</em></MenuItem>
-              {categories.map((category, index) => (
-                <MenuItem key={index} value={category}>
-                  {category.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          <FormControl className="condition-filter" variant="outlined">
-            <InputLabel id="condition-label">Condition</InputLabel>
-            <Select
-              labelId="condition-label"
-              value={selectedCondition}
-              onChange={(e) => setSelectedCondition(e.target.value)}
-              label="Condition"
-            >
-              <MenuItem value=""><em>None</em></MenuItem>
-              {conditions.map((condition, index) => (
-                <MenuItem key={index} value={condition}>
-                  {condition.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          <FormControl className="location-filter" variant="outlined">
-            <InputLabel id="location-label">Location</InputLabel>
-            <Select
-              labelId="location-label"
-              value={selectedLocation}
-              onChange={(e) => setSelectedLocation(e.target.value)}
-              label="Location"
-            >
-              <MenuItem value=""><em>None</em></MenuItem>
-              {locations.map((location, index) => (
-                <MenuItem key={index} value={location}>
-                  {location.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-
-          <FormControl className="price-filter" variant="outlined">
-            <Typography id="max-price-slider" gutterBottom>
-              Max Price
-            </Typography>
-            <Slider
-              value={maxPrice}
-              onChange={(e, newValue) => setMaxPrice(newValue)}
-              valueLabelDisplay="auto"
-              aria-labelledby="max-price-slider"
-              min={0}
-              max={500}
-              step={10}
-              marks={[
-                { value: 500, label: '500+' }
-              ]}
-              sx={{
-                color: "#001f3f"
-              }}
-            />
-          </FormControl>
-
-          <Button onClick={() => {clearFilters()}} variant="outlined">
-            Clear Filters
-          </Button>
-
-        </div>
-        <div className="product-grid">
-          {currentUser ? (<h1 style={{textAlign: "left", padding: "0 45px", margin: "35px 0 0 0"}}>{greeting}, {currentUser.first_name}</h1>) : null}
+    <div>
+      <div className="product-grid">
+          {currentUser ? (<h1 style={{textAlign: "left", padding: "0 45px", margin: "35px 0 0 0"}}>{greeting}, {currentUser.first_name}</h1>) : null} 
           
-
+          <Carousel
+            responsive={responsive}
+            swipeable={true}
+            draggable={true}
+            showDots={true}
+            infinite={true}
+            autoPlay={true}
+            autoPlaySpeed={2000}
+            keyBoardControl={true}
+            customTransition="all 0.5s"
+            transitionDuration={500}
+            containerClass="carousel-container"
+            removeArrowOnDeviceType={["tablet", "mobile"]}
+            dotListClass="custom-dot-list-style"
+            itemClass="carousel-item-padding-40-px"
+          >
+            <div>Item 1</div>
+            <div>Item 2</div>
+            <div>Item 3</div>
+            <div>Item 4</div>
+            <div>Item 5</div>
+          </Carousel>
+        
           <div className="title">
             <h2>Featured listings</h2>
-            <FormControl className="sort-by" variant="outlined">
-              <InputLabel id="sort-label">Sort By</InputLabel>
-              <Select
-                labelId="sort-label"
-                value={sortOption}
-                onChange={(e) => setSortOption(e.target.value)}
-                label="Sort By"
-              >
-                <MenuItem value="priceAsc">Price: Low to High</MenuItem>
-                <MenuItem value="priceDesc">Price: High to Low</MenuItem>
-                <MenuItem value="nameAsc">Name: A-Z</MenuItem>
-              </Select>
-            </FormControl>
           </div>
           <div className="products">
             {filteredProducts.map(product => (
