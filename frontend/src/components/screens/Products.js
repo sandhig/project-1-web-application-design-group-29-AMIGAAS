@@ -1,10 +1,12 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import './Products.css';
 import { useUser } from '../../context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import IconButton from "@mui/material/IconButton";
 import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
@@ -55,6 +57,16 @@ const Products = () => {
     navigate(`/products/${id}`);
   };
 
+  const scrollContainerRef = useRef(null);
+
+  const scrollLeft = () => {
+    scrollContainerRef.current.scrollBy({ left: -230, behavior: "smooth" });
+  };
+
+  const scrollRight = () => {
+    scrollContainerRef.current.scrollBy({ left: 230, behavior: "smooth" });
+  };
+
   return (
     <div>
       <div className="product-grid">
@@ -88,11 +100,18 @@ const Products = () => {
             </IconButton>
           </div>
         
-          <div className="title">
-            <h2>Featured listings</h2>
-          </div>
-          <div className="products">
-            {products.map(product => (
+          <div className="title">Page Turners</div>
+
+          <div style={{ display: "flex", alignItems: "center" }}>
+
+            <IconButton onClick={scrollLeft}>
+              <ArrowLeftIcon style={{ fontSize: "xxx-large" }} />
+            </IconButton>
+
+            <div className="scroll-container" ref={scrollContainerRef}>
+            {products
+              .filter(product => product.category === "Textbook")
+              .map(product => (
               <div key={product.id} className="product-item">
                 <div onClick={() => handleOpenProduct(product.id)}>
                   {product.image_url ? 
@@ -107,6 +126,12 @@ const Products = () => {
                 </div>
               </div>
             ))}
+            </div>
+
+            <IconButton onClick={scrollRight}>
+              <ArrowRightIcon style={{ fontSize: "xxx-large" }} />
+            </IconButton>
+
           </div>
         </div>
     </div>
