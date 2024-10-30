@@ -16,7 +16,7 @@ function EditProfile() {
     useEffect(() => {
         // Fetch profile data to populate form fields
         if (currentUser) {
-            fetch(`http://127.0.0.1:8000/api/user/${currentUser.id}/`, {
+            fetch(`http://3.87.240.14:8000/api/user/${currentUser.id}/`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Token ${token}`,
@@ -55,7 +55,7 @@ function EditProfile() {
             bio: profile.bio,
         };
 
-        fetch(`http://127.0.0.1:8000/api/profiles/edit-profile/`, {
+        fetch(`http://3.87.240.14:8000/api/profiles/edit-profile/`, {
             method: 'POST',
             headers: {
                 'Authorization': `Token ${token}`,
