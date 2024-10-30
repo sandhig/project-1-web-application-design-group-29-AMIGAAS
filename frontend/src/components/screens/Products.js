@@ -1,8 +1,5 @@
 import React, { useState, useEffect } from "react";
 import './Products.css';
-import { Select, MenuItem, FormControl, InputLabel, Slider, Typography, Button } from '@mui/material';
-import axios from 'axios';
-import {Link} from 'react-router-dom'; 
 import { useUser } from '../../context/UserContext';
 import { useNavigate } from 'react-router-dom';
 
@@ -11,62 +8,10 @@ import "react-multi-carousel/lib/styles.css";
 
 const Products = () => {
   const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
-  const [conditions, setConditions] = useState([]);
-  const [locations, setLocations] = useState([]);
-
-  const [sortOption, setSortOption] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedCondition, setSelectedCondition] = useState('');
-  const [selectedLocation, setSelectedLocation] = useState('');
-  const [maxPrice, setMaxPrice] = useState(500);
 
   const token = localStorage.getItem('authToken');
   const { currentUser } = useUser();
   const navigate = useNavigate();
-
-  const filteredProducts = products
-    .filter(product => {
-      if (selectedCategory) {
-        return product.category === selectedCategory.value;
-      }
-      return true;
-    })
-    .filter(product => {
-      if (selectedCondition) {
-        return product.condition === selectedCondition.value;
-      }
-      return true;
-    })
-    .filter(product => {
-      if (selectedLocation) {
-        return product.pickup_location === selectedLocation.value;
-      }
-      return true;
-    })
-    .filter(product => {
-      if (maxPrice === 500) {
-        return true;
-      }
-      return product.price <= maxPrice;
-    })
-    .sort((a, b) => {
-      if (sortOption === 'priceAsc') {
-        return a.price - b.price;
-      } else if (sortOption === 'priceDesc') {
-        return b.price - a.price;
-      } else if (sortOption === 'nameAsc') {
-        return a.name.localeCompare(b.name);
-      }
-      return 0;
-  });
-
-  const clearFilters = () => {
-    setSelectedCategory('');
-    setSelectedCondition('');
-    setSelectedLocation('');
-    setMaxPrice(500);
-  }
 
   const hour = parseInt(new Date().getHours());
   let greeting = '';
@@ -87,7 +32,6 @@ const Products = () => {
     },
   };
 
-
   useEffect(() => {
     fetch('http://3.87.240.14:8000/api/products/', {
       headers: {
@@ -97,18 +41,6 @@ const Products = () => {
       .then(response => response.json())
       .then(data => setProducts(data))
       .catch(error => console.error('Error fetching products:', error));
-      axios.get('http://3.87.240.14:8000/api/product-choices/', {
-        headers: {
-          'Authorization': `Token ${token}`,
-        }
-    })
-      .then(response => {
-        const { categories, conditions, locations } = response.data;
-        setCategories(categories);
-        setConditions(conditions);
-        setLocations(locations);
-      })
-      .catch(error => console.error('Error fetching preset values:', error));
   }, []);
 
   const handleOpenProduct = (id) => {
@@ -127,13 +59,13 @@ const Products = () => {
             showDots={true}
             infinite={true}
             autoPlay={true}
-            autoPlaySpeed={2000}
+            autoPlaySpeed={4000}
             keyBoardControl={true}
             customTransition="all 0.5s"
             transitionDuration={500}
             containerClass="carousel-container"
             removeArrowOnDeviceType={["tablet", "mobile"]}
-            dotListClass="custom-dot-list-style"
+            dotListClass="line-dot-style"
             itemClass="carousel-item-padding-40-px"
           >
             <div>Item 1</div>
@@ -147,7 +79,7 @@ const Products = () => {
             <h2>Featured listings</h2>
           </div>
           <div className="products">
-            {filteredProducts.map(product => (
+            {products.map(product => (
               <div key={product.id} className="product-item">
                 <div onClick={() => handleOpenProduct(product.id)}>
                   {product.image_url ? 
