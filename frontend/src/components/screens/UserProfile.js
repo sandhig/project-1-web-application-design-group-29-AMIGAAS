@@ -46,7 +46,7 @@ function UserProfile() {
                     {user.profilePic ? (
                         <img src={user.profilePic} alt="Profile" className="profile-pic" />
                     ) : (
-                        <img src="/default-profile-icon.jpg" alt="Default Profile" className="profile-pic" />
+                        <img src="/profile-icon.jpg" alt="Default Profile" className="profile-pic" />
                     )}
                 </div>
                 <div className="profile-info">
