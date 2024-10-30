@@ -34,13 +34,14 @@ def get_product_choices(request):
 class ProductAPIView(APIView):
     def get(self, request, pk=None):
         search_term = request.query_params.get('search', None)
+        current_user = request.user.profile
         
         if pk:
             product = get_object_or_404(Product, id=pk)
             serializer = ProductSerializer(product)
             return Response(serializer.data)
         else:
-            products = Product.objects.select_related('user').all()
+            products = Product.objects.select_related('user').exclude(user=current_user.user)
             if search_term:
                 products = products.filter(name__icontains=search_term)
 
@@ -63,7 +64,7 @@ class ProductAPIView(APIView):
                     return Response(serializer.data, status=status.HTTP_201_CREATED)
                 
                 image_file = request.FILES['image']
-                logger.debug(f'Image file size: {image_file.size} bytes')
+                filename = image_file.name.replace(" ", "_")
             
                 s3 = boto3.client(
                     's3',
@@ -73,7 +74,7 @@ class ProductAPIView(APIView):
                 )
                 
                 image_file.seek(0)
-                s3.upload_fileobj(image_file, settings.AWS_STORAGE_BUCKET_NAME, f'images/{image_file.name}')
+                s3.upload_fileobj(image_file, settings.AWS_STORAGE_BUCKET_NAME, f'images/{filename}')
 
                 logger.debug('Image upload successful')
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
