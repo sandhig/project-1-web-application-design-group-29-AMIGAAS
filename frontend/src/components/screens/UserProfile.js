@@ -13,7 +13,7 @@ function UserProfile() {
 
     useEffect(() => {
         if (currentUser) {
-            fetch(`http://3.87.240.14:8000/api/profile/${userId}/`, {
+            fetch(`http://3.87.240.14:8000/api/user/${userId}/`, {
                 method: 'GET',
                 headers: {
                   'Authorization': `Token ${token}`,
@@ -24,8 +24,6 @@ function UserProfile() {
             .then(data => setUser(data));
         }
     }, [userId, currentUser, token]);
-    
-    console.log(userId, currentUser.id)
 
     const handleMessageMe = () => {
         navigate(`/messages?userId=${userId}`);
