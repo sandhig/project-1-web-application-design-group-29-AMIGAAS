@@ -12,7 +12,7 @@ class ProfilesSerializer(serializers.ModelSerializer):
     last_name = serializers.CharField(source='user.last_name')
     password = serializers.CharField(write_only=True, source='user.password')
     bio = serializers.CharField()
-    profilePic = serializers.ImageField(read_only=True)
+    profilePic = serializers.ImageField()
     profilePic_url = serializers.CharField(read_only=True)
 
     class Meta:
@@ -40,6 +40,8 @@ class ProfilesSerializer(serializers.ModelSerializer):
 
         # Update profile-related field (e.g., bio)
         instance.bio = validated_data.get('bio', instance.bio)
+        if 'profilePic' in validated_data:
+            instance.profilePic = validated_data.get('profilePic')
         instance.save()
         
         return instance

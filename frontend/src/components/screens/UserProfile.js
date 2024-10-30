@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useUser } from '../../context/UserContext';
+import "./UserProfile.css"
 
 
 function UserProfile() {
@@ -42,7 +43,11 @@ function UserProfile() {
             
             <div className="profile-header">
                 <div className="profile-icon">
-                    <img src = "/profile-icon.jpg"></img>
+                    {user.profilePic ? (
+                        <img src={user.profilePic} alt="Profile" className="profile-pic" />
+                    ) : (
+                        <img src="/default-profile-icon.jpg" alt="Default Profile" className="profile-pic" />
+                    )}
                 </div>
                 <div className="profile-info">
                     <h2>{user.first_name} {user.last_name}</h2>

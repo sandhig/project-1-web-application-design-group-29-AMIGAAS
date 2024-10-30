@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useUser } from '../../context/UserContext';
+import './EditProfile.css';
 
 function EditProfile() {
+    
+    const navigate = useNavigate();
+
     const [profile, setProfile] = useState({
         first_name: '',
         last_name: '',
@@ -10,10 +14,11 @@ function EditProfile() {
         profilePic: null
     });
 
-    const [successMessage, setSuccessMessage] = useState('');
-    const navigate = useNavigate();
+    const [profilePicPreview, setProfilePicPreview] = useState(null);
     const { currentUser } = useUser();
     const token = localStorage.getItem('authToken');
+
+    const [successMessage, setSuccessMessage] = useState('');
 
     useEffect(() => {
         // Fetch profile data to populate form fields
@@ -33,6 +38,7 @@ function EditProfile() {
                     bio: data.bio || '',
                     profilePic: data.profilePic || ''
                 });
+                setProfilePicPreview(data.profilePic)
             })
             .catch(error => console.error('Error fetching profile:', error));
         }
@@ -46,6 +52,15 @@ function EditProfile() {
         }));
     };
 
+    const handleFileChange = (e) => {
+        const file = e.target.files[0];
+        setProfile(prevProfile => ({
+            ...prevProfile,
+            profilePic: file,
+        }));
+        setProfilePicPreview(URL.createObjectURL(file));  // Preview the selected image
+    };
+
     const handleSave = (e) => {
         e.preventDefault();
 
@@ -56,6 +71,7 @@ function EditProfile() {
                 last_name: profile.last_name,
             },
             bio: profile.bio,
+            profilePic: profile.profilePic,
         };
 
         fetch(`http://3.87.240.14:8000/api/profiles/edit-profile/`, {
@@ -81,34 +97,51 @@ function EditProfile() {
     return (
         <div className="edit-profile-container">
             <h1>Edit Profile</h1>
-            <form onSubmit={handleSave}>
-                <label>
+            <form onSubmit={handleSave} className='profile-form'>
+                <label className="profile-label">
                     First Name:
                     <input
                         type="text"
                         name="first_name"
                         value={profile.first_name}
                         onChange={handleChange}
+                        className="profile-input"
                     />
                 </label>
-                <label>
+                <label className="profile-label">
                     Last Name:
                     <input
                         type="text"
                         name="last_name"
                         value={profile.last_name}
                         onChange={handleChange}
+                        className="profile-input"
                     />
                 </label>
-                <label>
+                <label className='profile-label'>
                     Bio:
                     <textarea
                         name="bio"
                         value={profile.bio}
                         onChange={handleChange}
+                        className='profile-textarea'
+                        row="5"
                     />
                 </label>
-                <button type="submit">Save Changes</button>
+                <label>
+                    Profile Photo:
+                    <input
+                        type="file"
+                        onChange={handleFileChange}  // Update file input handler
+                        className="profile-photo-input"
+                        accept="image/*"
+                    />
+                </label>
+                {profilePicPreview && (
+                    <img src={profilePicPreview} alt="Profile Preview" style={{ width: '100px', height: '100px', borderRadius: '50%' }} />
+                )}
+                <button type="submit" className="profile-save-button">Save Changes</button>
+                {successMessage && <p className="success-message">{successMessage}</p>}
             </form>
         </div>
     );

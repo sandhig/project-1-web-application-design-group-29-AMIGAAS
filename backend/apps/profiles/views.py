@@ -97,6 +97,10 @@ def get_profile (request, userId):
 @permission_classes([IsAuthenticated])
 def edit_profile(request):
     profile = get_object_or_404(Profile, user=request.user)
+    
+    data = request.data.copy()
+    if 'profilePic' in request.FILES:
+        data['profilePic'] = request.FILES['profilePic']
 
     if request.user.id != profile.user.id:
         return Response({'error': 'You are not authorized to edit this profile.'}, status=status.HTTP_403_FORBIDDEN)
