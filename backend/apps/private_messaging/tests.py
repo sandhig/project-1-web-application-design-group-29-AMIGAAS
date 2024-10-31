@@ -289,4 +289,3 @@ class MessagingViewTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.json()['unread_message_count'], 1)
         print('Test: Get Unread Messages - PASS')
- 
