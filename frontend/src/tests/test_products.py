@@ -8,7 +8,7 @@ WAIT_TO_LOAD_SHORT = 1000  # 1000 milliseconds = 1 sec
 
 # CONSTANT URL PATHS
 LOGIN_PAGE_URL = 'http://localhost:3000/profiles/login'
-PRODUCTS_PAGE_URL = 'http://localhost:3000/products'
+CREATE_LISTING_URL = 'http://localhost:3000/products/create'
 
 # LOCATOR SELECTORS
 EMAIL = 'input[name="email"]'
@@ -27,6 +27,7 @@ PRODUCT_PRICE = '.product-price'
 PRODUCT_TITLE = '.product-title'
 PRICE_SLIDER_TRACK = ".MuiSlider-track"
 CLEAR_FILTERS = 'Clear Filters'
+CREATE_LISTING = 'Create Listing'
 
 # ROLES
 ROLE_BUTTON = 'button'
@@ -535,3 +536,55 @@ def test_search_sort_by_filter(page):
     sorted_expected, after_sorting, page = create_random_sort_by_choice(page)
     assert after_sorting == sorted_expected
     print("Test: Random combination of search, sort by and filtering works as expected")
+
+
+def navigate_to_create_listing_page(page):
+    page.goto(PRODUCTS_PAGE_URL)
+    page.get_by_role(ROLE_BUTTON, name=CREATE_LISTING).click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    assert page.get_by_text("Name").is_visible(), "Name error message not displayed" # add title and update text
+    print("Test: Navigate to Create Listing page works as expected")
+
+
+def test_submit_empty_create_listing_form(page):
+    page.goto(PRODUCTS_PAGE_URL)
+    page.get_by_role(ROLE_BUTTON, name=CREATE_LISTING).click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    # Submit empty form
+    page.get_by_role(ROLE_BUTTON, name="Submit").click()
+    
+    # Wait for error messages to appear
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    # Check for error messages
+    assert page.get_by_text("Please fill out this field.").is_visible(), "Name error message not displayed"
+    print("Test: Submit empty Create Listing form works as expected")
+
+
+def test_create_listing_with_invalid_price(page):
+    page.goto(PRODUCTS_PAGE_URL)
+    page.get_by_role(ROLE_BUTTON, name=CREATE_LISTING).click()
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+
+    # fill in other required fields
+    page.get_by_label("Name").fill("Test Product")
+    page.get_by_label("Category").click()
+    page.get_by_role(ROLE_OPTION, name=CATEGORY_CHOICES[0]).click()
+    page.get_by_label("Condition").click()
+    page.get_by_role(ROLE_OPTION, name=CONDITION_CHOICES[0]).click()
+    page.get_by_label("Location").click()
+    page.get_by_role(ROLE_OPTION, name=LOCATION_CHOICES[0]).click() 
+
+    # Set an invalid price 
+    page.get_by_label("Price").fill("1000000000") 
+    page.get_by_role(ROLE_BUTTON, name="Submit").click()
+
+    # Wait for error messages to appear
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    # Check for the specific error message for price
+    assert page.get_by_text("Price must be less than $100,000,000.").is_visible(), "Invalid price error message not displayed"
+
+
