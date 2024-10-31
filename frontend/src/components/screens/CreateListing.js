@@ -104,6 +104,7 @@ function CreateListing() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+    setSubmitError(null);
 
     const payload = new FormData();
     payload.append('name', formData.name);
@@ -124,7 +125,20 @@ function CreateListing() {
       .then(response => {
         navigate('/products');
       })
-      .catch(error => console.error('Error adding product:', error));
+      .catch(error => {
+        console.error('Error adding product:', error);
+        if (error.response && error.response.data) {
+          const backendErrors = error.response.data;
+          const fieldErrors = {};
+
+          Object.keys(backendErrors).forEach(key => {
+            fieldErrors[key] = backendErrors[key].join(' '); // if multiple messages for the same field
+          });
+          setFormErrors(fieldErrors); 
+        } else {
+          setSubmitError('Failed to add product. Please check your input and try again.');
+        }
+      });
   };
 
   return (
