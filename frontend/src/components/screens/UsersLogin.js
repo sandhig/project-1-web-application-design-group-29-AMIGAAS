@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import HeaderPre from "../../components/HeaderPre"
 
 const UsersLogin = () => {
   const [formData, setFormData] = useState({
@@ -36,9 +37,9 @@ const UsersLogin = () => {
         setSuccessMessage('Login successful!');
         setErrorMessage('');
         setTimeout(() => {
-          navigate('/homepage');  // Redirects to verify-email page
-        }, 2000);  // Adjust the timeout duration as needed
-        // Optionally, you could store a token or session data here
+          navigate('/products');  //was /homepage is not /products
+        }, 2000);  
+
       }
     } catch (error) {
       setErrorMessage('Invalid email or password.');
@@ -48,6 +49,7 @@ const UsersLogin = () => {
 
   return (
     <div>
+      <HeaderPre />
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <div>
