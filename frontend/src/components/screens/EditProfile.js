@@ -88,7 +88,6 @@ function EditProfile() {
             method: 'POST',
             headers: {
                 'Authorization': `Token ${token}`,
-                'Content-Type': 'application/json',
             },
             body: formData //JSON.stringify(updatedProfile),
         })
@@ -98,7 +97,7 @@ function EditProfile() {
                 setTimeout(() => setSuccessMessage(''), 3000); // Clear message after 3 seconds
                 navigate(`/user/${currentUser.id}`);
             } else {
-                console.error('Error saving profile:', response.statusText);
+                console.error('Error saving profile:', response);
             }
         })
         .catch(error => console.error('Error:', error));

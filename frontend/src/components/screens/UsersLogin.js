@@ -75,7 +75,7 @@ const UsersLogin = () => {
 
       <p> 
           Not a User? 
-          <Link to="/users/signup"> Signup</Link>
+          <Link to="/profiles/signup"> Signup</Link>
       </p>
 
       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
