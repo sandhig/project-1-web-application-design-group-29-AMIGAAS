@@ -1,53 +1,61 @@
-/* General header styling */
 .header {
-    display: flex;
-    justify-content: flex-start;  /* Align items to the left */
+    padding: 10px 20px;
     align-items: center;
-    background-color: #001f3f;  /* Navy blue color */
-    padding: 1rem;
-}
-
-/* Logo styling */
-.logo a {
-    color: white;
-    font-size: 1.5rem;
-    text-decoration: none;
-    margin-right: 2rem;  /* Spacing between logo and navigation links */
-}
-
-/* Navigation links list */
-.nav-links {
-    list-style: none;
     display: flex;
-    gap: 1.5rem;
-    margin: 0;
-    padding: 0;
+    background-color: #001f3f;
+    justify-content: space-between;
+    box-shadow: 0px 2px 5px #00000077;
+    z-index: 100;
 }
 
-/* Styling for each link */
-.nav-links li a {
-    color: white;
-    text-decoration: none;
-    font-size: 1rem;
-}
-
-/* Hover effect for links */
-.nav-links li a:hover {
-    text-decoration: underline;
-}
-
-.messages-title {
+.logo-container {
+    flex-shrink: 0;
     display: flex;
     flex-direction: row;
-    gap: 4px;
+    gap: 20px;
+    align-items: center;
+}
 
-    .bubble {
-        background-color: white;
-        color: black;
-        font-size: x-small;
-        display: block;
-        width: 12px;
-        height: 12px;
-        border-radius: 50%;
-    }
+.header-logo {
+    height: 60px;
+}
+
+.site-title {
+    font-size: larger;
+    color: white;
+    font-weight: 800;
+}
+
+.search-container {
+    flex-grow: 1;
+}
+
+.search-bar {
+    width: 500px;
+    background-color: white;
+    border-radius: 5px;
+}
+
+.profile-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+}
+
+.create-listing {
+    border: none;
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: 5px;
+    font-size: medium;
+    font-family: monospace;
+}
+
+.create-listing:hover {
+    cursor: pointer;
+}
+
+.header-profile {
+    width: 40px;
 }
