@@ -157,7 +157,7 @@ function CreateListing() {
       {error && <Alert severity="error">{error}</Alert>}
 
       <TextField
-        label="name"
+        label="Name"
         name="name"
         value={formData.name}
         onChange={handleInputChange}
