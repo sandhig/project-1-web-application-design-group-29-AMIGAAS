@@ -268,6 +268,9 @@ function PrivateMessage() {
     }
 
     return (
+        <div>
+            <Header/>
+        
         <div className="container">
             
             <div className="conversations">
@@ -284,7 +287,6 @@ function PrivateMessage() {
                 ))}
             </div>
             <div className="messages">
-                <Header />
                 {selectedConversationId ? (
                     <div className='messages-container'>
                         <h2>
@@ -350,6 +352,7 @@ function PrivateMessage() {
                     <div>Select a conversation</div>
                 )}
             </div>
+        </div>
         </div>
     );
 }

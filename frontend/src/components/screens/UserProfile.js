@@ -40,10 +40,10 @@ function UserProfile() {
     }
 
     return (
-        <div>
+        <div >
             <Header />
         
-        <div className="profile-container">
+        <div className="profile-container-1">
             
             <div className="profile-header">
             
