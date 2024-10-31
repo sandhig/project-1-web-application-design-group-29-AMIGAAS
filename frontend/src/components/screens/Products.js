@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { Link } from 'react-router-dom';
+import Header from "../../components/Header"
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -9,7 +10,7 @@ const Products = () => {
   // Fetch products from the backend
   useEffect(() => {
     axios
-      .get("http://127.0.0.1:8000/api/products/", {
+      .get("http://3.87.240.14:8000/api/products/", {
         headers: {
           'Authorization': `Token ${token}`,
           'Content-Type': 'application/json',
@@ -25,6 +26,7 @@ const Products = () => {
   
   return (
     <div>
+        <Header />
         <h2>Products</h2>
         <Link to="/products/create">
             <button className="button">Create Listing</button>

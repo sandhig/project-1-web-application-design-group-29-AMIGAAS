@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import HeaderPre from "../../components/HeaderPre"
 
 
 
@@ -38,7 +39,7 @@ const UsersSignUp = () => {
     }
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/profiles/signup', formData, {
+      const response = await axios.post('http://3.87.240.14:8000/api/profiles/signup', formData, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -60,6 +61,7 @@ const UsersSignUp = () => {
 
   return (
     <div>
+      <HeaderPre />
       <h2>Sign Up</h2>
       <form onSubmit={handleSubmit}>
         <div>

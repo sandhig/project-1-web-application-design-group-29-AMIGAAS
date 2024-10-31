@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import HeaderPre from "../../components/HeaderPre"
 
 const EmailVerification = () => {
   const [formData, setFormData] = useState({
@@ -30,7 +31,7 @@ const EmailVerification = () => {
     };
 
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/profiles/verify-email', trimmedFormData, {
+      const response = await axios.post('http://3.87.240.14:8000/api/profiles/verify-email', trimmedFormData, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -58,6 +59,7 @@ const EmailVerification = () => {
 
   return (
     <div>
+      <HeaderPre/>
       <h2>Email Verification</h2>
       <form onSubmit={handleSubmit}>
         <div>

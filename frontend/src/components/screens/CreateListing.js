@@ -3,6 +3,7 @@ import axios from "axios";
 import './CreateListing.css'
 import '../UploadAndDisplayImage.js'
 import UploadAndDisplayImage from "../UploadAndDisplayImage.js";
+import Header from "../../components/Header"
 
 const CreateListing = () => {
   const [products, setProducts] = useState([]);
@@ -92,7 +93,7 @@ const CreateListing = () => {
     if (newProduct.size) formData.append("size", newProduct.size); // optional
     if (newProduct.colour) formData.append("colour", newProduct.colour);
 
-    axios.post("http://127.0.0.1:8000/api/products/", formData, {
+    axios.post("http://3.87.240.14:8000/api/products/", formData, {
       headers: {
         'Authorization': `Token ${token}`,
         "Content-Type": "multipart/form-data",
@@ -112,6 +113,7 @@ const CreateListing = () => {
   
   return (
     <div>
+      <Header />
       <h2 className="column-container">Products</h2>
       {/* Form to Add New Listing */}
       <form onSubmit={handleSubmit}>

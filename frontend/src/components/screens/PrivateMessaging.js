@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import './PrivateMessage.css';
 import { IoSend } from "react-icons/io5";
 import { useUser } from '../../context/UserContext';
+import Header from "../../components/Header"
 
 function PrivateMessage() {
     const [conversations, setConversations] = useState([]);
@@ -267,7 +268,11 @@ function PrivateMessage() {
     }
 
     return (
+        <div>
+            <Header/>
+        
         <div className="container">
+            
             <div className="conversations">
                 <h2>Chats</h2>
                 {conversations.map(conversation => (
@@ -347,6 +352,7 @@ function PrivateMessage() {
                     <div>Select a conversation</div>
                 )}
             </div>
+        </div>
         </div>
     );
 }

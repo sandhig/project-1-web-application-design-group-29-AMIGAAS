@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useUser } from '../../context/UserContext';
+import "./UserProfile.css"
+import Header from "../../components/Header"
 
 
 function UserProfile() {
@@ -13,7 +15,7 @@ function UserProfile() {
 
     useEffect(() => {
         if (currentUser) {
-            fetch(`http://127.0.0.1:8000/api/profile/${userId}/`, {
+            fetch(`http://3.87.240.14:8000/api/user/${userId}/`, {
                 method: 'GET',
                 headers: {
                   'Authorization': `Token ${token}`,
@@ -24,8 +26,6 @@ function UserProfile() {
             .then(data => setUser(data));
         }
     }, [userId, currentUser, token]);
-    
-    console.log(userId, currentUser.id)
 
     const handleMessageMe = () => {
         navigate(`/messages?userId=${userId}`);
@@ -40,11 +40,19 @@ function UserProfile() {
     }
 
     return (
-        <div className="profile-container">
+        <div >
+            <Header />
+        
+        <div className="profile-container-1">
             
             <div className="profile-header">
+            
                 <div className="profile-icon">
-                    <img src = "/profile-icon.jpg"></img>
+                    {user.profilePic ? (
+                        <img src={user.profilePic} alt="Profile" className="profile-pic" />
+                    ) : (
+                        <img src="/profile-icon.jpg" alt="Default Profile" className="profile-pic" />
+                    )}
                 </div>
                 <div className="profile-info">
                     <h2>{user.first_name} {user.last_name}</h2>
@@ -68,6 +76,7 @@ function UserProfile() {
                     <button onClick={handleEditProfile}>Edit Profile</button>
                 )}
             </div>
+        </div>
         </div>
     );
 }

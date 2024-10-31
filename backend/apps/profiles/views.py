@@ -13,6 +13,13 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import AllowAny
 from django.shortcuts import get_object_or_404
 
+import boto3
+from django.conf import settings
+
+import logging
+logger = logging.getLogger('django')
+
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def add_user(request):
@@ -98,12 +105,41 @@ def get_profile (request, userId):
 def edit_profile(request):
     profile = get_object_or_404(Profile, user=request.user)
 
+    # Unauthorized user
     if request.user.id != profile.user.id:
         return Response({'error': 'You are not authorized to edit this profile.'}, status=status.HTTP_403_FORBIDDEN)
 
-    # Use the serializer with a single instance for partial updates
-    serializer = ProfilesSerializer(profile, data=request.data, partial=True)
-    if serializer.is_valid():
-        serializer.save()
-        return Response({'message': 'Profile updated successfully!', 'profile': serializer.data}, status=status.HTTP_200_OK)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    try:
+        # Serialize profile data
+        serializer = ProfilesSerializer(instance=profile, data=request.data, partial=True)
+
+        if serializer.is_valid():
+            serializer.save()
+
+            # If there is no profile image
+            if 'profilePic' not in request.FILES:
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            
+            image_file = request.FILES['profilePic']
+            filename = image_file.name.replace(" ", "_")
+        
+            s3 = boto3.client(
+                's3',
+                aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+                region_name=settings.AWS_S3_REGION_NAME
+            )
+
+            logger.debug(f's3: {s3}')
+            
+            image_file.seek(0)
+            s3.upload_fileobj(image_file, settings.AWS_STORAGE_BUCKET_NAME, f'images/{filename}')
+            logger.debug('Uploaded')
+
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    except Exception as e:
+        logger.error(f'Error: {str(e)}')
+        return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)

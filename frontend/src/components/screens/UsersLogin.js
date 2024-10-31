@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import HeaderPre from "../../components/HeaderPre"
 
 const UsersLogin = () => {
   const [formData, setFormData] = useState({
@@ -24,7 +25,7 @@ const UsersLogin = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('http://127.0.0.1:8000/api/profiles/login', formData, {
+      const response = await axios.post('http://3.87.240.14:8000/api/profiles/login', formData, {
         headers: {
           'Content-Type': 'application/json',
         },
@@ -36,9 +37,9 @@ const UsersLogin = () => {
         setSuccessMessage('Login successful!');
         setErrorMessage('');
         setTimeout(() => {
-          navigate('/homepage');  // Redirects to verify-email page
-        }, 2000);  // Adjust the timeout duration as needed
-        // Optionally, you could store a token or session data here
+          navigate('/products');  //was /homepage is not /products
+        }, 2000);  
+
       }
     } catch (error) {
       setErrorMessage('Invalid email or password.');
@@ -48,6 +49,7 @@ const UsersLogin = () => {
 
   return (
     <div>
+      <HeaderPre />
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -75,7 +77,7 @@ const UsersLogin = () => {
 
       <p> 
           Not a User? 
-          <Link to="/users/signup"> Signup</Link>
+          <Link to="/profiles/signup"> Signup</Link>
       </p>
 
       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
