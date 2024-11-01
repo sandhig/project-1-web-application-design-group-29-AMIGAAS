@@ -24,7 +24,7 @@
             background-color: #e0dddd;
         }
 
-        .title {
+        .message-title {
             width: 100%;
             white-space: nowrap;
             overflow: hidden;
@@ -68,8 +68,11 @@
         flex-direction: column;
         gap: 5px;
         margin-bottom: 10px;
-        overflow: scroll;
+        overflow-y: auto;
+        overflow-x: hidden;
         height: 100%;
+        padding-right: 10px;
+        box-sizing: content-box;
     } 
 
     .timestamp {

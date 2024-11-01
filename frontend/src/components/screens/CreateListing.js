@@ -1,179 +1,216 @@
-import React, { useState, useEffect } from "react";
-import axios from "axios";
-import './CreateListing.css'
-import '../UploadAndDisplayImage.js'
-import UploadAndDisplayImage from "../UploadAndDisplayImage.js";
+import React, { useState, useEffect } from 'react';
+import { TextField, MenuItem, Select, InputLabel, FormControl, Button, Box, InputAdornment } from '@mui/material';
+import axios from 'axios';
+import { useUser } from '../../context/UserContext';
+import { useNavigate } from 'react-router-dom';
 import Header from "../../components/Header"
 
-const CreateListing = () => {
-  const [products, setProducts] = useState([]);
-  const [newProduct, setNewProduct] = useState({
-    title: "",
-    price: "",
-    description: "",
-    category: "",
-    condition: "",
-    pickupLocation: "",
+function CreateListing() {
+  const navigate = useNavigate();
+  
+  const [formData, setFormData] = useState({
+    name: '',
+    price: '',
+    category: '',
+    condition: '',
+    location: '',
+    description: '',
+    image: null
   });
-  const [selectedCategory, setSelectedCategory] = useState('');
-  const [selectedCondition, setSelectedCondition] = useState('');
-  const [selectedPickupLocation, setSelectedPickupLocation] = useState('');
+
+  const { currentUser } = useUser();
   const token = localStorage.getItem('authToken');
 
-  const categories = [
-    { id: 1, name: 'Category 1' },
-    { id: 2, name: 'Category 2' },
-    { id: 3, name: 'Category 3' },
-    { id: 4, name: 'Category 4' },
-  ];
+  const [categories, setCategories] = useState([]);
+  const [conditions, setConditions] = useState([]);
+  const [locations, setLocations] = useState([]);
 
-  const condition = [
-    { id: 1, name: 'New' },
-    { id: 2, name: 'Used - Like New' },
-    { id: 3, name: 'Used - Good' },
-    { id: 4, name: 'Used - Fair' },
-  ];
-
-  const pickupLocation = [
-    { id: 1, name: 'Robarts' },
-    { id: 2, name: 'Gerstein' },
-    { id: 3, name: 'Computer Science Library' },
-    { id: 4, name: 'Bahen' },
-    { id: 5, name: 'Galbraith' },
-    { id: 6, name: 'Sanford Fleming' },
-    { id: 7, name: 'Bahen' },
-  ];
-
-  // Handle form input changes
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setNewProduct({
-      ...newProduct,
-      [name]: value,
-    });
-  };
-
-  const handleCategoryChange = (e) => {
-    setSelectedCategory(e.target.value);
-    setNewProduct({
-      ...newProduct,
-      category: e.target.value,
-    });
-  };
-
-  const handleConditionChange = (e) => {
-    setSelectedCondition(e.target.value);
-    setNewProduct({
-      ...newProduct,
-      condition: e.target.value,
-    });
-  };
-
-  const handlePickupLocationChange = (e) => {
-    setSelectedPickupLocation(e.target.value);
-    setNewProduct({
-      ...newProduct,
-      pickupLocation: e.target.value,
-    });
-  };
-
-  // Submit new product to the backend
-  const handleSubmit = (e) => {
-    e.preventDefault();
-
-    const formData = new FormData();
-    formData.append("user", 1); // Example user ID, replace with dynamic value
-    formData.append("name", newProduct.title); 
-    formData.append("price", newProduct.price); 
-    formData.append("category", newProduct.category); 
-    formData.append("condition", newProduct.condition); 
-    formData.append("pickup_location", newProduct.pickupLocation); 
-    formData.append("photo", newProduct.photo); // Add photo to form data
-    if (newProduct.description) formData.append("description", newProduct.description); 
-    if (newProduct.size) formData.append("size", newProduct.size); // optional
-    if (newProduct.colour) formData.append("colour", newProduct.colour);
-
-    axios.post("http://3.87.240.14:8000/api/products/", formData, {
+  useEffect(() => {
+    axios.get('http://3.87.240.14:8000/api/product-choices/', {
       headers: {
         'Authorization': `Token ${token}`,
-        "Content-Type": "multipart/form-data",
-      },
+      }
     })
-      .then((response) => {
-        setProducts([...products, response.data]); // Add the new product to the list
-        setNewProduct({ title: "", price: "", category: "", condition: "", pickupLocation: "", description: "" }); // Reset form
-        setSelectedCategory("");
-        setSelectedCondition("");
-        setSelectedPickupLocation("");
+      .then(response => {
+        const { categories, conditions, locations } = response.data;
+        setCategories(categories);
+        setConditions(conditions);
+        setLocations(locations);
       })
-      .catch((error) => {
-        console.error("There was an error creating the listing!", error);
+      .catch(error => console.error('Error fetching preset values:', error));
+  }, []);
+
+  const handleInputChange = (event) => {
+    const { name, value, type, files } = event.target;
+
+    if (name === 'price') {
+      const validPrice = value.match(/^\d*(\.\d{0,2})?$/);
+      if (validPrice) {
+        setFormData({
+          ...formData,
+          [name]: value
+        });
+      }
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value
       });
+    }
+
+    if (type === 'file') {
+      setFormData({
+        ...formData,
+        image: files[0]
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value
+      });
+    }
   };
-  
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+
+    const payload = new FormData();
+    payload.append('name', formData.name);
+    payload.append('price', parseFloat(formData.price));
+    payload.append('category', formData.category.value);
+    payload.append('condition', formData.condition.value);
+    payload.append('pickup_location', formData.location.value);
+    payload.append('description', formData.description);
+    if (formData.image) {
+      payload.append('image', formData.image);
+    }
+
+    axios.post('http://3.87.240.14:8000/api/products/', payload, {
+      headers: {
+        'Authorization': `Token ${token}`
+      }
+    })
+      .then(response => {
+        navigate('/products');
+      })
+      .catch(error => console.error('Error adding product:', error));
+  };
+
   return (
-    <div>
-      <Header />
-      <h2 className="column-container">Products</h2>
-      {/* Form to Add New Listing */}
-      <form onSubmit={handleSubmit}>
-        <div className="column-container">
-          <input 
-            className="column-item"
-            type="text"
-            name="title"
-            placeholder="Title"
-            value={newProduct.title}
+    <div> 
+       <Header />
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        encType="multipart/form-data"
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          maxWidth: 300,
+          margin: 'auto'
+        }}
+      >
+        <TextField
+          label="name"
+          name="name"
+          value={formData.name}
+          onChange={handleInputChange}
+          variant="outlined"
+          required
+        />
+
+        <TextField
+          label="Price"
+          name="price"
+          type="number"
+          value={formData.price}
+          onChange={handleInputChange}
+          variant="outlined"
+          required
+          InputProps={{
+            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+            inputProps: { min: 0, step: 0.01 }
+          }}
+        />
+
+        <FormControl variant="outlined" required>
+          <InputLabel id="category-label">Category</InputLabel>
+          <Select
+            labelId="category-label"
+            name="category"
+            value={formData.category}
             onChange={handleInputChange}
-          />
-          <UploadAndDisplayImage /> 
-          <input
-            className="column-item"
-            type="number"
-            name="price"
-            placeholder="Price"
-            value={newProduct.price}
+            label="Category"
+          >
+            <MenuItem value="" disabled>Select a Category</MenuItem>
+            {categories.map((category, index) => (
+              <MenuItem key={index} value={category}>
+                {category.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl variant="outlined" required>
+          <InputLabel id="condition-label">Condition</InputLabel>
+          <Select
+            labelId="condition-label"
+            name="condition"
+            value={formData.condition}
             onChange={handleInputChange}
-          />
-          <label className="column-item">
-            Category:
-            <select value={selectedCategory} onChange={handleCategoryChange}>
-              <option value="" disabled>Select an option</option>
-              {categories.map(category => (
-                <option key={category.id} value={`${category.id}`}>{category.name}</option>
-              ))}
-            </select>
-          </label>
-          <label className="column-item space-right">
-            Condition:
-            <select value={selectedCondition} onChange={handleConditionChange}>
-              <option value="" disabled>Select an option</option>
-              {condition.map(condition => (
-                <option key={condition.id} value={`${condition.id}`}>{condition.name}</option>
-              ))}
-            </select>
-          </label>
-          <label className="column-item">
-            Pickup Location:
-            <select value={selectedPickupLocation} onChange={handlePickupLocationChange}>
-              <option value="" disabled>Select an option</option>
-              {pickupLocation.map(location => (
-                <option key={location.id} value={`${location.id}`}>{location.name}</option>
-              ))}
-            </select>
-          </label>
-          <textarea
-            className="column-item"
-            name="description"
-            placeholder="Product Description"
-            value={newProduct.description}
+            label="Condition"
+          >
+            <MenuItem value="" disabled>Select a Condition</MenuItem>
+            {conditions.map((condition, index) => (
+              <MenuItem key={index} value={condition}>
+                {condition.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl variant="outlined" required>
+          <InputLabel id="location-label">Location</InputLabel>
+          <Select
+            labelId="location-label"
+            name="location"
+            value={formData.location}
             onChange={handleInputChange}
-          />
-          <button className="column-item" type="submit">Add Listing</button>
-        </div>
-      </form>
-    </div>
+            label="Location"
+          >
+            <MenuItem value="" disabled>Select a Condition</MenuItem>
+            {locations.map((location, index) => (
+              <MenuItem key={index} value={location}>
+                {location.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <TextField
+          label="Description"
+          name="description"
+          value={formData.description}
+          onChange={handleInputChange}
+          variant="outlined"
+          multiline
+          rows={4}
+        />
+
+        <input
+          type="file"
+          name="image"
+          accept="image/*"
+          onChange={handleInputChange}
+        />
+
+        <Button type="submit" variant="contained" color="primary">
+          Submit
+        </Button>
+      </Box>
+   </div>
   );
-};
+}
 
 export default CreateListing;

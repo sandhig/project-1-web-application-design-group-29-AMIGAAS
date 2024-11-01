@@ -12,7 +12,7 @@
     background-color: #001f3f;
     justify-content: space-between;
     box-shadow: 0px 2px 5px #00000077;
-    z-index: 1000;
+    z-index: 100;
 }
 
 .logo-container {
@@ -36,6 +36,7 @@
 
 .search-container {
     display: flex;
+    flex-grow: 1;
 }
 
 .search-bar {
@@ -65,6 +66,7 @@
 .create-listing:hover {
     cursor: pointer;
 }
+
 
 .header-profile {
     width: 40px;

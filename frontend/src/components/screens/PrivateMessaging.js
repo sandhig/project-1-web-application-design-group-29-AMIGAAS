@@ -5,6 +5,7 @@ import { IoSend } from "react-icons/io5";
 import { useUser } from '../../context/UserContext';
 import Header from "../../components/Header"
 
+
 function PrivateMessage() {
     const [conversations, setConversations] = useState([]);
     const [selectedConversationId, setSelectedConversationId] = useState(null);
@@ -279,7 +280,9 @@ function PrivateMessage() {
                     <div key={conversation.id} onClick={() => setSelectedConversationId(conversation.id)}
                         className={conversation.id === selectedConversationId ? 'selected' : '' || !conversation.is_read ? 'unread' : ''}>
                         <span className={!conversation.is_read ? 'dot' : ''}></span>
-                        <span className="title">
+
+                        <span className="message-title">
+
                             {conversation.name}
                             <p>{conversation.last_sender_id == currentUser.id ? 'You' : conversation.last_sender_name}: {conversation.last_message}</p>
                         </span>
@@ -353,7 +356,9 @@ function PrivateMessage() {
                 )}
             </div>
         </div>
+
         </div>
+
     );
 }
 

@@ -10,3 +10,8 @@ django-cors-headers
 django-rest-authtoken
 djangorestframework-simplejwt
 daphne
+boto3 
+django-storages
+whitenoise
+pytest
+playwright

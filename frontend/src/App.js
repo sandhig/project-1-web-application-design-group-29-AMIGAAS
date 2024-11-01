@@ -1,6 +1,7 @@
 import './App.css';
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import { Navigate } from "react-router-dom";
 
 import UserProfile from './components/screens/UserProfile';
 import PrivateMessage from './components/screens/PrivateMessaging';
@@ -15,13 +16,16 @@ import PrivateRoute from './components/PrivateRoute';
 import { UserProvider } from './context/UserContext';
 import WelcomePage from './components/screens/WelcomePage';
 import EditProfile from './components/screens/EditProfile';
+import ProductListing from './components/screens/ProductListing';
+import SearchResults from './components/screens/SearchResults';
+
 
 function App() {
 
     return (
       <div className="App">
         <UserProvider>
-          <Router>
+          <Router
             {/*<Header/>*/}
     
             <Routes>
@@ -32,8 +36,11 @@ function App() {
               <Route path = "/profiles/login" element={<UsersLogin/>}></Route>
 
               {/* Protected pages */}
-              <Route path ="/homepage" element={<PrivateRoute element={<HomeScreen />} />}></Route>
+              {/*<Route path = "/" element={<PrivateRoute element={<HomeScreen />} />}></Route>*/}
+              <Route path="/" element={<Navigate to="/products" replace />} />
+              <Route path="/search" element={<PrivateRoute element={<SearchResults />} />} />
               <Route path="/products" element={<PrivateRoute element={<Products />} />} />
+              <Route path="/products/:id" element={<PrivateRoute element={<ProductListing />} />} />
               <Route path="/products/create" element={<PrivateRoute element={<CreateListing />} />} />
               <Route path="/user/:userId" element={<PrivateRoute element={<UserProfile />} />} />
               <Route path="/messages" element={<PrivateRoute element={<PrivateMessage />} />} />

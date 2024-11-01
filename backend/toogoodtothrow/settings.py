@@ -32,6 +32,7 @@ ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '3.87.240.14']
 # Application definition
 
 INSTALLED_APPS = [
+    'storages',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -55,7 +56,8 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
-    'django.middleware.clickjacking.XFrameOptionsMiddleware'
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
 ]
 
 ROOT_URLCONF = 'toogoodtothrow.urls'
@@ -184,8 +186,6 @@ CHANNEL_LAYERS = {
     },
 }
 
-MEDIA_URL = '/media/'
-MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -195,3 +195,68 @@ REST_FRAMEWORK = {
         'rest_framework.permissions.IsAuthenticated',
     ]
 }
+
+AWS_ACCESS_KEY_ID = 'AKIAXNGUU57HQ7X3DJKW'
+AWS_SECRET_ACCESS_KEY = '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'
+AWS_STORAGE_BUCKET_NAME = 'ece444-s3-2'
+
+AWS_S3_REGION_NAME = 'us-east-2'
+AWS_S3_SIGNATURE_VERSION = 's3v4'
+
+AWS_S3_ENDPOINT_URL = f'https://{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com'
+
+DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
+
+AWS_S3_CUSTOM_DOMAIN = f'{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com'
+MEDIA_URL = f'https://{AWS_S3_CUSTOM_DOMAIN}/'
+
+
+import logging
+
+# Set the base directory
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+# Configure logging
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'formatters': {
+        'verbose': {
+            'format': '{levelname} {asctime} {module} {message}',
+            'style': '{',
+        },
+        'simple': {
+            'format': '{levelname} {message}',
+            'style': '{',
+        },
+    },
+    'handlers': {
+        'file': {
+            'level': 'DEBUG',
+            'class': 'logging.FileHandler',
+            'filename': os.path.join(BASE_DIR, 'django_debug.log'),  # Log file path
+            'formatter': 'verbose',  # Use the verbose format
+        },
+    },
+    'loggers': {
+        'django': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'boto3': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+        'botocore': {
+            'handlers': ['file'],
+            'level': 'DEBUG',
+            'propagate': True,
+        },
+    },
+}
+
+# Set up logging for boto3
+logging.getLogger('boto3').setLevel(logging.DEBUG)
+logging.getLogger('botocore').setLevel(logging.DEBUG)
