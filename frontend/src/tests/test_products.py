@@ -8,6 +8,7 @@ WAIT_TO_LOAD_SHORT = 1000  # 1000 milliseconds = 1 sec
 
 # CONSTANT URL PATHS
 LOGIN_PAGE_URL = 'http://localhost:3000/profiles/login'
+PRODUCTS_PAGE_URL = 'http://localhost:3000/products'
 CREATE_LISTING_URL = 'http://localhost:3000/products/create'
 
 # LOCATOR SELECTORS
@@ -543,7 +544,7 @@ def navigate_to_create_listing_page(page):
     page.get_by_role(ROLE_BUTTON, name=CREATE_LISTING).click()
     page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
 
-    assert page.get_by_text("Name").is_visible(), "Name error message not displayed" # add title and update text
+    assert page.get_by_text("Create Listing").is_visible(), "Title not displayed"
     print("Test: Navigate to Create Listing page works as expected")
 
 
@@ -559,7 +560,11 @@ def test_submit_empty_create_listing_form(page):
     page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
 
     # Check for error messages
-    assert page.get_by_text("Please fill out this field.").is_visible(), "Name error message not displayed"
+    assert page.get_by_text("Please enter a name.").is_visible(), "Name error message not displayed"
+    assert page.get_by_text("Please enter a valid price.").is_visible(), "Price error message not displayed"
+    assert page.get_by_text("Please select a category.").is_visible(), "Category error message not displayed"
+    assert page.get_by_text("Please select a condition.").is_visible(), "Condition error message not displayed"
+    assert page.get_by_text("Please select a location.").is_visible(), "Location error message not displayed"
     print("Test: Submit empty Create Listing form works as expected")
 
 
