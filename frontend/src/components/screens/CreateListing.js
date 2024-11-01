@@ -176,7 +176,7 @@ function CreateListing() {
           }}
         >
           <TextField
-            label="name"
+            label="Name"
             name="name"
             value={formData.name}
             onChange={handleInputChange}
