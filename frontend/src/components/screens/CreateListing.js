@@ -180,8 +180,11 @@ function CreateListing() {
             name="name"
             value={formData.name}
             onChange={handleInputChange}
+            onBlur={handleBlur}
             variant="outlined"
             required
+            error={!!formErrors.price}
+            helperText={formErrors.price}
           />
 
         <TextField
