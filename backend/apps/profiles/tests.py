@@ -2,12 +2,15 @@ from django.test import TestCase
 from django.contrib.auth.models import User
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
+from django.urls import reverse
+from rest_framework.test import APITestCase
+from rest_framework import status
 from .models import Profile
+from .serializers import ProfilesSerializer, EmailVerificationSerializer, LoginSerializer
 import os
 
 # Create your tests here.
 class ProfilesModelTests(TestCase):
-
     def setUp(self):
         # Create a new test user and profile
         self.user = User.objects.create_user(username="testuser", password="Test1234!", email="test.user@mail.utoronto.ca")
@@ -281,6 +284,94 @@ class ProfilesModelTests(TestCase):
         except ValidationError:
             self.fail("Profile bio of 500 characters should be valid")
         print('Test: Edge Case - Bio Boundary - PASS')
+
+
+class ProfilesSerializerTest(TestCase):
+    def setUp(self):
+        self.user_data = {
+            'first_name': 'Test',
+            'last_name': 'User',
+            'email': 'test.user@mail.utoronto.ca',
+            'password': 'Test1234!',
+            'bio': 'ECE UofT 2T4 + PEY'
+        }
+        
+    
+    # TODO: ensure if image field should be required=false
+    def test_valid_profile_creation(self):
+        """ Test creation with valid data """
+        serializer = ProfilesSerializer(data=self.user_data)
+        # is_valid = serializer.is_valid()
+
+        # if not is_valid:
+        #     print(serializer.errors)
+        self.assertTrue(serializer.is_valid())
+        profile = serializer.save()
+        self.assertIsNotNone(profile.verification_code)  # should be automatically generated and not none
+        print("Test: Valid Profile Creation - PASS")
+
+    
+    def test_invalid_email_format(self):
+        """ Test for invalid email format (must be @mail.utoronto.ca) """
+        self.user_data['email'] = 'testuser@example.com'
+        serializer = ProfilesSerializer(data=self.user_data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("Please Use UofT Email.", serializer.errors['email'][0])  # Error message should show this
+        print("Test: Invalid Email Format - PASS")
+
+    
+    def test_duplicate_email(self):
+        """ Test duplicate profile for same email not allowed"""
+        User.objects.create_user(
+            username=self.user_data['email'], email=self.user_data['email'], password=self.user_data['password']
+        )
+        serializer = ProfilesSerializer(data=self.user_data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("Email already exists.", serializer.errors['email'][0])  # Error message should show this
+        print("Test: Duplicate Email - PASS")
+
+
+    def test_update_profile_fields(self):
+        """ Test that first name, last name, and bio can be updated, but email cannot e updated """
+        # Create a user and profile to test with
+        user = User.objects.create_user(username=self.user_data['email'], email=self.user_data['email'], password=self.user_data['password'], first_name=self.user_data['first_name'], last_name=self.user_data['last_name'])
+        profile = Profile.objects.create(user=user, bio='Old bio')
+
+        # Define data we want to update
+        updated_data = {
+            'first_name': 'UpdatedFirstName',
+            'last_name': 'UpdatedLastName',
+            'email' : 'newtest.user@mail.utoronto.ca',
+            'bio': 'Updated bio'
+        }
+
+        # Retain original email
+        original_email = user.email
+
+        # Deserialize and update profile, refresh database
+        serializer = ProfilesSerializer(instance=profile, data=updated_data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        profile.refresh_from_db()
+
+        # Ensure that first, last name and bio updated, but email did not
+        self.assertEqual(user.email, original_email, "Email should not be updated")
+        self.assertEqual(profile.user.first_name, 'UpdatedFirstName')
+        self.assertEqual(profile.user.last_name, 'UpdatedLastName')
+        self.assertEqual(profile.bio, 'Updated bio')
+        print("Test: Update Profile Fields - PASS")
+
+
+    def test_read_only_fields(self):
+        """ Test to check that user_id and profilePic_url are read-only """
+        serializer = ProfilesSerializer()
+        self.assertIn('user_id', serializer.fields)
+        self.assertTrue(serializer.fields['user_id'].read_only)
+        self.assertIn('profilePic_url', serializer.fields)
+        self.assertTrue(serializer.fields['profilePic_url'].read_only)
+        print("Test: Read Only Fields - PASS")
+
+
 
     
 
