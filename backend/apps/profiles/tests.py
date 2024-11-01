@@ -1,5 +1,6 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
+from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from .models import Profile
 import os
@@ -25,7 +26,6 @@ class ProfilesModelTests(TestCase):
         """ Test that a valid Product object can be created"""
         profile = self.create_valid_profile()
         self.assertIsInstance(profile, Profile)
-        self.assertEqual(profile.user, self.user)
         print("Test: Valid Profile Creationn - PASS")
 
     # Test for default fields
@@ -112,8 +112,7 @@ class ProfilesModelTests(TestCase):
         profile.profilePic = image_data
         profile.save()
         self.assertIsNotNone(profile.image_url)
-        print(profile.image_url)
-        #self.assertIn("test_image.jpg", self.profile.image_url)
+        self.assertIn("test_profile_pic.jpg", profile.image_url)
         print("Test: Image upload Image URL Property - PASS")
 
 
@@ -141,7 +140,147 @@ class ProfilesModelTests(TestCase):
         self.assertEqual(Profile.objects.get(user=self.user).bio, test_bio_str)
         print("Test: Profile Bio Field - PASS")
 
+    # Bio Max Length Tests
+    def test_bio_max_length(self):
+        """ Test that the maximum length allowed for bio field is correct """
+        profile = self.create_valid_profile()
+        max_length = profile._meta.get_field('bio').max_length
+        self.assertEqual(max_length, 500)
+        print("Test: Bio Max Length Within Limit - PASS")
+
+    
+    def test_bio_max_length_within_limit(self):
+        """ Test that a profile can have a bio within maximum limit """
+        profile = self.create_valid_profile()
+        bio = 'Within Limit Test Bio'
+        self.assertLessEqual(len(bio), 255)
+        profile.bio = bio
+        try:
+            profile.full_clean()  # Should not raise errors
+        except ValidationError:
+            self.fail(f"{bio} should be a within max length limit")
+        print('Test: Bio Within Maximum Length')
+
+    
+    def test_bio_max_length_over_limit(self):
+        """ Test that a profile cannot have a bio over maximum limit """
+        profile = self.create_valid_profile()
+        bio = 'Long Bio' + ' bio ' * 100
+        self.assertLessEqual(255, len(bio))
+        with self.assertRaises(ValidationError):
+            profile.bio = bio
+            profile.full_clean() # Triggers validation
+        print("Test: Bio Over Maximum Limit - PASS")
     
 
+    # Verification Code Values
+    def test_verification_code_range(self):
+        """ Test that the verification code field accepts 6 digits, not more than that """
+        """ Code field can be less than 6 digits as per the model, so no testing for that """
+        profile = self.create_valid_profile()
+        valid_code = '384753'
+        invalid_code_big = '12345678'
 
+        # Check that it accepts a code of exactly 6 digits
+        self.assertEqual(len(valid_code), 6)
+        profile.verification_code = valid_code
+        try:
+            profile.full_clean()  # Should not raise errors
+        except ValidationError:
+            self.fail(f"{valid_code} should be accepted")
+        print("Test: Verification Code is = 6 digits - PASS")
+        
+        # Check that it doesn't accept a code of greater than 6 digits
+        self.assertGreater(len(invalid_code_big), 6)
+        with self.assertRaises(ValidationError):
+            profile.verification_code = invalid_code_big
+            profile.full_clean() # Triggers validation
+        print("Test: Verification Code is > 6 digits - PASS")
+
+
+    # Blank and Null Fields Tests
+    def test_verification_code_is_blank(self):
+        """ Test that the profile can have a blank verification code """
+        profile = self.create_valid_profile()
+        profile.verification_code = ""
+        try:
+            profile.full_clean()  # Should pass without errors
+            print("Test: Verification Code is Blank - PASS")
+        except ValidationError:
+            self.fail("Profile verificaion model should allow blank values")
+
+    
+    def test_bio_is_blank(self):
+        """ Test that the profile canhave a blank bio """
+        profile = self.create_valid_profile()
+        profile.bio = ""
+        try:
+            profile.full_clean()  # Should pass without errors
+            print("Test: Bio is Blank - PASS")
+        except ValidationError:
+            self.fail("Profile bio should allow blank values")
+
+
+    def test_verification_code_is_nullk(self):
+        """ Test that the profile canhave a blank verification code """
+        profile = self.create_valid_profile()
+        profile.verification_code = ""
+        try:
+            profile.full_clean()  # Should pass without errors
+            print("Test: Verification Code is Blank - PASS")
+        except ValidationError:
+            self.fail("Profile verificaion model should allow blank values")
+
+
+    def test_image_is_null(self):
+        """ Test that a profile can have a null image """
+        profile = self.create_valid_profile()
+        profile.profilePic = None
+        try: 
+            profile.full_clean() # Should pass without errors
+            print("Test: Image is Null - PASS")
+        except ValidationError:
+            self.fail("Profile image should allow null values")
+
+    
+    def test_bio_is_null(self):
+        """ Test that a profile can have a null bio """
+        profile = self.create_valid_profile()
+        profile.bio = None
+        try: 
+            profile.full_clean() # Should pass without errors
+            print("Test: Bio is Null - PASS")
+        except ValidationError:
+            self.fail("Profile bio should allow null values")
+
+    
+    # Model Relationship Tests
+    def test_profile_user_relationship(self):
+        """ Test the relationship between user and profile"""
+        profile = self.create_valid_profile()
+        self.assertEqual(profile.user, self.user)
+        print("Test: Profile User Relationship - PASS")
+
+    
+    def test_profile_deletion_on_user_delete(self):
+        """ Test that a profile is deleted when a user is deleted """
+        profile = self.create_valid_profile()
+        self.assertTrue(Profile.objects.filter(id=profile.id).exists())  # verify profile exists in database
+        self.user.delete()  # Delete the user
+        self.assertFalse(Profile.objects.filter(id=profile.id).exists(), "Profile should be deleted when the user is deleted")
+        print('Test: Profile Deletion on User Deletion - PASS')
+
+    
+    # Edge Case Tests
+    def test_bio_max_length_boundary(self):
+        """ Test that a profile can have a bio at maximum limit """
+        profile = self.create_valid_profile()
+        profile.name = 'x' * 500
+        try:
+            profile.full_clean()  # Should not raise errors
+        except ValidationError:
+            self.fail("Profile bio of 500 characters should be valid")
+        print('Test: Edge Case - Bio Boundary - PASS')
+
+    
 
