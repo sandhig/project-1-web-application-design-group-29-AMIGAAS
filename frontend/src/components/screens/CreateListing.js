@@ -183,8 +183,8 @@ function CreateListing() {
             onBlur={handleBlur}
             variant="outlined"
             required
-            error={!!formErrors.price}
-            helperText={formErrors.price}
+            error={!!formErrors.name}
+            helperText={formErrors.name}
           />
 
         <TextField
