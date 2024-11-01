@@ -72,39 +72,52 @@ function CreateListing() {
     }
   };
 
-  const validateRequired = (event) => {
-    const { name, value } = event.target;
-    let errorMessage = '';
-    if (!value) {
-      errorMessage = `Please enter a ${name}.`;
-    }
-    setFormErrors({ ...formErrors, [name]: errorMessage });
+  const validateRequired = (name, value) => {
+    return !value ? `Please enter a ${name}.` : '';
   };
 
-  const validatePrice = (event) => {
-    const { name, value } = event.target;
-    console.log('Price:', parseFloat(value));
-    let errorMessage = '';
-    if (!value) {
-      errorMessage = `Please enter a ${name}.`;
-    } else if (parseFloat(value) >= 100000000) {
-      errorMessage = 'Price must be less than $100,000,000.';
-    }
-    setFormErrors({ ...formErrors, [name]: errorMessage });
+  const validatePrice = (value) => {
+    if (!value) return 'Please enter a valid price.';
+    if (parseFloat(value) >= 100000000) return 'Price must be less than $100,000,000.';
+    if (parseFloat(value) < 0) return 'Price cannot be negative.';
+    return '';
   };
 
-  const validateSelectField = (event) => {
+  const validateSelectField = (name, value) => {
+    return !value ? `Please select a ${name}.` : '';
+  };
+
+  const handleBlur = (event) => {
     const { name, value } = event.target;
     let errorMessage = '';
-    if (!value) {
-      errorMessage = `Please select a ${name}.`;
+
+    if (name === 'name') {
+      errorMessage = validateRequired(name, value);
+    } else if (name === 'price') {
+      errorMessage = validatePrice(value);
+    } else if (['category', 'condition', 'location'].includes(name)) {
+      errorMessage = validateSelectField(name, value);
     }
+
     setFormErrors({ ...formErrors, [name]: errorMessage });
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setSubmitError(null);
+
+    const errors = {
+      name: validateRequired('name', formData.name),
+      price: validatePrice(formData.price),
+      category: validateSelectField('category', formData.category),
+      condition: validateSelectField('condition', formData.condition),
+      location: validateSelectField('location', formData.location),
+    };
+
+    const hasErrors = Object.values(errors).some(error => error !== '');
+    if (hasErrors) {
+      setFormErrors(errors);
+      return;
+    }
 
     const payload = new FormData();
     payload.append('name', formData.name);
@@ -144,6 +157,7 @@ function CreateListing() {
   return (
     <Box
       component="form"
+      noValidate
       onSubmit={handleSubmit}
       encType="multipart/form-data"
       sx={{
@@ -161,7 +175,7 @@ function CreateListing() {
         name="name"
         value={formData.name}
         onChange={handleInputChange}
-        onBlur={validateRequired}
+        onBlur={handleBlur}
         variant="outlined"
         required
         error={!!formErrors.name}
@@ -174,7 +188,7 @@ function CreateListing() {
         type="number"
         value={formData.price}
         onChange={handleInputChange}
-        onBlur={validatePrice}
+        onBlur={handleBlur}
         variant="outlined"
         required
         error={!!formErrors.price}
@@ -192,7 +206,7 @@ function CreateListing() {
           name="category"
           value={formData.category}
           onChange={handleInputChange}
-          onBlur={validateSelectField}
+          onBlur={handleBlur}
           label="Category"
         >
           <MenuItem value="" disabled>Select a Category</MenuItem>
@@ -212,7 +226,7 @@ function CreateListing() {
           name="condition"
           value={formData.condition}
           onChange={handleInputChange}
-          onBlur={validateSelectField}
+          onBlur={handleBlur}
           label="Condition"
         >
           <MenuItem value="" disabled>Select a Condition</MenuItem>
@@ -232,7 +246,7 @@ function CreateListing() {
           name="location"
           value={formData.location}
           onChange={handleInputChange}
-          onBlur={validateSelectField}
+          onBlur={handleBlur}
           label="Location"
         >
           <MenuItem value="" disabled>Select a Location</MenuItem>
@@ -250,11 +264,12 @@ function CreateListing() {
         name="description"
         value={formData.description}
         onChange={handleInputChange}
+        onBlur={handleBlur}
         variant="outlined"
         multiline
         rows={4}
-        helperText={formErrors.description}
         error={!!formErrors.description}
+        helperText={formErrors.description}
       />
 
       <input
@@ -264,11 +279,11 @@ function CreateListing() {
         onChange={handleInputChange}
       />
 
-      {submitError && <Alert severity="error">{submitError}</Alert>}
-
       <Button type="submit" variant="contained" color="primary">
         Submit
       </Button>
+
+      {submitError && <Alert severity="error">{submitError}</Alert>}
     </Box>
   );
 }
