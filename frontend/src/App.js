@@ -14,23 +14,25 @@ import EmailVerification from './components/screens/EmailVerification';
 import Header from "./components/Header"; 
 import PrivateRoute from './components/PrivateRoute';
 import { UserProvider } from './context/UserContext';
+import WelcomePage from './components/screens/WelcomePage';
+import EditProfile from './components/screens/EditProfile';
 import ProductListing from './components/screens/ProductListing';
 import SearchResults from './components/screens/SearchResults';
+
 
 function App() {
 
     return (
       <div className="App">
         <UserProvider>
-          <Router>
-            
-            <Header/>
-            
+          <Router
+            {/*<Header/>*/}
     
             <Routes>
               {/* Public pages */}
-              <Route path = "/users/signup" element={<UsersSignUp/>}></Route>
-              <Route path = "/users/verify-email" element={<EmailVerification/>}></Route>
+              <Route path = "/" element={<WelcomePage/>}></Route>
+              <Route path = "/profiles/signup" element={<UsersSignUp/>}></Route>
+              <Route path = "/profiles/verify-email" element={<EmailVerification/>}></Route>
               <Route path = "/profiles/login" element={<UsersLogin/>}></Route>
 
               {/* Protected pages */}
@@ -42,6 +44,8 @@ function App() {
               <Route path="/products/create" element={<PrivateRoute element={<CreateListing />} />} />
               <Route path="/user/:userId" element={<PrivateRoute element={<UserProfile />} />} />
               <Route path="/messages" element={<PrivateRoute element={<PrivateMessage />} />} />
+              <Route path="/profile/:userId" element={<UserProfile />} />
+              <Route path="/profiles/edit-profile" element={<EditProfile />} />
             </Routes>
     
           </Router>

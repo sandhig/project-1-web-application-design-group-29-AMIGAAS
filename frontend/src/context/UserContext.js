@@ -33,6 +33,7 @@ export const UserProvider = ({ children }) => {
               email: data.email,
               first_name: data.first_name,
               last_name: data.last_name,
+              bio: data.bio,
               token: token,
           });
         })
