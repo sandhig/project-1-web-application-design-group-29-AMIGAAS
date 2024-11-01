@@ -35,48 +35,47 @@ function UserProfile() {
         navigate(`/profiles/edit-profile`);
     };
 
-    if (!user) {
-        return <div>Loading...</div>;
-    }
-
     return (
         <div >
             <Header />
-        
-        <div className="profile-container-1">
-            
-            <div className="profile-header">
-            
-                <div className="profile-icon">
-                    {user.profilePic ? (
-                        <img src={user.profilePic} alt="Profile" className="profile-pic" />
-                    ) : (
-                        <img src="/profile-icon.jpg" alt="Default Profile" className="profile-pic" />
+
+            {!user ? (<div>Loading...</div>) : (
+
+            <div className="profile-container-1">
+                
+                <div className="profile-header">
+                
+                    <div className="profile-icon">
+                        {user.profilePic ? (
+                            <img src={user.profilePic} alt="Profile" className="profile-pic" />
+                        ) : (
+                            <img src="/profile-icon.jpg" alt="Default Profile" className="profile-pic" />
+                        )}
+                    </div>
+                    <div className="profile-info">
+                        <h2>{user.first_name} {user.last_name}</h2>
+                        <p>{user.email}</p>
+                    </div>
+                </div>
+
+                <div className="profile-bio">
+                    <h3>Bio</h3>
+                    <p>{user.bio || "This user hasn't added a bio yet."}</p>
+                </div>
+
+                <div>  
+                    {parseInt(currentUser.id) !== parseInt(userId) && (
+                        <button onClick={handleMessageMe}>Message Me</button>
                     )}
                 </div>
-                <div className="profile-info">
-                    <h2>{user.first_name} {user.last_name}</h2>
-                    <p>{user.email}</p>
+                
+                <div>
+                    {parseInt(currentUser.id) == parseInt(userId) && (
+                        <button onClick={handleEditProfile}>Edit Profile</button>
+                    )}
                 </div>
             </div>
-
-            <div className="profile-bio">
-                <h3>Bio</h3>
-                <p>{user.bio || "This user hasn't added a bio yet."}</p>
-            </div>
-
-            <div>  
-                {parseInt(currentUser.id) !== parseInt(userId) && (
-                    <button onClick={handleMessageMe}>Message Me</button>
-                )}
-            </div>
-            
-            <div>
-                {parseInt(currentUser.id) == parseInt(userId) && (
-                    <button onClick={handleEditProfile}>Edit Profile</button>
-                )}
-            </div>
-        </div>
+            )}
         </div>
     );
 }

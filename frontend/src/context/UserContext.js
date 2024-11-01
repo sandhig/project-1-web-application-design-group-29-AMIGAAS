@@ -27,13 +27,14 @@ export const UserProvider = ({ children }) => {
             return response.json();
         })
         .then(data => {
+          console.log(data);
             setCurrentUser({
               id: data.id,
               username: data.username,
               email: data.email,
               first_name: data.first_name,
               last_name: data.last_name,
-              bio: data.bio,
+              profilePic: data.profile_pic,
               token: token,
           });
         })

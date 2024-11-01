@@ -26,8 +26,9 @@ function App() {
       <div className="App">
         <UserProvider>
           <Router>
-            {/*<Header/>*/}
-    
+            
+          <div className="App-scroll-container">
+
             <Routes>
               {/* Public pages */}
               <Route path = "/" element={<WelcomePage/>}></Route>
@@ -47,7 +48,7 @@ function App() {
               <Route path="/profile/:userId" element={<UserProfile />} />
               <Route path="/profiles/edit-profile" element={<EditProfile />} />
             </Routes>
-    
+    </div>
           </Router>
         </UserProvider>
       </div>
