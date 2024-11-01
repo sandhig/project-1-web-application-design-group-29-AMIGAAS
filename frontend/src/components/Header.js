@@ -9,6 +9,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import MessageIcon from '@mui/icons-material/Message';
 import TextField from "@mui/material/TextField";
 import LogoutIcon from '@mui/icons-material/Logout';
+import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 function Header() {
     const { currentUser } = useUser();
@@ -16,6 +17,8 @@ function Header() {
     const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
     const [searchTerm, setSearchTerm] = useState("");
     const navigate = useNavigate();
+
+    console.log(currentUser)
 
     const handleInputChange = (e) => {
       setSearchTerm(e.target.value);
@@ -36,20 +39,14 @@ function Header() {
       setCurrentUser(null);
       navigate('/profiles/login');
     };
-
-    const handleProfileClick = () => {
-      if (currentUser && currentUser.id) {
-        navigate(`/user/${currentUser.id}`);
-      }
-    };
     
     return (
       <div className="header">
         <div className="logo-container">
-          <Link to="/products">
+          <Link to="/products" style={{display:'flex', alignItems:'center', gap:'20px'}}>
             <img className="header-logo" src="/images/logo-white.png"></img>
+            <div className="site-title">Too Good To Throw</div>
           </Link>
-          <div className="site-title">Too Good To Throw</div>
         </div>
         <div className="search-container">
           <TextField
@@ -66,25 +63,34 @@ function Header() {
           </IconButton>
         </div>
         <div className="profile-container">
-          <Link to="/products/create">
-              <button className="create-listing">Create Listing</button>
+          <Link to="/products/create" className="icon-button">
+            <IconButton aria-label="message">
+              <AddCircleOutlineIcon style={{ fill: "white", fontSize: "larger" }} />
+            </IconButton>
+            <p>New Listing</p>
           </Link>
-          <Link to="/messages">
+          <Link to="/messages" className="icon-button">
             <IconButton aria-label="message">
               <MessageIcon style={{ fill: "white", fontSize: "larger" }} />
             </IconButton>
+            <p>Messages</p>
           </Link>
-          <IconButton aria-label="message" onClick={handleLogout}>
+          <div className="icon-button">
+            <IconButton aria-label="message" onClick={handleLogout}>
               <LogoutIcon style={{ fill: "white", fontSize: "larger" }} />
             </IconButton>
-          {currentUser ? (<p style={{color: "white"}}>Hi, {currentUser.first_name}</p>) : null}
-          <img
-            className="header-profile"
-            src="/images/profile.png"
-            alt="Profile"
-            onClick={handleProfileClick}
-            style={{ cursor: 'pointer' }}
-          />
+            <p>Logout</p>
+          </div>
+          {currentUser ? (
+            <Link to={`/user/${currentUser.id}`} style={{display:'flex', alignItems:'center', gap:'10px', cursor:'pointer'}}>
+              <p style={{color: "white"}}>Hi, {currentUser.first_name}</p>
+              {currentUser.profilePic ? (
+                <img src={currentUser.profilePic} alt="Profile" className="header-profile"/>
+                ) : (
+                <img src="/profile-icon.jpg" alt="Default Profile" className="header-profile" />
+                )}
+            </Link>
+          ) : null}
         </div>
       </div>
     );

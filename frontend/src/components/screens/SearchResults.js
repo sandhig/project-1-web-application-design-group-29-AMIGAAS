@@ -6,6 +6,7 @@ import axios from 'axios';
 import {Link} from 'react-router-dom'; 
 import { useUser } from '../../context/UserContext';
 import { useNavigate } from 'react-router-dom';
+import Header from "../Header";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
@@ -100,6 +101,9 @@ const SearchResults = () => {
   };
 
   return (
+    <div style={{height:'100vh'}}>
+      <Header />
+    
     <div className="products-container">
         <div className="filters">
 
@@ -216,6 +220,7 @@ const SearchResults = () => {
             ))}
           </div>
         </div>
+    </div>
     </div>
   );
 };
