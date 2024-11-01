@@ -3,6 +3,7 @@ import { TextField, MenuItem, Select, InputLabel, FormControl, Button, Box, Inpu
 import axios from 'axios';
 import { useUser } from '../../context/UserContext';
 import { useNavigate } from 'react-router-dom';
+import Header from "../../components/Header"
 
 function CreateListing() {
   const navigate = useNavigate();
@@ -155,32 +156,28 @@ function CreateListing() {
   };
 
   return (
-    <Box
-      component="form"
-      noValidate
-      onSubmit={handleSubmit}
-      encType="multipart/form-data"
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 2,
-        maxWidth: 300,
-        margin: 'auto'
-      }}
-    >
-      {error && <Alert severity="error">{error}</Alert>}
-
-      <TextField
-        label="Name"
-        name="name"
-        value={formData.name}
-        onChange={handleInputChange}
-        onBlur={handleBlur}
-        variant="outlined"
-        required
-        error={!!formErrors.name}
-        helperText={formErrors.name}
-      />
+    <div> 
+       <Header />
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        encType="multipart/form-data"
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          maxWidth: 300,
+          margin: 'auto'
+        }}
+      >
+        <TextField
+          label="name"
+          name="name"
+          value={formData.name}
+          onChange={handleInputChange}
+          variant="outlined"
+          required
+        />
 
       <TextField
         label="Price"
@@ -272,12 +269,12 @@ function CreateListing() {
         helperText={formErrors.description}
       />
 
-      <input
-        type="file"
-        name="image"
-        accept="image/*"
-        onChange={handleInputChange}
-      />
+        <input
+          type="file"
+          name="image"
+          accept="image/*"
+          onChange={handleInputChange}
+        />
 
       <Button type="submit" variant="contained" color="primary">
         Submit

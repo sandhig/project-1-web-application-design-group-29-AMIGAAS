@@ -1,6 +1,7 @@
 import { useUser } from '../../context/UserContext';
 import React, { useState, useEffect } from 'react';
 import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
+import Header from "../../components/Header"
 
 function HomeScreen() {
     const { currentUser } = useUser();
@@ -33,6 +34,7 @@ function HomeScreen() {
     
       return (
         <div>
+          <Header />
           <h1>Welcome, {currentUser.first_name}!</h1>
           <h2>Users:</h2>
           <ul>
