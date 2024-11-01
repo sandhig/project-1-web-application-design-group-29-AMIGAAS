@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useUser } from '../../context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import Header from "../../components/Header"
+import './CreateListing.css';
 
 function CreateListing() {
   const navigate = useNavigate();
@@ -200,65 +201,71 @@ function CreateListing() {
           }}
         />
 
-        <FormControl variant="outlined" required error={!!formErrors.category}>
-          <InputLabel id="category-label">Category</InputLabel>
-          <Select
-            labelId="category-label"
-            name="category"
-            value={formData.category}
-            onChange={handleInputChange}
-            onBlur={handleBlur}
-            label="Category"
-          >
-            <MenuItem value="" disabled>Select a Category</MenuItem>
-            {categories.map((category, index) => (
-              <MenuItem key={index} value={category}>
-                {category.label}
-              </MenuItem>
-            ))}
-          </Select>
-          <Typography variant="caption" color="error">{formErrors.category}</Typography>
-        </FormControl>
+        <div className='align-left'> 
+          <FormControl variant="outlined" required error={!!formErrors.category}>
+            <InputLabel id="category-label">Category</InputLabel>
+            <Select
+              labelId="category-label"
+              name="category"
+              value={formData.category}
+              onChange={handleInputChange}
+              onBlur={handleBlur}
+              label="Category"
+            >
+              <MenuItem value="" disabled>Select a Category</MenuItem>
+              {categories.map((category, index) => (
+                <MenuItem key={index} value={category}>
+                  {category.label}
+                </MenuItem>
+              ))}
+            </Select>
+            <Typography variant="caption" color="error">{formErrors.category}</Typography>
+          </FormControl>
+        </div>
 
-        <FormControl variant="outlined" required error={!!formErrors.condition}>
-          <InputLabel id="condition-label">Condition</InputLabel>
-          <Select
-            labelId="condition-label"
-            name="condition"
-            value={formData.condition}
-            onChange={handleInputChange}
-            onBlur={handleBlur}
-            label="Condition"
-          >
-            <MenuItem value="" disabled>Select a Condition</MenuItem>
-            {conditions.map((condition, index) => (
-              <MenuItem key={index} value={condition}>
-                {condition.label}
-              </MenuItem>
-            ))}
-          </Select>
-          <Typography variant="caption" color="error">{formErrors.condition}</Typography>
-        </FormControl>
+        <div className='align-left'>
+          <FormControl variant="outlined" required error={!!formErrors.condition}>
+            <InputLabel id="condition-label">Condition</InputLabel>
+            <Select
+              labelId="condition-label"
+              name="condition"
+              value={formData.condition}
+              onChange={handleInputChange}
+              onBlur={handleBlur}
+              label="Condition"
+            >
+              <MenuItem value="" disabled>Select a Condition</MenuItem>
+              {conditions.map((condition, index) => (
+                <MenuItem key={index} value={condition}>
+                  {condition.label}
+                </MenuItem>
+              ))}
+            </Select>
+            <Typography variant="caption" color="error">{formErrors.condition}</Typography>
+          </FormControl>
+        </div>
 
-        <FormControl variant="outlined" required error={!!formErrors.location}>
-          <InputLabel id="location-label">Location</InputLabel>
-          <Select
-            labelId="location-label"
-            name="location"
-            value={formData.location}
-            onChange={handleInputChange}
-            onBlur={handleBlur}
-            label="Location"
-          >
-            <MenuItem value="" disabled>Select a Location</MenuItem>
-            {locations.map((location, index) => (
-              <MenuItem key={index} value={location}>
-                {location.label}
-              </MenuItem>
-            ))}
-          </Select>
-          <Typography variant="caption" color="error">{formErrors.location}</Typography>
-        </FormControl>
+        <div className='align-left'>
+          <FormControl variant="outlined" required error={!!formErrors.location}>
+            <InputLabel id="location-label">Location</InputLabel>
+            <Select
+              labelId="location-label"
+              name="location"
+              value={formData.location}
+              onChange={handleInputChange}
+              onBlur={handleBlur}
+              label="Location"
+            >
+              <MenuItem value="" disabled>Select a Location</MenuItem>
+              {locations.map((location, index) => (
+                <MenuItem key={index} value={location}>
+                  {location.label}
+                </MenuItem>
+              ))}
+            </Select>
+            <Typography variant="caption" color="error">{formErrors.location}</Typography>
+          </FormControl>
+        </div>
 
         <TextField
           label="Description"
