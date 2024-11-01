@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import HeaderPre from "../../components/HeaderPre"
 
 const EmailVerification = () => {
   const [formData, setFormData] = useState({
@@ -58,6 +59,7 @@ const EmailVerification = () => {
 
   return (
     <div>
+      <HeaderPre/>
       <h2>Email Verification</h2>
       <form onSubmit={handleSubmit}>
         <div>

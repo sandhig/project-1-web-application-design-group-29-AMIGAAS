@@ -3,6 +3,8 @@ import { useLocation } from 'react-router-dom';
 import './PrivateMessage.css';
 import { IoSend } from "react-icons/io5";
 import { useUser } from '../../context/UserContext';
+import Header from "../../components/Header"
+
 
 function PrivateMessage() {
     const [conversations, setConversations] = useState([]);
@@ -267,14 +269,20 @@ function PrivateMessage() {
     }
 
     return (
+        <div>
+            <Header/>
+        
         <div className="container">
+            
             <div className="conversations">
                 <h2>Chats</h2>
                 {conversations.map(conversation => (
                     <div key={conversation.id} onClick={() => setSelectedConversationId(conversation.id)}
                         className={conversation.id === selectedConversationId ? 'selected' : '' || !conversation.is_read ? 'unread' : ''}>
                         <span className={!conversation.is_read ? 'dot' : ''}></span>
+
                         <span className="message-title">
+
                             {conversation.name}
                             <p>{conversation.last_sender_id == currentUser.id ? 'You' : conversation.last_sender_name}: {conversation.last_message}</p>
                         </span>
@@ -348,6 +356,9 @@ function PrivateMessage() {
                 )}
             </div>
         </div>
+
+        </div>
+
     );
 }
 

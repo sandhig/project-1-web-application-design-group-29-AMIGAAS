@@ -7,14 +7,17 @@ from django.contrib.auth import authenticate
 
 class ProfilesSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(source='user.id', read_only=True)
-    email = serializers.EmailField(source='user.email')
+    email = serializers.EmailField(source='user.email', required=False)
     first_name = serializers.CharField(source='user.first_name')
     last_name = serializers.CharField(source='user.last_name')
-    password = serializers.CharField(write_only=True, source='user.password')
+    password = serializers.CharField(write_only=True, source='user.password', required=False)
+    bio = serializers.CharField(allow_blank=True)
+    profilePic = serializers.ImageField(required=False)
+    profilePic_url = serializers.CharField(read_only=True)
 
     class Meta:
         model = Profile
-        fields = ['user_id', 'email', 'first_name', 'last_name', 'password']
+        fields = ['user_id', 'email', 'first_name', 'last_name', 'password', 'bio', 'profilePic', 'profilePic_url']
 
     def validate_email(self, value):
         if '@mail.utoronto.ca' not in value:
@@ -24,7 +27,29 @@ class ProfilesSerializer(serializers.ModelSerializer):
             raise serializers.ValidationError("Email already exists.")
         
         return value 
+
+    def update(self, instance, validated_data):
+        # Handle user-related fields
+        user_data = validated_data.get('user', {})
+        user = instance.user  # Access the related User instance
+
+        # Update first name and last name if they are in validated data
+        user.first_name = user_data.get('first_name', user.first_name)
+        user.last_name = user_data.get('last_name', user.last_name)
+        user.save()
+
+        # Update profile-related field (e.g., bio)
+        instance.bio = validated_data.get('bio', instance.bio)
+        if 'profilePic' in validated_data:
+            instance.profilePic = validated_data.get('profilePic')
+        instance.save()
+        
+        return instance
     
+    def post(self):
+        # placeholder for post function
+        return 
+
     def create(self, validated_data):
         verification_code=get_random_string(length=6, allowed_chars='0123456789')
 
@@ -55,7 +80,7 @@ class ProfilesSerializer(serializers.ModelSerializer):
             fail_silently = False,
         )
         return profile 
-
+        
 class EmailVerificationSerializer(serializers.Serializer):
     email = serializers.EmailField()
     verification_code = serializers.CharField(max_length=6)

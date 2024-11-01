@@ -37,33 +37,12 @@ function Header() {
       navigate('/profiles/login');
     };
 
-    /*
-    useEffect(() => {
-        const token = localStorage.getItem('authToken');
-        
-        if (currentUser && token) {
-            const fetchUnreadMessagesCount = async () => {
-                try {
-                const response = await fetch('http://3.87.240.14:8000/api/unread_messages/', {
-                    headers: {
-                    'Authorization': `Token ${token}`,
-                    'Content-Type': 'application/json',
-                    }
-                });
-
-                const data = await response.json();
-                setUnreadMessagesCount(data.unread_message_count);
-                } catch (error) {
-                console.error("Error fetching unread messages count:", error);
-                }
-            };
-
-            fetchUnreadMessagesCount();
-            const intervalId = setInterval(fetchUnreadMessagesCount, 30000);
-            return () => clearInterval(intervalId);
-        }
-    }, [currentUser]);
-    */
+    const handleProfileClick = () => {
+      if (currentUser && currentUser.id) {
+        navigate(`/user/${currentUser.id}`);
+      }
+    };
+    
     return (
       <div className="header">
         <div className="logo-container">
@@ -98,15 +77,14 @@ function Header() {
           <IconButton aria-label="message" onClick={handleLogout}>
               <LogoutIcon style={{ fill: "white", fontSize: "larger" }} />
             </IconButton>
-          {currentUser ? (
-            <span>
-              <p style={{color: "white"}}>Hi, {currentUser.first_name}</p>
-              <Link to={`/user/${currentUser.id}`}>
-                <img className="header-profile" src="/images/profile.png"></img>
-              </Link>
-            </span>
-          ) : null}
-          
+          {currentUser ? (<p style={{color: "white"}}>Hi, {currentUser.first_name}</p>) : null}
+          <img
+            className="header-profile"
+            src="/images/profile.png"
+            alt="Profile"
+            onClick={handleProfileClick}
+            style={{ cursor: 'pointer' }}
+          />
         </div>
       </div>
     );

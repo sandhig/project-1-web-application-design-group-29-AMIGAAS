@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import HeaderPre from "../../components/HeaderPre"
 
 
 
@@ -48,7 +49,7 @@ const UsersSignUp = () => {
         setErrorMessage('');
 
         setTimeout(() => {
-          navigate('/users/verify-email');  // Redirects to verify-email page
+          navigate('/profiles/verify-email');  // Redirects to verify-email page
         }, 2000);  // Adjust the timeout duration as needed
       }
     } catch (error) {
@@ -60,6 +61,7 @@ const UsersSignUp = () => {
 
   return (
     <div>
+      <HeaderPre />
       <h2>Sign Up</h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -102,7 +104,7 @@ const UsersSignUp = () => {
             required
           />
         </div>
-        <button type="submit">Sign In</button>
+        <button type="submit">Sign Up</button>
       </form>
       <p> 
           Already User? 

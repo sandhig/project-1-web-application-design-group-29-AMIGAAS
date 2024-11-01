@@ -1,15 +1,19 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import HeaderPre from "../../components/HeaderPre"
 
 const UsersLogin = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
+
   
   const [errorMessage, setErrorMessage] = useState('');
   const [successMessage, setSuccessMessage] = useState('');
+  const navigate = useNavigate()
 
   const handleChange = (e) => {
     setFormData({
@@ -32,7 +36,10 @@ const UsersLogin = () => {
         
         setSuccessMessage('Login successful!');
         setErrorMessage('');
-        // Optionally, you could store a token or session data here
+        setTimeout(() => {
+          navigate('/products');  //was /homepage is not /products
+        }, 2000);  
+
       }
     } catch (error) {
       setErrorMessage('Invalid email or password.');
@@ -42,6 +49,7 @@ const UsersLogin = () => {
 
   return (
     <div>
+      <HeaderPre />
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
         <div>
@@ -69,7 +77,7 @@ const UsersLogin = () => {
 
       <p> 
           Not a User? 
-          <Link to="/users/signup"> Signup</Link>
+          <Link to="/profiles/signup"> Signup</Link>
       </p>
 
       {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}

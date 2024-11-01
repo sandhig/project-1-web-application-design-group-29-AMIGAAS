@@ -3,6 +3,7 @@ import { TextField, MenuItem, Select, InputLabel, FormControl, Button, Box, Inpu
 import axios from 'axios';
 import { useUser } from '../../context/UserContext';
 import { useNavigate } from 'react-router-dom';
+import Header from "../../components/Header"
 
 function CreateListing() {
   const navigate = useNavigate();
@@ -96,116 +97,119 @@ function CreateListing() {
   };
 
   return (
-    <Box
-      component="form"
-      onSubmit={handleSubmit}
-      encType="multipart/form-data"
-      sx={{
-        display: 'flex',
-        flexDirection: 'column',
-        gap: 2,
-        maxWidth: 300,
-        margin: 'auto'
-      }}
-    >
-      <TextField
-        label="name"
-        name="name"
-        value={formData.name}
-        onChange={handleInputChange}
-        variant="outlined"
-        required
-      />
-
-      <TextField
-        label="Price"
-        name="price"
-        type="number"
-        value={formData.price}
-        onChange={handleInputChange}
-        variant="outlined"
-        required
-        InputProps={{
-          startAdornment: <InputAdornment position="start">$</InputAdornment>,
-          inputProps: { min: 0, step: 0.01 }
+    <div> 
+       <Header />
+      <Box
+        component="form"
+        onSubmit={handleSubmit}
+        encType="multipart/form-data"
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          maxWidth: 300,
+          margin: 'auto'
         }}
-      />
-
-      <FormControl variant="outlined" required>
-        <InputLabel id="category-label">Category</InputLabel>
-        <Select
-          labelId="category-label"
-          name="category"
-          value={formData.category}
+      >
+        <TextField
+          label="name"
+          name="name"
+          value={formData.name}
           onChange={handleInputChange}
-          label="Category"
-        >
-          <MenuItem value="" disabled>Select a Category</MenuItem>
-          {categories.map((category, index) => (
-            <MenuItem key={index} value={category}>
-              {category.label}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+          variant="outlined"
+          required
+        />
 
-      <FormControl variant="outlined" required>
-        <InputLabel id="condition-label">Condition</InputLabel>
-        <Select
-          labelId="condition-label"
-          name="condition"
-          value={formData.condition}
+        <TextField
+          label="Price"
+          name="price"
+          type="number"
+          value={formData.price}
           onChange={handleInputChange}
-          label="Condition"
-        >
-          <MenuItem value="" disabled>Select a Condition</MenuItem>
-          {conditions.map((condition, index) => (
-            <MenuItem key={index} value={condition}>
-              {condition.label}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+          variant="outlined"
+          required
+          InputProps={{
+            startAdornment: <InputAdornment position="start">$</InputAdornment>,
+            inputProps: { min: 0, step: 0.01 }
+          }}
+        />
 
-      <FormControl variant="outlined" required>
-        <InputLabel id="location-label">Location</InputLabel>
-        <Select
-          labelId="location-label"
-          name="location"
-          value={formData.location}
+        <FormControl variant="outlined" required>
+          <InputLabel id="category-label">Category</InputLabel>
+          <Select
+            labelId="category-label"
+            name="category"
+            value={formData.category}
+            onChange={handleInputChange}
+            label="Category"
+          >
+            <MenuItem value="" disabled>Select a Category</MenuItem>
+            {categories.map((category, index) => (
+              <MenuItem key={index} value={category}>
+                {category.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl variant="outlined" required>
+          <InputLabel id="condition-label">Condition</InputLabel>
+          <Select
+            labelId="condition-label"
+            name="condition"
+            value={formData.condition}
+            onChange={handleInputChange}
+            label="Condition"
+          >
+            <MenuItem value="" disabled>Select a Condition</MenuItem>
+            {conditions.map((condition, index) => (
+              <MenuItem key={index} value={condition}>
+                {condition.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <FormControl variant="outlined" required>
+          <InputLabel id="location-label">Location</InputLabel>
+          <Select
+            labelId="location-label"
+            name="location"
+            value={formData.location}
+            onChange={handleInputChange}
+            label="Location"
+          >
+            <MenuItem value="" disabled>Select a Condition</MenuItem>
+            {locations.map((location, index) => (
+              <MenuItem key={index} value={location}>
+                {location.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+
+        <TextField
+          label="Description"
+          name="description"
+          value={formData.description}
           onChange={handleInputChange}
-          label="Location"
-        >
-          <MenuItem value="" disabled>Select a Condition</MenuItem>
-          {locations.map((location, index) => (
-            <MenuItem key={index} value={location}>
-              {location.label}
-            </MenuItem>
-          ))}
-        </Select>
-      </FormControl>
+          variant="outlined"
+          multiline
+          rows={4}
+        />
 
-      <TextField
-        label="Description"
-        name="description"
-        value={formData.description}
-        onChange={handleInputChange}
-        variant="outlined"
-        multiline
-        rows={4}
-      />
+        <input
+          type="file"
+          name="image"
+          accept="image/*"
+          onChange={handleInputChange}
+        />
 
-      <input
-        type="file"
-        name="image"
-        accept="image/*"
-        onChange={handleInputChange}
-      />
-
-      <Button type="submit" variant="contained" color="primary">
-        Submit
-      </Button>
-    </Box>
+        <Button type="submit" variant="contained" color="primary">
+          Submit
+        </Button>
+      </Box>
+   </div>
   );
 }
 
