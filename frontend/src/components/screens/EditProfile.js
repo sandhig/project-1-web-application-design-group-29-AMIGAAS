@@ -71,7 +71,8 @@ function EditProfile() {
         formData.append('last_name', profile.last_name); 
         formData.append('bio', profile.bio); 
         
-        if (profile.profilePic) {
+        // Only add profile pic to form if it's a new file
+        if (profile.profilePic && typeof profile.profilePic !== 'string') {
             formData.append('profilePic', profile.profilePic);
         }
     
