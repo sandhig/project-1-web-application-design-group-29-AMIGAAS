@@ -87,11 +87,9 @@ a:active {
     color: black;
 }
 
-/*
 .product-item:hover {
     cursor: pointer;
 }
-*/
 
 .product-image {
     display: block;
