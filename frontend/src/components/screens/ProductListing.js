@@ -48,10 +48,6 @@ const ProductListing = () => {
         navigate(-1); // This navigates back to the previous page
     };
 
-    const handleClickOnSeller = () => {
-        return;
-    };
-
     const sendMessageToSeller = () => {
         if (product.user) {
 
@@ -139,8 +135,8 @@ const ProductListing = () => {
                         <h2 style={{margin: "0"}}>Seller information</h2>
                         {product.user ? (
                             <Link to={`/user/${product.user.id}`} className="seller-info" >
-                            {product.user.profilePic ? (
-                                <img src={product.user.profilePic} alt="Profile" className="header-profile"/>
+                            {product.user.profile_pic ? (
+                                <img src={product.user.profile_pic} alt="Profile" className="header-profile"/>
                                 ) : (
                                 <img src="/profile-icon.jpg" alt="Default Profile" className="header-profile" />
                             )}

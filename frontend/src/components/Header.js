@@ -18,8 +18,6 @@ function Header() {
     const [searchTerm, setSearchTerm] = useState("");
     const navigate = useNavigate();
 
-    console.log(currentUser)
-
     const handleInputChange = (e) => {
       setSearchTerm(e.target.value);
     };
