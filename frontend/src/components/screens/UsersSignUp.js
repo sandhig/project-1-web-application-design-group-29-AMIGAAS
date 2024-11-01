@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import HeaderPre from "../../components/HeaderPre"
 
 
 
@@ -60,6 +61,7 @@ const UsersSignUp = () => {
 
   return (
     <div>
+      <HeaderPre />
       <h2>Sign Up</h2>
       <form onSubmit={handleSubmit}>
         <div>

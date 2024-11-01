@@ -37,6 +37,11 @@ function Header() {
       navigate('/profiles/login');
     };
 
+    const handleProfileClick = () => {
+      if (currentUser && currentUser.id) {
+        navigate(`/user/${currentUser.id}`);
+      }
+    };
     
     return (
       <div className="header">
@@ -73,7 +78,13 @@ function Header() {
               <LogoutIcon style={{ fill: "white", fontSize: "larger" }} />
             </IconButton>
           {currentUser ? (<p style={{color: "white"}}>Hi, {currentUser.first_name}</p>) : null}
-          <img className="header-profile" src="/images/profile.png"></img>
+          <img
+            className="header-profile"
+            src="/images/profile.png"
+            alt="Profile"
+            onClick={handleProfileClick}
+            style={{ cursor: 'pointer' }}
+          />
         </div>
       </div>
     );

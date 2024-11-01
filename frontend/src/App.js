@@ -32,7 +32,7 @@ function App() {
               <Route path = "/profiles/login" element={<UsersLogin/>}></Route>
 
               {/* Protected pages */}
-              <Route path = "/homepage" element={<PrivateRoute element={<HomeScreen />} />}></Route>
+              <Route path ="/homepage" element={<PrivateRoute element={<HomeScreen />} />}></Route>
               <Route path="/products" element={<PrivateRoute element={<Products />} />} />
               <Route path="/products/create" element={<PrivateRoute element={<CreateListing />} />} />
               <Route path="/user/:userId" element={<PrivateRoute element={<UserProfile />} />} />

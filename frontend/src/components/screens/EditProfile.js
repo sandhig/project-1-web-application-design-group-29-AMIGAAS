@@ -105,59 +105,61 @@ function EditProfile() {
     };
 
     return (
-        <div className="edit-profile-container">
+        <div >
             <Header />
-            <h1>Edit Profile</h1>
-            <form onSubmit={handleSave} className='profile-form'>
-                <label className="profile-label">
-                    First Name:
-                    <input
-                        type="text"
-                        name="first_name"
-                        value={profile.first_name}
-                        onChange={handleChange}
-                        className="profile-input"
-                    />
-                </label>
-                <label className="profile-label">
-                    Last Name:
-                    <input
-                        type="text"
-                        name="last_name"
-                        value={profile.last_name}
-                        onChange={handleChange}
-                        className="profile-input"
-                    />
-                </label>
-                <label className='profile-label'>
-                    Bio:
-                    <textarea
-                        name="bio"
-                        value={profile.bio}
-                        onChange={handleChange}
-                        className='profile-textarea'
-                        row="5"
-                    />
-                </label>
-                <label>
-                    Profile Photo:
-                    <input
-                        type="file"
-                        onChange={handleFileChange}  // Update file input handler
-                        className="profile-photo-input"
-                        accept="image/*"
-                    />
-                </label>
+            <div className="edit-profile-container">
+                <h1>Edit Profile</h1>
+                <form onSubmit={handleSave} className='profile-form'>
+                    <label className="profile-label">
+                        First Name:
+                        <input
+                            type="text"
+                            name="first_name"
+                            value={profile.first_name}
+                            onChange={handleChange}
+                            className="profile-input"
+                        />
+                    </label>
+                    <label className="profile-label">
+                        Last Name:
+                        <input
+                            type="text"
+                            name="last_name"
+                            value={profile.last_name}
+                            onChange={handleChange}
+                            className="profile-input"
+                        />
+                    </label>
+                    <label className='profile-label'>
+                        Bio:
+                        <textarea
+                            name="bio"
+                            value={profile.bio}
+                            onChange={handleChange}
+                            className='profile-textarea'
+                            row="5"
+                        />
+                    </label>
+                    <label>
+                        Profile Photo:
+                        <input
+                            type="file"
+                            onChange={handleFileChange}  // Update file input handler
+                            className="profile-photo-input"
+                            accept="image/*"
+                        />
+                    </label>
 
-                {profilePicPreview && (
-                    <img src={profilePicPreview} 
-                    alt="Profile Preview" 
-                    style={{ width: '100px', height: '100px', borderRadius: '50%' }} 
-                    />
-                )}
-                <button type="submit" className="profile-save-button">Save Changes</button>
-                {successMessage && <p className="success-message">{successMessage}</p>}
-            </form>
+                    {profilePicPreview && (
+                        <img src={profilePicPreview} 
+                        alt="Profile Preview" 
+                        style={{ width: '100px', height: '100px', borderRadius: '50%' }} 
+                        />
+                    )}
+                    <button type="submit" className="profile-save-button">Save Changes</button>
+                    {successMessage && <p className="success-message">{successMessage}</p>}
+                </form>
+            </div>
         </div>
     );
 }
