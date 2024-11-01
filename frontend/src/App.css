@@ -41,6 +41,10 @@
   }
 }
 
+.App-scroll-container {
+  height: 100vh;
+}
+
 @media (max-width: 768px) {
   .App-scroll-container {
     overflow-x: auto;
