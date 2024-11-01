@@ -297,7 +297,6 @@ class ProfilesSerializerTest(TestCase):
         }
         
     
-    # TODO: ensure if image field should be required=false
     def test_valid_profile_creation(self):
         """ Test creation with valid data """
         serializer = ProfilesSerializer(data=self.user_data)
@@ -370,6 +369,114 @@ class ProfilesSerializerTest(TestCase):
         self.assertIn('profilePic_url', serializer.fields)
         self.assertTrue(serializer.fields['profilePic_url'].read_only)
         print("Test: Read Only Fields - PASS")
+
+
+class EmailVerificationSerializerTest(TestCase):
+    def setUp(self):
+        # Create a user, and a profile with a generated verification code
+        self.user_data = {
+            'email' : 'test.user@mail.utoronto.ca', 
+            'password' : 'Test1234!'
+        }
+        self.user = User.objects.create_user(
+            username=self.user_data['email'], email=self.user_data['email'], password=self.user_data['password']
+        )
+        self.profile = Profile.objects.create(user=self.user)
+        self.verification_code = self.profile.generate_verification_code()
+    
+
+    def test_non_existent_email(self):
+        """ Test to check that email veficiation serializer does not allow for non-existent email in the database """
+        # Define the data to be validated
+        data = {'email': 'nonexistent@example.com', 'verification_code': '123456'}
+
+        # If email doesn't exist, should trigger error
+        serializer = EmailVerificationSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("Email not found.", serializer.errors['non_field_errors'][0])
+        print("Test: Non Existent Email - PASS")
+
+
+    def test_valid_verification_code(self):
+        """ Test to check that email serializer works as expected"""
+        # Define the data to be validated
+        data = {'email': self.user_data['email'], 'verification_code': self.verification_code}
+
+        # Ensure email exists, and verification code is valid, should not trigger error
+        serializer = EmailVerificationSerializer(data=data)
+        self.assertTrue(serializer.is_valid())
+
+        # Update profile and refresh database
+        serializer.save()
+        self.profile.refresh_from_db()
+
+        # Ensure that the verification codes match and verification status has been updated
+        self.assertIsNone(self.profile.verification_code)
+        self.assertTrue(self.profile.is_verified)
+        print("Test: Valid Verification Code - PASS")
+
+    
+    def test_invalid_verification_code(self):
+        data = {'email': self.user_data['email'], 'verification_code': '654321'}
+
+        # Ensure the data passed in is not the valid verification code
+        self.assertNotEqual(data['verification_code'], self.verification_code)
+
+        # Ensure that the verification codes does not match, should trigger error
+        serializer = EmailVerificationSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("Invalid verification code.", serializer.errors['non_field_errors'][0])
+        print("Test: Invalid Verification Code - PASS")
+        
+
+
+
+
+
+        
+        
+        
+
+
+# class LoginSerializerTest(TestCase):
+#     todo = True
+
+
+# class ProfileUrlTests(APITestCase):
+#     todo = True
+
+# #     def setUp(self):
+# #         # Set up a test user for tests that require authentication
+# #         self.user = User.objects.create(username="testuser", password="Test1234!")
+# #         self.profile = Profile.objects.create(user=self.user)
+# #         self.client.login(username="testuser", password="Test1234!")
+    
+# #     # Tests for add_user endpoint (sign-up)
+# #     def test_successfull_signup(self):
+# #         """Test that a new user can sign up successfully."""
+# #         response = self.client.post(reverse('add_user'), data={
+# #             "username": "newtestuser",
+# #             "password": "Test12345!",
+# #             "email": "newtest.user@mail.utoronto.ca"
+# #         })
+# #         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+# #         self.assertIn("username", response.data)
+    
+
+# #     def test_signup_missing_fields(self):
+# #         """Test that signup fails if required fields are missing."""
+
+# #         # when password is missing
+# #         response = self.client.post(reverse('add_user'), data={"username": "newtestuser"})
+# #         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+# #         # when username is missing
+# #         response = self.client.post(reverse('add_user'), data={"password": "Test12345!"})
+# #         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+
+# class ProfileViewsTests(TestCase):
+#     todo = True
 
 
 
