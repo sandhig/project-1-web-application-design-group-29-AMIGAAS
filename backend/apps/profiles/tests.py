@@ -417,6 +417,8 @@ class EmailVerificationSerializerTest(TestCase):
 
     
     def test_invalid_verification_code(self):
+        """ Test to check that email serializer does not allow for invalid verification code for the given profile"""
+        # Define the data to be validated
         data = {'email': self.user_data['email'], 'verification_code': '654321'}
 
         # Ensure the data passed in is not the valid verification code
@@ -429,17 +431,67 @@ class EmailVerificationSerializerTest(TestCase):
         print("Test: Invalid Verification Code - PASS")
         
 
+class LoginSerializerTest(TestCase):
+    def setUp(self):
+        # Create a user, and a profile with a generated verification code
+        self.user_data = {
+            'email' : 'test.user@mail.utoronto.ca', 
+            'password' : 'Test1234!'
+        }
+        self.user = User.objects.create_user(
+            username=self.user_data['email'], email=self.user_data['email'], password=self.user_data['password']
+        )
+        self.profile = Profile.objects.create(user=self.user, is_verified=True)
+
+
+    def test_successful_login(self):
+        """ Test to check that login serializer works as expected"""
+        # Define the data to be validated
+        data = {'email': self.user_data['email'], 'password' : self.user_data['password'] }
+
+        # Ensure that the user can be successfully logged in
+        serializer = LoginSerializer(data=data)
+        self.assertTrue(serializer.is_valid())
+        self.assertEqual(serializer.validated_data['user'], self.user)
+        print("Test: Successful Login - PASS")
+
+
+    def test_non_existent_user_login(self):
+        """ Test to check that login serializer does not allow login for a non existent user in the database"""
+        # Define the data to be validated
+        data = {'email': 'nonexistent@example.com', 'password': 'nonexistent'}
+
+        # If user doesn't exists, should trigger errors
+        serializer = LoginSerializer(data=data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("User not found.", serializer.errors['non_field_errors'][0])
+        print("Test: Non-Existent User Login - PASS")
+    
+
+    def test_incorrect_credentials(self):
+        """ Test to check that login serializer does not allow login for an incorrect email and password pair"""
+        # Define the data to be validated
+        wrong_password_data = {'email':  self.user_data['email'], 'password': 'wrongpassword'}
+        wrong_email_data = {'email' : 'wrong.email@mail.utorotno.ca', 'password': self.user_data['password']}
+
+        # If password is wrong, it should trigger errors
+        serializer = LoginSerializer(data=wrong_password_data)
+        self.assertFalse(serializer.is_valid())
+        self.assertIn("Incorrect email or password.", serializer.errors['non_field_errors'][0])
+
+        # If email is wrong, it should trigger errors
+        serializer = LoginSerializer(data=wrong_email_data)
+        self.assertFalse(serializer.is_valid())
+        try: 
+            # in the case wrong email exists in the database
+            self.assertIn("Incorrect email or password.", serializer.errors['non_field_errors'][0])
+        except:
+            # in the case wrong email does not exist in the database
+            self.assertIn("User not found.", serializer.errors['non_field_errors'][0])
+        print("Test: Incorrect Credentials - PASS")
 
 
 
-
-        
-        
-        
-
-
-# class LoginSerializerTest(TestCase):
-#     todo = True
 
 
 # class ProfileUrlTests(APITestCase):
