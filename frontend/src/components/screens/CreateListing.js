@@ -157,8 +157,11 @@ function CreateListing() {
 
   return (
     <div> 
-       <Header />
-        <Box
+      <Header />
+      <div className='padding-top'> 
+        <h1>Create Listing</h1>
+      </div>
+      <Box
           component="form"
           noValidate
           onSubmit={handleSubmit}
