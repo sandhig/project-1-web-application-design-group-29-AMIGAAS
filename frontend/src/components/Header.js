@@ -98,8 +98,15 @@ function Header() {
           <IconButton aria-label="message" onClick={handleLogout}>
               <LogoutIcon style={{ fill: "white", fontSize: "larger" }} />
             </IconButton>
-          {currentUser ? (<p style={{color: "white"}}>Hi, {currentUser.first_name}</p>) : null}
-          <img className="header-profile" src="/images/profile.png"></img>
+          {currentUser ? (
+            <span>
+              <p style={{color: "white"}}>Hi, {currentUser.first_name}</p>
+              <Link to={`/user/${currentUser.id}`}>
+                <img className="header-profile" src="/images/profile.png"></img>
+              </Link>
+            </span>
+          ) : null}
+          
         </div>
       </div>
     );
