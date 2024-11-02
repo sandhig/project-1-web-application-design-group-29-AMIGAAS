@@ -5,6 +5,7 @@ import { IoSend } from "react-icons/io5";
 import { useUser } from '../../context/UserContext';
 import Header from "../../components/Header"
 
+
 function PrivateMessage() {
     const [conversations, setConversations] = useState([]);
     const [selectedConversationId, setSelectedConversationId] = useState(null);
@@ -259,101 +260,101 @@ function PrivateMessage() {
 
     let lastReadMessageId = getLastReadMessageId();
 
-    if (hasConversations === null) {
-        return <div>Loading...</div>;
-    }
-
-    if (hasConversations === false) {
-        return <div>No messages</div>;
-    }
-
     return (
-        <div>
+        <div style={{display: 'contents'}}>
             <Header/>
+
+            {hasConversations === null ? (<div>Loading...</div>) : (
+                hasConversations === false ? (<div>No messages</div>) :
         
-        <div className="container">
-            
-            <div className="conversations">
-                <h2>Chats</h2>
-                {conversations.map(conversation => (
-                    <div key={conversation.id} onClick={() => setSelectedConversationId(conversation.id)}
-                        className={conversation.id === selectedConversationId ? 'selected' : '' || !conversation.is_read ? 'unread' : ''}>
-                        <span className={!conversation.is_read ? 'dot' : ''}></span>
-                        <span className="title">
-                            {conversation.name}
-                            <p>{conversation.last_sender_id == currentUser.id ? 'You' : conversation.last_sender_name}: {conversation.last_message}</p>
-                        </span>
-                    </div>
-                ))}
-            </div>
-            <div className="messages">
-                {selectedConversationId ? (
-                    <div className='messages-container'>
-                        <h2>
-                            {selectedConversation ? selectedConversation.name : ''}
-                        </h2>
-                        {loading ? (
-                            <div>Loading...</div>
-                        ) : (
-                            <div className='messages-inner-container'>
-                                <div className="message-list" ref={messageListRef}>
-                                    {messages.map((message, i) => (
-                                        <div key={message.id}>
-                                            {(i === 0 || (new Date(message.timestamp).getTime() - new Date(messages[i - 1].timestamp).getTime()) / (1000 * 3600) > 2) && (
-                                                <div className="timestamp">
-                                                    {new Date(message.timestamp).toLocaleString('en-US', {
-                                                        year: 'numeric',
-                                                        month: 'short',
-                                                        day: 'numeric',
-                                                        hour: 'numeric',
-                                                        minute: 'numeric',
-                                                        hour12: true
-                                                    })}
-                                                </div>
-                                            )}
-                                            <div className={message.sender_id === currentUser.id ? 'from' : 'to'}>
-                                                <div className="message-container">
-                                                    <div className='message'>
-                                                        {message.content}
-                                                        <span className="time">{
-                                                            new Date(message.timestamp).toLocaleString('en-US', {
-                                                                hour: 'numeric',
-                                                                minute: 'numeric',
-                                                                hour12: true
-                                                            })}</span>
+            <div className="container">
+                
+                <div className="conversations">
+                    <h2>Chats</h2>
+                    {conversations.map(conversation => (
+                        <div key={conversation.id} onClick={() => setSelectedConversationId(conversation.id)}
+                            className={conversation.id === selectedConversationId ? 'selected' : '' || !conversation.is_read ? 'unread' : ''}>
+                            <span className={!conversation.is_read ? 'dot' : ''}></span>
+
+                            <span className="message-title">
+
+                                {conversation.name}
+                                <p>{conversation.last_sender_id == currentUser.id ? 'You' : conversation.last_sender_name}: {conversation.last_message}</p>
+                            </span>
+                        </div>
+                    ))}
+                </div>
+                <div className="messages">
+                    {selectedConversationId ? (
+                        <div className='messages-container'>
+                            <h2>
+                                {selectedConversation ? selectedConversation.name : ''}
+                            </h2>
+                            {loading ? (
+                                <div>Loading...</div>
+                            ) : (
+                                <div className='messages-inner-container'>
+                                    <div className="message-list" ref={messageListRef}>
+                                        {messages.map((message, i) => (
+                                            <div key={message.id}>
+                                                {(i === 0 || (new Date(message.timestamp).getTime() - new Date(messages[i - 1].timestamp).getTime()) / (1000 * 3600) > 2) && (
+                                                    <div className="timestamp">
+                                                        {new Date(message.timestamp).toLocaleString('en-US', {
+                                                            year: 'numeric',
+                                                            month: 'short',
+                                                            day: 'numeric',
+                                                            hour: 'numeric',
+                                                            minute: 'numeric',
+                                                            hour12: true
+                                                        })}
                                                     </div>
-                                                    {/*
-                                        <div className="read-receipt">
-                                            {message.id === lastReadMessageId && (
-                                                <p>Read</p>
-                                            )}
-                                        </div>
-                                        */}
+                                                )}
+                                                <div className={message.sender_id === currentUser.id ? 'from' : 'to'}>
+                                                    <div className="message-container">
+                                                        <div className='message'>
+                                                            {message.content}
+                                                            <span className="time">{
+                                                                new Date(message.timestamp).toLocaleString('en-US', {
+                                                                    hour: 'numeric',
+                                                                    minute: 'numeric',
+                                                                    hour12: true
+                                                                })}</span>
+                                                        </div>
+                                                        {/*
+                                            <div className="read-receipt">
+                                                {message.id === lastReadMessageId && (
+                                                    <p>Read</p>
+                                                )}
+                                            </div>
+                                            */}
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                    ))}
-                                </div>
+                                        ))}
+                                    </div>
 
-                                <div className="text-input">
-                                    <input type="text" value={input} onChange={e => setInput(e.target.value)}
-                                        onKeyPress={e => {
-                                            if (e.key === 'Enter') {
-                                                sendMessage();
-                                            }
-                                        }}
-                                    />
-                                    <button onClick={sendMessage}><IoSend /></button>
+                                    <div className="text-input">
+                                        <input type="text" value={input} onChange={e => setInput(e.target.value)}
+                                            onKeyPress={e => {
+                                                if (e.key === 'Enter') {
+                                                    sendMessage();
+                                                }
+                                            }}
+                                        />
+                                        <button onClick={sendMessage}><IoSend /></button>
+                                    </div>
                                 </div>
-                            </div>
-                        )}
-                    </div>
-                ) : (
-                    <div>Select a conversation</div>
-                )}
+                            )}
+                        </div>
+                    ) : (
+                        <div>Select a conversation</div>
+                    )}
+                </div>
             </div>
+            )}
+
         </div>
-        </div>
+
     );
 }
 

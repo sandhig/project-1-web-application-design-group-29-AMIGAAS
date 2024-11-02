@@ -3,6 +3,7 @@
   height: 100vh;
   display: flex;
   flex-direction: column;
+  font-family: 'Roboto', Arial, sans-serif;
 }
 
 .App-logo {
@@ -37,5 +38,16 @@
   }
   to {
     transform: rotate(360deg);
+  }
+}
+
+.App-scroll-container {
+  height: 100vh;
+}
+
+@media (max-width: 768px) {
+  .App-scroll-container {
+    overflow-x: auto;
+    min-width: 768px;
   }
 }

@@ -22,6 +22,6 @@ class Profile(models.Model):
         return code
     
     @property
-    def image_url(self):
+    def profile_pic_url(self):
         return self.profilePic.url if self.profilePic else None
     

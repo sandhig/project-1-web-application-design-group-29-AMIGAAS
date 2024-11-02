@@ -12,14 +12,6 @@ from rest_framework.decorators import authentication_classes, permission_classes
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
-def get_user_profile(request, user_id):
-    profile = get_object_or_404(Profile, user__id=user_id)
-    serializer = ProfilesSerializer(profile)
-    return Response(serializer.data)
-
-@api_view(['GET'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
 def get_user_conversations(request):
     current_user = request.user.profile
     conversations = Conversation.objects.filter(participants=current_user)
