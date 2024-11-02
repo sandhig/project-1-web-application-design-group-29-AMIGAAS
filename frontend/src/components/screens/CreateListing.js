@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from 'react';
 import {
   Alert,
   Box,
@@ -13,14 +12,16 @@ import {
   Typography
 } from '@mui/material';
 import axios from 'axios';
-import { useUser } from '../../context/UserContext';
-import { useNavigate } from 'react-router-dom';
-import Header from "../../components/Header"
+import React, { useState, useEffect } from 'react';
+
 import './CreateListing.css';
+import Header from "../../components/Header";
+import { useNavigate } from 'react-router-dom';
+import { useUser } from '../../context/UserContext';
 
 function CreateListing() {
   const navigate = useNavigate();
-  
+
   const [formData, setFormData] = useState({
     name: '',
     price: '',
@@ -37,9 +38,11 @@ function CreateListing() {
   const [categories, setCategories] = useState([]);
   const [conditions, setConditions] = useState([]);
   const [locations, setLocations] = useState([]);
+
   const [error, setError] = useState(null);
-  const [submitError, setSubmitError] = useState(null);
   const [formErrors, setFormErrors] = useState({});
+  const [submitError, setSubmitError] = useState(null);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
@@ -215,17 +218,18 @@ function CreateListing() {
             margin: 'auto'
           }}
         >
-          <TextField
-            label="Name"
-            name="name"
-            value={formData.name}
-            onChange={handleInputChange}
-            onBlur={handleBlur}
-            variant="outlined"
-            required
-            error={!!formErrors.name}
-            helperText={formErrors.name}
-          />
+
+        <TextField
+          label="Name"
+          name="name"
+          value={formData.name}
+          onChange={handleInputChange}
+          onBlur={handleBlur}
+          variant="outlined"
+          required
+          error={!!formErrors.name}
+          helperText={formErrors.name}
+        />
 
         <TextField
           label="Price"
@@ -240,7 +244,7 @@ function CreateListing() {
           helperText={formErrors.price}
           InputProps={{
             startAdornment: <InputAdornment position="start">$</InputAdornment>,
-            inputProps: { min: 0, step: 0.01 }
+            inputProps: { min: 0, step: 0.5 }
           }}
         />
 
