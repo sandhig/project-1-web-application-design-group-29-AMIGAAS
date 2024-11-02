@@ -134,6 +134,75 @@ const Products = () => {
             </IconButton>
 
           </div>
+
+          <div className="title">Fashion Finds</div>
+
+          <div style={{ display: "flex", alignItems: "center" }}>
+
+            <IconButton onClick={scrollLeft}>
+              <ArrowLeftIcon style={{ fontSize: "xxx-large" }} />
+            </IconButton>
+
+            <div className="scroll-container" ref={scrollContainerRef}>
+            {products
+              .filter(product => product.category === "Clothing")
+              .map(product => (
+              <div key={product.id} className="product-item">
+                <div onClick={() => handleOpenProduct(product.id)}>
+                  {product.image_url ? 
+                  (<img className="product-image" src={product.image_url}></img>) 
+                  : <img className="product-image" src="/images/no-image-icon.png"></img>}
+                  
+                  <div className="product-text">
+                    <div className="product-price">${product.price}</div>
+                    <div className="product-title">{product.name}</div>
+                    <div className="product-location">{product.pickup_location}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+            </div>
+
+            <IconButton onClick={scrollRight}>
+              <ArrowRightIcon style={{ fontSize: "xxx-large" }} />
+            </IconButton>
+
+          </div>
+
+          <div className="title">Dorm Essentials</div>
+
+          <div style={{ display: "flex", alignItems: "center" }}>
+
+            <IconButton onClick={scrollLeft}>
+              <ArrowLeftIcon style={{ fontSize: "xxx-large" }} />
+            </IconButton>
+
+            <div className="scroll-container" ref={scrollContainerRef}>
+            {products
+              .filter(product => product.category === "Furniture")
+              .map(product => (
+              <div key={product.id} className="product-item">
+                <div onClick={() => handleOpenProduct(product.id)}>
+                  {product.image_url ? 
+                  (<img className="product-image" src={product.image_url}></img>) 
+                  : <img className="product-image" src="/images/no-image-icon.png"></img>}
+                  
+                  <div className="product-text">
+                    <div className="product-price">${product.price}</div>
+                    <div className="product-title">{product.name}</div>
+                    <div className="product-location">{product.pickup_location}</div>
+                  </div>
+                </div>
+              </div>
+            ))}
+            </div>
+
+            <IconButton onClick={scrollRight}>
+              <ArrowRightIcon style={{ fontSize: "xxx-large" }} />
+            </IconButton>
+
+          </div>
+
         </div>
     </div>
   );

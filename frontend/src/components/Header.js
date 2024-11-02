@@ -12,13 +12,13 @@ import LogoutIcon from '@mui/icons-material/Logout';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 
 function Header() {
-    const { currentUser } = useUser();
-    const { setCurrentUser } = useUser();
+    const { currentUser, setCurrentUser } = useUser();
     const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
     const [searchTerm, setSearchTerm] = useState("");
     const navigate = useNavigate();
 
-    console.log(currentUser)
+    useEffect(() => {
+    }, [currentUser]);
 
     const handleInputChange = (e) => {
       setSearchTerm(e.target.value);

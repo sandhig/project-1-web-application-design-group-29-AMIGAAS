@@ -11,6 +11,7 @@ import axios from 'axios';
 import { useUser } from '../../context/UserContext';
 import { TextField, Button, Snackbar } from '@mui/material';
 import { IoSend } from "react-icons/io5";
+import Header from "../../components/Header"
 
 const ProductListing = () => {
 
@@ -45,10 +46,6 @@ const ProductListing = () => {
 
     const handleBack = () => {
         navigate(-1); // This navigates back to the previous page
-    };
-
-    const handleClickOnSeller = () => {
-        return;
     };
 
     const sendMessageToSeller = () => {
@@ -96,6 +93,8 @@ const ProductListing = () => {
     
     return (
         <div className="listing-page-container">
+
+            <Header />
             
             <div style={{ width: "fit-content" }} onClick={handleBack}>
                 <IconButton type="submit" aria-label="back" className="back-to-listings">
@@ -135,10 +134,14 @@ const ProductListing = () => {
                         <hr></hr>
                         <h2 style={{margin: "0"}}>Seller information</h2>
                         {product.user ? (
-                        <div className="seller-info" onClick={handleClickOnSeller}>
-                            <img className="header-profile" src="/images/profile.png"></img>
+                            <Link to={`/user/${product.user.id}`} className="seller-info" >
+                            {product.user.profile_pic ? (
+                                <img src={product.user.profile_pic} alt="Profile" className="header-profile"/>
+                                ) : (
+                                <img src="/profile-icon.jpg" alt="Default Profile" className="header-profile" />
+                            )}
                             {product.user.first_name} {product.user.last_name} ({product.user.email})
-                            </div>)
+                            </Link>)
                         : (<p>Loading user info...</p>)}
                         <div className="text-input">
                         <input type="text" value={message} onChange={e => setMessage(e.target.value)}
