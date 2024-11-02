@@ -23,50 +23,43 @@ class ProfilesModelTests(TestCase):
         # self.profile = Profile.objects.create(user=self.user)
     
     def create_valid_profile(self):
-        """ Helper method to create a valid product"""
+        """ Helper method to create a valid product """
         return Profile.objects.create(**self.valid_profile_data)
 
     # Testing for valid profile creation
     def test_profile_creation(self):
-        """ Test that a valid Product object can be created"""
+        """ Test that a valid Product object can be created """
         profile = self.create_valid_profile()
         self.assertIsInstance(profile, Profile)
         print("Test: Valid Profile Creationn - PASS")
 
     # Test for default fields
     def test_default_verification_status(self):
-        """ Test to ensure the is verified is False by default"""
+        """ Test to ensure the is verified is False by default """
         profile = self.create_valid_profile()
         self.assertFalse(profile.is_verified)
         print("Test: Default Verification Status - PASS")
 
     
     def test_default_bio(self):
-        """ Test to ensure the bio is None by default"""
+        """ Test to ensure the bio is None by default """
         profile = self.create_valid_profile()
         self.assertEqual(profile.bio, None)
         print("Test: Default Bio - PASS")
     
 
     def test_default_verification_code(self):
-        """ Test to ensure the verification code is None by default"""
-        profile = self.create_valid_profile()
-        self.assertEqual(profile.verification_code, None)
-        print("Test: Default Verification Code - PASS")
-
-
-    def test_default_verification_code(self):
-        """ Test to ensure the verification code is None by default"""
+        """ Test to ensure the verification code is None by default """
         profile = self.create_valid_profile()
         self.assertEqual(profile.verification_code, None)
         print("Test: Default Verification Code - PASS")
 
 
     def test_default_profile_pic_code(self):
-        """ Test to ensure the verification code is None by default"""
+        """ Test to ensure the verification code is None by default """
         profile = self.create_valid_profile()
         self.assertEqual(profile.profilePic, None)
-        print("Test: Default Verification Code - PASS")
+        print("Test: Default Profile Pic Code - PASS")
 
 
     # Custom Method and Properties Tests
@@ -92,7 +85,7 @@ class ProfilesModelTests(TestCase):
 
     
     def test_generate_new_verification_code(self):
-        """ Test to ensure a new verification code is generated everytime"""
+        """ Test to ensure a new verification code is generated everytime """
         profile = self.create_valid_profile()
         old_code = profile.verification_code
         new_code = profile.generate_verification_code()
@@ -102,14 +95,14 @@ class ProfilesModelTests(TestCase):
 
     
     def test_image_url_without_image(self):
-        """Test image_url property when no image is uploaded."""
+        """ Test image_url property when no image is uploaded """
         profile = self.create_valid_profile()
         self.assertEqual(profile.image_url, None)
         print("Test: Image URL Without Image - PASS")
 
     
     def test_image_upload_and_image_url_property(self):
-        """Test the profilePic upload and image_url property."""
+        """ Test the profilePic upload and image_url property """
         profile = self.create_valid_profile()
         
         # Simulate an image upload
@@ -123,7 +116,7 @@ class ProfilesModelTests(TestCase):
 
     # Updating/Editing Tests
     def test_updated_verification_status(self):
-        """ Test to ensure verification status is verified for an user after an update""" 
+        """ Test to ensure verification status is verified for an user after an update """ 
         # update the verification status for the profile
         profile = self.create_valid_profile()
         profile.is_verified = True
@@ -135,7 +128,7 @@ class ProfilesModelTests(TestCase):
     
 
     def test_profile_bio_field(self):
-        """Test setting and retrieving bio field."""
+        """ Test setting and retrieving bio field """
         profile = self.create_valid_profile()
         test_bio_str = "This is a test bio."
         profile.bio = test_bio_str
@@ -151,7 +144,7 @@ class ProfilesModelTests(TestCase):
         profile = self.create_valid_profile()
         max_length = profile._meta.get_field('bio').max_length
         self.assertEqual(max_length, 500)
-        print("Test: Bio Max Length Within Limit - PASS")
+        print("Test: Bio Max Length - PASS")
 
     
     def test_bio_max_length_within_limit(self):
@@ -226,10 +219,10 @@ class ProfilesModelTests(TestCase):
             self.fail("Profile bio should allow blank values")
 
 
-    def test_verification_code_is_nullk(self):
+    def test_verification_code_is_null(self):
         """ Test that the profile canhave a blank verification code """
         profile = self.create_valid_profile()
-        profile.verification_code = ""
+        profile.verification_code = None
         try:
             profile.full_clean()  # Should pass without errors
             print("Test: Verification Code is Blank - PASS")
@@ -261,7 +254,7 @@ class ProfilesModelTests(TestCase):
     
     # Model Relationship Tests
     def test_profile_user_relationship(self):
-        """ Test the relationship between user and profile"""
+        """ Test the relationship between user and profile """
         profile = self.create_valid_profile()
         self.assertEqual(profile.user, self.user)
         print("Test: Profile User Relationship - PASS")
@@ -322,7 +315,7 @@ class ProfilesSerializerTest(TestCase):
 
     
     def test_duplicate_email(self):
-        """ Test duplicate profile for same email not allowed"""
+        """ Test duplicate profile for same email not allowed """
         User.objects.create_user(
             username=self.user_data['email'], email=self.user_data['email'], password=self.user_data['password']
         )
@@ -419,7 +412,7 @@ class EmailVerificationSerializerTest(TestCase):
 
     
     def test_invalid_verification_code(self):
-        """ Test to check that email serializer does not allow for invalid verification code for the given profile"""
+        """ Test to check that email serializer does not allow for invalid verification code for the given profile """
         # Define the data to be validated
         data = {'email': self.user_data['email'], 'verification_code': '654321'}
 
@@ -447,7 +440,7 @@ class LoginSerializerTest(TestCase):
 
 
     def test_successful_login(self):
-        """ Test to check that login serializer works as expected"""
+        """ Test to check that login serializer works as expected """
         # Define the data to be validated
         data = {'email': self.user_data['email'], 'password' : self.user_data['password'] }
 
@@ -459,7 +452,7 @@ class LoginSerializerTest(TestCase):
 
 
     def test_non_existent_user_login(self):
-        """ Test to check that login serializer does not allow login for a non existent user in the database"""
+        """ Test to check that login serializer does not allow login for a non existent user in the database """
         # Define the data to be validated
         data = {'email': 'nonexistent@example.com', 'password': 'nonexistent'}
 
@@ -471,7 +464,7 @@ class LoginSerializerTest(TestCase):
     
 
     def test_incorrect_credentials(self):
-        """ Test to check that login serializer does not allow login for an incorrect email and password pair"""
+        """ Test to check that login serializer does not allow login for an incorrect email and password pair """
         # Define the data to be validated
         wrong_password_data = {'email':  self.user_data['email'], 'password': 'wrongpassword'}
         wrong_email_data = {'email' : 'wrong.email@mail.utorotno.ca', 'password': self.user_data['password']}
@@ -638,7 +631,7 @@ class ProfileViewsTests(APITestCase):
         
     # Tests for add_user endpoint (sign-up)
     def test_successfull_signup(self):
-        """Test that a new user can sign up successfully."""
+        """ Test that a new user can sign up successfully """
         # Define the data to be used
         data = {
             'email' : 'new.test.user@mail.utoronto.ca',
@@ -658,7 +651,7 @@ class ProfileViewsTests(APITestCase):
     
 
     def test_signup_email_exists(self):
-        """Test that a new user with duplicate email is unsuccessfull"""
+        """ Test that a new user with duplicate email is unsuccessfull """
         # Define the data to be used
         data = {
             'email' : self.user_email,
@@ -678,7 +671,7 @@ class ProfileViewsTests(APITestCase):
     
 
     def test_signup_missing_fields(self):
-        """Test that signup fails if required fields are missing."""
+        """ Test that signup fails if required fields are missing"""
         valid_data = {
             'email' : 'newmissing.testuser@mail.utoronto.ca',
             'password' : 'Test12345!',
@@ -774,7 +767,7 @@ class ProfileViewsTests(APITestCase):
     
 
     def test_email_verification_missing_code(self):
-        """ Test email verification with a missing code"""
+        """ Test email verification with a missing code """
         # Intentionally set profile's verification status to False
         self.profile.is_verified = False
 
@@ -835,7 +828,7 @@ class ProfileViewsTests(APITestCase):
 
     # Tests for get_current_user endpoint
     def test_get_current_user_authenticated(self):
-        """ Test fetching the profile of the authenticated user"""
+        """ Test fetching the profile of the authenticated user """
         self.client.force_authenticate(user=self.user)
 
         # send the API request
@@ -878,7 +871,7 @@ class ProfileViewsTests(APITestCase):
     
     # Tests for get-profile endpoint
     def test_get_profile_valid_user_authenticated(self):
-        """Test fetching a specific user profile by user ID with authentication"""
+        """ Test fetching a specific user profile by user ID with authentication """
         self.client.force_authenticate(user=self.user)
 
         # Send the API request
@@ -894,15 +887,15 @@ class ProfileViewsTests(APITestCase):
     
 
     def test_get_profile_valid_user_unauthenticated(self):
-        """Test fetching a specific user profile by user ID with authentication"""
+        """ Test fetching a specific user profile by user ID with authentication """
         # Send the API request without authentication
         response = self.client.get(self.get_profile_url)
         self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
         print("Test: Get Profile Valid User Unauthenticated - PASS")
 
 
-    def test_get_profile_invalid_user(self):
-        """Test fetching profile with invalid user ID with authentication"""
+    def test_get_profile_invalid_user_authenticated(self):
+        """ Test fetching profile with invalid user ID with authentication """
         self.client.force_authenticate(user=self.user)
 
         # Send the API request without authentication
@@ -913,7 +906,7 @@ class ProfileViewsTests(APITestCase):
 
     
     def test_edit_profile_valid_data_authenticated(self):
-        """Test editing profile with valid data as an authenticated user"""
+        """ Test editing profile with valid data as an authenticated user """
         self.client.force_authenticate(user=self.user)
 
         # Send the API request with authentication
@@ -924,11 +917,11 @@ class ProfileViewsTests(APITestCase):
         # Refresh the database and ensure it's been updated
         self.profile.refresh_from_db()
         self.assertEqual(self.profile.bio, 'Updated bio content')
-        print("Test: Edit Profile Valid Data Authenticated")
+        print("Test: Edit Profile Valid Data Authenticated - PASS")
 
     
     def test_edit_profile_valid_data_unauthenticated_user(self):
-        """Test profile edit attempt by an unauthorized user"""
+        """ Test profile edit attempt by an unauthorized user """
         # Send the API request without authentication
         data = {'bio': 'Unauthorized edit attempt'}
         response = self.client.post(self.edit_profile_url, data)
@@ -937,7 +930,7 @@ class ProfileViewsTests(APITestCase):
     
 
     def test_edit_profile_unauthorized_user(self):
-        """Test profile edit attempt by an unauthorized user, with no profile"""
+        """ Test profile edit attempt by an unauthorized user, with no profile """
         other_user = User.objects.create_user(username="other.user@mail.utoronto.ca", email="other.user@", password="otherpassword")
         self.client.force_authenticate(user=other_user)
 
@@ -945,11 +938,11 @@ class ProfileViewsTests(APITestCase):
         data = {'bio': 'Unauthorized edit attempt'}
         response = self.client.post(self.edit_profile_url, data)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        print("Test: Edit Profile Unauthorized - PASS")
+        print("Test: Edit Profile Unauthorized User - PASS")
     
 
     def test_edit_profile_invalid_data(self):
-        """Test editing profile with invalid data, like trying to change the user's email"""
+        """ Test editing profile with invalid data, like trying to change the user's email """
         self.client.force_authenticate(user=self.user)
 
         # Send the API request with authentication

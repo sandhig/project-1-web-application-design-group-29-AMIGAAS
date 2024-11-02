@@ -77,18 +77,6 @@ def list_all_profiles(request):
     serializer = ProfilesSerializer(profiles, many=True)
     return Response(serializer.data) 
 
-@api_view(['GET'])
-@authentication_classes([TokenAuthentication])
-@permission_classes([IsAuthenticated])
-def get_current_user(request):
-    user = request.user
-    return Response({
-        'id': user.id,
-        'username': user.username,
-        'email': user.email,
-        'first_name': user.first_name,
-        'last_name': user.last_name,
-    })
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
