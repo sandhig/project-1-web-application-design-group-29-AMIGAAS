@@ -94,23 +94,23 @@ class ProfilesModelTests(TestCase):
         print("Test: Generate New Verification Code - PASS")
 
     
-    def test_image_url_without_image(self):
-        """ Test image_url property when no image is uploaded """
+    def test_profile_pic_url_without_image(self):
+        """ Test profile_pic_url property when no image is uploaded """
         profile = self.create_valid_profile()
-        self.assertEqual(profile.image_url, None)
-        print("Test: Image URL Without Image - PASS")
+        self.assertEqual(profile.profile_pic_url, None)
+        print("Test: Profile Pic URL Without Image - PASS")
 
     
-    def test_image_upload_and_image_url_property(self):
-        """ Test the profilePic upload and image_url property """
+    def test_image_upload_and_profile_pic_url_property(self):
+        """ Test the profilePic upload and profile_pic_url property """
         profile = self.create_valid_profile()
         
         # Simulate an image upload
         image_data = SimpleUploadedFile(self.test_image_path, b"file_content", content_type="image/jpeg")
         profile.profilePic = image_data
         profile.save()
-        self.assertIsNotNone(profile.image_url)
-        self.assertIn("test_profile_pic.jpg", profile.image_url)
+        self.assertIsNotNone(profile.profile_pic_url)
+        self.assertIn("test_profile_pic.jpg", profile.profile_pic_url)
         print("Test: Image upload Image URL Property - PASS")
 
 
