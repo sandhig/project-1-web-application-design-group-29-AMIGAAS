@@ -499,7 +499,10 @@ class ProfilesUrlsTests(TestCase):
         self.user_email = "test.user@mail.utoronto.ca"
         self.user = User.objects.create(username=self.user_email, email=self.user_email, password="Test1234!")
         self.profile = Profile.objects.create(user=self.user, is_verified=True)
+        self.client = APIClient()
+        self.client.force_authenticate(user=self.user)
 
+    # URL Resolutions
     def test_signup_url_resolves(self):
         """ Test that the 'add_user' URL name resolves to the correct path and view """
         url = reverse('add_user')
@@ -549,3 +552,68 @@ class ProfilesUrlsTests(TestCase):
         print('Test: Edit Profile URL Resolves - PASS')
     
 
+    # Authenticated User Response Tests
+    def test_get_user_authenticated_access(self):
+        """ Test that authenticated users can access 'get_current_user' """
+        response = self.client.get(reverse('get_current_user'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        print('Test: Authenticated Users can access Get User - PASS')
+    
+
+    def test_list_all_profiles_authenticated_access(self):
+        """ Test that authenticated users can access 'list_all_profiles' """
+        response = self.client.get(reverse('list_all_profiles'))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        print('Test: Authenticated Users can access List All Profiles - PASS')
+
+    
+    def test_get_profile_authenticated_access(self):
+        """ Test that authenticated users can access 'get-profile' """
+        response = self.client.get(reverse('get-profile', kwargs={'userId': self.profile.user_id}))
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        print('Test: Authenticated Users can access Get Profile - PASS')
+
+    
+    def test_edit_profile_authenticated_access(self):
+        """ Test that authenticated users can access 'edit-profile' """
+        data = {'bio': 'Updated bio'}
+        response = self.client.post(reverse('edit-profile'), data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+        print('Test: Authenticated Users can access Edit Profile - PASS')
+
+    
+    # Authentication Requirement Tests
+    def test_get_user_requires_login(self):
+        """ Test that unauthenticated users cannot access 'get_current_user' """
+        self.client.logout()  # Log out the user
+        response = self.client.get(reverse('get_current_user'))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        print('Test: Unauthenticated Users cannot access Get User - PASS')
+    
+
+    def test_list_all_profiles_requires_login(self):
+        """ Test that unauthenticated users cannot access 'list_all_profiles' """
+        self.client.logout()  # Log out the user
+        response = self.client.get(reverse('list_all_profiles'))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        print('Test: Unauthenticated Users cannot access List All Profiles - PASS')
+
+    
+    def test_get_profile_requires_login(self):
+        """ Test that unauthenticated users cannot access 'get-profile' """
+        self.client.logout()  # Log out the user
+        response = self.client.get(reverse('get-profile', kwargs={'userId': self.profile.user_id}))
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        print('Test: Unauthenticated Users cannot access Get Profile - PASS')
+
+    
+    def test_edit_profile_requires_login(self):
+        """ Test that unauthenticated users cannot access 'edit-profile' """
+        self.client.logout()  # Log out the user
+        data = {'bio': 'Updated bio'}
+        response = self.client.post(reverse('edit-profile'), data)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        print('Test: Unauthenticated Users cannot access Edit Profile - PASS')
+    
+
+    
