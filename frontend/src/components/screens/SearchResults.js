@@ -187,7 +187,7 @@ const SearchResults = () => {
         <div className="product-grid">
 
           <div className="title">
-            <h2>Search Results for "{searchTerm}"</h2>
+            <h2>{filteredProducts.length} results for "{searchTerm}"</h2>
             <FormControl className="sort-by" variant="outlined">
               <InputLabel id="sort-label">Sort By</InputLabel>
               <Select
