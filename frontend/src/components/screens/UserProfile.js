@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useUser } from '../../context/UserContext';
 import "./UserProfile.css"
 import Header from "../../components/Header"
+import { Button } from '@mui/material';
 
 
 function UserProfile() {
@@ -41,41 +42,55 @@ function UserProfile() {
 
             {!user ? (<div>Loading...</div>) : (
 
-            <div className="profile-container-1">
-                
-                <div className="profile-header">
-                
-                    <div className="profile-icon">
-                        {user.profilePic ? (
-                            <img src={user.profilePic} alt="Profile" className="profile-pic" />
-                        ) : (
-                            <img src="/profile-icon.jpg" alt="Default Profile" className="profile-pic" />
-                        )}
-                    </div>
-                    <div className="profile-info">
-                        <h2>{user.first_name} {user.last_name}</h2>
-                        <p>{user.email}</p>
-                    </div>
-                </div>
+            <div className="profile-page-container">
 
-                <div className="profile-bio">
-                    <h3>Bio</h3>
+                <div className="profile-info-container">
+
+                    <div className="profile-header">
+
+                        <div className="profile-icon">
+                            {user.profilePic ? (
+                                <img src={user.profilePic} alt="Profile" className="profile-pic" />
+                            ) : (
+                                <img src="/profile-icon.jpg" alt="Default Profile" className="profile-pic" />
+                            )}
+                        </div>
+                        
+                        <div className="profile-name">
+
+                            <h1>{user.first_name} {user.last_name}</h1>
+
+                            {parseInt(currentUser.id) !== parseInt(userId) && (
+                                <Button onClick={handleMessageMe} variant="outlined">
+                                    Send Message
+                                </Button>
+                            )}
+
+                            {parseInt(currentUser.id) == parseInt(userId) && (
+                                <Button onClick={handleEditProfile} variant="outlined">
+                                    Edit Profile
+                                </Button>
+                            )}
+                            
+                        </div>
+                        
+                    </div>
+
+                    <span style={{fontWeight:"bold", marginBottom:"10px"}}>About me</span>
                     <p>{user.bio || "This user hasn't added a bio yet."}</p>
+                    
+                    <span style={{fontWeight:"bold", marginBottom:"10px", marginTop:"30px"}}>Email</span>
+                    <p>{user.email}</p>
+                    
                 </div>
 
-                <div>  
-                    {parseInt(currentUser.id) !== parseInt(userId) && (
-                        <button onClick={handleMessageMe}>Message Me</button>
-                    )}
+                <div className="listings-info-container">
+                    <h2>Listings</h2>
                 </div>
-                
-                <div>
-                    {parseInt(currentUser.id) == parseInt(userId) && (
-                        <button onClick={handleEditProfile}>Edit Profile</button>
-                    )}
-                </div>
+
             </div>
             )}
+                    
         </div>
     );
 }
