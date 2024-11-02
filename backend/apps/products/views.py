@@ -29,6 +29,14 @@ def get_product_choices(request):
         'locations': [{ 'value': c[0], 'label': c[1] } for c in locations],
     })
 
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_user_products(request, user_id):
+    products = Product.objects.select_related('user').filter(user__id=user_id)
+    serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data)
+
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 class ProductAPIView(APIView):
@@ -47,7 +55,6 @@ class ProductAPIView(APIView):
 
             serializer = ProductSerializer(products, many=True)
             return Response(serializer.data)
-
 
     def post(self, request):
         logger.debug('Received request for image upload')

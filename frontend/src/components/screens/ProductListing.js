@@ -99,7 +99,7 @@ const ProductListing = () => {
             <div style={{ width: "fit-content" }} onClick={handleBack}>
                 <IconButton type="submit" aria-label="back" className="back-to-listings">
                     <ArrowBackIcon style={{ fill: "grey", fontSize: "medium" }} />
-                    <div>Back to listings</div>
+                    <div>Back</div>
                 </IconButton>
             </div>
             

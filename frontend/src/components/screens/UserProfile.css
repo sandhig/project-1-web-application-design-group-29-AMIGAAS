@@ -43,4 +43,32 @@
 
 .listings-info-container {
     flex: 1 0;
+    border: #4f7ba7 0px solid;
+    border-radius: 15px;
+    padding: 20px;
+}
+
+.profile-products-list {
+    height: 500px;
+    overflow: auto;
+}
+
+.profile-product-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    margin-bottom: 20px;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+.profile-product-image {
+    width: 20%;
+    display: block;
+    background-color: grey;
+    border-radius: 10px;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
 }
