@@ -569,6 +569,9 @@ def test_can_submit_valid_form(page):
     submit_button = page.get_by_role(ROLE_BUTTON, name="Submit")
     assert submit_button.is_disabled(), "Submit button is not disabled when form has been submitted"
 
+    # Check that snackbar with success message is displayed
+    assert page.get_by_text("Listing Created!").is_visible(), "Successful creation message not displayed"
+
     print("Test: Can submit valid form works as expected")
 
 
@@ -592,6 +595,10 @@ def test_submit_empty_create_listing_form(page):
     # Check that the submit button is disabled
     submit_button = page.get_by_role(ROLE_BUTTON, name="Submit")
     assert submit_button.is_disabled(), "Submit button is not disabled when there are errors"
+
+    # Check that snackbar with error message is displayed
+    snackbarErrorMessage = "New listing was not created. Please fix the errors and try again.";
+    assert page.get_by_text(snackbarErrorMessage).is_visible(), "Error snackbar not displayed"
 
     print("Test: Submit empty Create Listing form works as expected")
 
@@ -620,6 +627,10 @@ def test_create_listing_with_invalid_price(page):
     # Check that the submit button is disabled
     submit_button = page.get_by_role(ROLE_BUTTON, name="Submit")
     assert submit_button.is_disabled(), "Submit button is not disabled when there are errors"
+
+    # Check that snackbar with error message is displayed
+    snackbarErrorMessage = "New listing was not created. Please fix the errors and try again.";
+    assert page.get_by_text(snackbarErrorMessage).is_visible(), "Error snackbar not displayed"
 
     print("Test: Create listing with invalid price works as expected")
 

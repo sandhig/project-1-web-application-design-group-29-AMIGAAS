@@ -1,5 +1,17 @@
 import React, { useState, useEffect } from 'react';
-import { TextField, MenuItem, Select, InputLabel, FormControl, Button, Box, InputAdornment, Typography, Alert } from '@mui/material';
+import {
+  Alert,
+  Box,
+  Button,
+  FormControl,
+  InputAdornment,
+  InputLabel,
+  MenuItem,
+  Select,
+  Snackbar,
+  TextField,
+  Typography
+} from '@mui/material';
 import axios from 'axios';
 import { useUser } from '../../context/UserContext';
 import { useNavigate } from 'react-router-dom';
@@ -29,6 +41,12 @@ function CreateListing() {
   const [submitError, setSubmitError] = useState(null);
   const [formErrors, setFormErrors] = useState({});
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [navigateAfterSnackbar, setNavigateAfterSnackbar] = useState(false);
+
+  const snackbarErrorMessage = "New listing was not created. Please fix the errors and try again.";
+  const isFormInvalid = isSubmitting || Object.values(formErrors).some(error => error) || snackbarOpen;
 
   useEffect(() => {
     axios.get('http://3.87.240.14:8000/api/product-choices/', {
@@ -72,6 +90,15 @@ function CreateListing() {
         ...formData,
         image: files[0]
       });
+    }
+  };
+
+  const handleSnackbarClose = () => {
+    setSnackbarOpen(false);
+
+    // navigate to Products page after Snackbar closes
+    if (navigateAfterSnackbar) {
+      navigate('/products');
     }
   };
 
@@ -119,6 +146,8 @@ function CreateListing() {
     const hasErrors = Object.values(errors).some(error => error !== '');
     if (hasErrors) {
       setFormErrors(errors);
+      setSnackbarMessage(snackbarErrorMessage);
+      setSnackbarOpen(true);
       return;
     }
 
@@ -141,7 +170,9 @@ function CreateListing() {
       }
     })
       .then(response => {
-        navigate('/products');
+        setSnackbarMessage("Listing Created!");
+        setSnackbarOpen(true);
+        setNavigateAfterSnackbar(true);
       })
       .catch(error => {
         console.error('Error adding product:', error);
@@ -156,13 +187,14 @@ function CreateListing() {
         } else {
           setSubmitError('Failed to add product. Please check your input and try again.');
         }
+
+        setSnackbarMessage(snackbarErrorMessage);
+        setSnackbarOpen(true);
       })
       .finally(() => {
         setIsSubmitting(false);
       });
   };
-
-  const isFormInvalid = isSubmitting || Object.values(formErrors).some(error => error) || snackbarOpen;
 
   return (
     <div> 
@@ -283,12 +315,9 @@ function CreateListing() {
           name="description"
           value={formData.description}
           onChange={handleInputChange}
-          onBlur={handleBlur}
-          variant="outlined"
           multiline
           rows={4}
-          error={!!formErrors.description}
-          helperText={formErrors.description}
+          variant="outlined"
         />
 
           <input
@@ -310,6 +339,13 @@ function CreateListing() {
 
         {submitError && <Alert severity="error">{submitError}</Alert>}
         {error && <Alert severity="error">{error}</Alert>}
+
+        <Snackbar
+          open={snackbarOpen}
+          autoHideDuration={3000}
+          onClose={handleSnackbarClose}
+          message={snackbarMessage}
+        />
       </Box>
     </div>
   );
