@@ -624,7 +624,7 @@ class ProfileViewsTests(APITestCase):
         self.user = User.objects.create_user(username=self.user_email, email=self.user_email, password=self.user_password)
         self.profile = Profile.objects.create(user=self.user)
         self.profile.is_verified = True
-        self.client = APIClient()
+        # self.client = APIClient()
 
         # Define the endpoint urls
         self.add_user_url = reverse('add_user')
@@ -833,5 +833,132 @@ class ProfileViewsTests(APITestCase):
         print("Test: Login Unverified User - PASS")
 
 
+    # Tests for get_current_user endpoint
+    def test_get_current_user_authenticated(self):
+        """ Test fetching the profile of the authenticated user"""
+        self.client.force_authenticate(user=self.user)
+
+        # send the API request
+        response = self.client.get(self.get_user_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['id'], self.user.id)
+        self.assertEqual(response.data['username'], self.user.username)
+        self.assertEqual(response.data['email'], self.user.email)
+        self.assertEqual(response.data['first_name'], self.user.first_name)
+        self.assertEqual(response.data['last_name'], self.user.last_name)
+        print("Test: Get Current User Authenticated - PASS")
     
+
+    def test_get_current_user_unauthenticated(self):
+        """ Test accessing current user endpoint without authentication """
+        # Send the API request without authenticating
+        response = self.client.get(self.get_user_url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        print("Test: Get Current User Unauthenticated - PASS")
     
+
+    # Tests for list_all_profiles endpoint
+    def test_list_all_profiles_authenticated(self):
+        """ Test listing all profiles as an authenticated user """
+        self.client.force_authenticate(user=self.user)  # Login
+
+        # Send the API request
+        response = self.client.get(self.list_all_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        print("Test: List All Profiles Authenticated - PASS")
+    
+
+    def test_list_all_profiles_unauthenticated(self):
+        """ Test listing profiles without authentication """
+        # Send the API request without authenticating
+        response = self.client.get(self.list_all_url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        print("Test: List All Profiles Unauthenticated - PASS")
+
+    
+    # Tests for get-profile endpoint
+    def test_get_profile_valid_user_authenticated(self):
+        """Test fetching a specific user profile by user ID with authentication"""
+        self.client.force_authenticate(user=self.user)
+
+        # Send the API request
+        response = self.client.get(self.get_profile_url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.data['user_id'], self.user.id)
+        self.assertEqual(response.data['email'], self.user.email)
+        self.assertEqual(response.data['first_name'], self.user.first_name)
+        self.assertEqual(response.data['last_name'], self.user.last_name)
+        self.assertEqual(response.data['bio'], self.profile.bio)
+        self.assertEqual(response.data['profilePic'], self.profile.profilePic)
+        print("Test: Get Profile Valid User Authenticated - PASS")
+    
+
+    def test_get_profile_valid_user_unauthenticated(self):
+        """Test fetching a specific user profile by user ID with authentication"""
+        # Send the API request without authentication
+        response = self.client.get(self.get_profile_url)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        print("Test: Get Profile Valid User Unauthenticated - PASS")
+
+
+    def test_get_profile_invalid_user(self):
+        """Test fetching profile with invalid user ID with authentication"""
+        self.client.force_authenticate(user=self.user)
+
+        # Send the API request without authentication
+        url = reverse('get-profile', kwargs={'userId': 99999})  # Assuming 99999 is a non-existent ID
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        print("Test: Get Profile Invalid User Authenticated - PASS")
+
+    
+    def test_edit_profile_valid_data_authenticated(self):
+        """Test editing profile with valid data as an authenticated user"""
+        self.client.force_authenticate(user=self.user)
+
+        # Send the API request with authentication
+        data = {'bio': 'Updated bio content'}
+        response = self.client.post(self.edit_profile_url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
+
+        # Refresh the database and ensure it's been updated
+        self.profile.refresh_from_db()
+        self.assertEqual(self.profile.bio, 'Updated bio content')
+        print("Test: Edit Profile Valid Data Authenticated")
+
+    
+    def test_edit_profile_valid_data_unauthenticated_user(self):
+        """Test profile edit attempt by an unauthorized user"""
+        # Send the API request without authentication
+        data = {'bio': 'Unauthorized edit attempt'}
+        response = self.client.post(self.edit_profile_url, data)
+        self.assertEqual(response.status_code, status.HTTP_401_UNAUTHORIZED)
+        print("Test: Edit Profile Valid Data Unauthenticated - PASS")
+    
+
+    def test_edit_profile_unauthorized_user(self):
+        """Test profile edit attempt by an unauthorized user, with no profile"""
+        other_user = User.objects.create_user(username="other.user@mail.utoronto.ca", email="other.user@", password="otherpassword")
+        self.client.force_authenticate(user=other_user)
+
+        # send the API request without an authorized profile
+        data = {'bio': 'Unauthorized edit attempt'}
+        response = self.client.post(self.edit_profile_url, data)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        print("Test: Edit Profile Unauthorized - PASS")
+    
+
+    def test_edit_profile_invalid_data(self):
+        """Test editing profile with invalid data, like trying to change the user's email"""
+        self.client.force_authenticate(user=self.user)
+
+        # Send the API request with authentication
+        data = {'email': 'attempt.update@mail.utoronto.ca'}
+        response = self.client.post(self.edit_profile_url, data)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)  # returns this code but doesn't change anything
+        
+        # Refresh the database and ensure it hasn't been updated
+        self.profile.refresh_from_db()
+        self.assertNotEqual(self.user.email, 'attempt.update@mail.utoronto.ca')
+        print("Test: Edit Profile Invalid Data - PASS")
+
