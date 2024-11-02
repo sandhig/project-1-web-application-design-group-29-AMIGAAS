@@ -547,11 +547,34 @@ def navigate_to_create_listing_page(page):
     assert page.get_by_text("Create Listing").is_visible(), "Title not displayed"
     print("Test: Navigate to Create Listing page works as expected")
 
+def test_can_submit_valid_form(page):
+    page.goto(CREATE_LISTING_URL)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+
+    # fill in all required fields
+    page.get_by_label("Name").fill("Test Product")
+    page.get_by_label("Price").fill("200") 
+    page.get_by_label("Category").click()
+    page.get_by_role(ROLE_OPTION, name=CATEGORY_CHOICES[0]).click()
+    page.get_by_label("Condition").click()
+    page.get_by_role(ROLE_OPTION, name=CONDITION_CHOICES[0]).click()
+    page.get_by_label("Location").click()
+    page.get_by_role(ROLE_OPTION, name=LOCATION_CHOICES[0]).click() 
+
+    # Submit the form 
+    page.get_by_role(ROLE_BUTTON, name="Submit").click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    # Check that the submit button is disabled
+    submit_button = page.get_by_role(ROLE_BUTTON, name="Submit")
+    assert submit_button.is_disabled(), "Submit button is not disabled when form has been submitted"
+
+    print("Test: Can submit valid form works as expected")
+
 
 def test_submit_empty_create_listing_form(page):
-    page.goto(PRODUCTS_PAGE_URL)
-    page.get_by_role(ROLE_BUTTON, name=CREATE_LISTING).click()
-    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+    page.goto(CREATE_LISTING_URL)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
 
     # Submit empty form
     page.get_by_role(ROLE_BUTTON, name="Submit").click()
@@ -565,12 +588,16 @@ def test_submit_empty_create_listing_form(page):
     assert page.get_by_text("Please select a category.").is_visible(), "Category error message not displayed"
     assert page.get_by_text("Please select a condition.").is_visible(), "Condition error message not displayed"
     assert page.get_by_text("Please select a location.").is_visible(), "Location error message not displayed"
+
+    # Check that the submit button is disabled
+    submit_button = page.get_by_role(ROLE_BUTTON, name="Submit")
+    assert submit_button.is_disabled(), "Submit button is not disabled when there are errors"
+
     print("Test: Submit empty Create Listing form works as expected")
 
 
 def test_create_listing_with_invalid_price(page):
-    page.goto(PRODUCTS_PAGE_URL)
-    page.get_by_role(ROLE_BUTTON, name=CREATE_LISTING).click()
+    page.goto(CREATE_LISTING_URL)
     page.wait_for_timeout(WAIT_TO_LOAD_LONG)
 
     # fill in other required fields
@@ -585,11 +612,14 @@ def test_create_listing_with_invalid_price(page):
     # Set an invalid price 
     page.get_by_label("Price").fill("1000000000") 
     page.get_by_role(ROLE_BUTTON, name="Submit").click()
-
-    # Wait for error messages to appear
     page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
 
     # Check for the specific error message for price
     assert page.get_by_text("Price must be less than $100,000,000.").is_visible(), "Invalid price error message not displayed"
 
+    # Check that the submit button is disabled
+    submit_button = page.get_by_role(ROLE_BUTTON, name="Submit")
+    assert submit_button.is_disabled(), "Submit button is not disabled when there are errors"
+
+    print("Test: Create listing with invalid price works as expected")
 

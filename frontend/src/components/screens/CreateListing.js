@@ -28,6 +28,7 @@ function CreateListing() {
   const [error, setError] = useState(null);
   const [submitError, setSubmitError] = useState(null);
   const [formErrors, setFormErrors] = useState({});
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
     axios.get('http://3.87.240.14:8000/api/product-choices/', {
@@ -121,6 +122,8 @@ function CreateListing() {
       return;
     }
 
+    setIsSubmitting(true);
+
     const payload = new FormData();
     payload.append('name', formData.name);
     payload.append('price', parseFloat(formData.price));
@@ -153,8 +156,13 @@ function CreateListing() {
         } else {
           setSubmitError('Failed to add product. Please check your input and try again.');
         }
+      })
+      .finally(() => {
+        setIsSubmitting(false);
       });
   };
+
+  const isFormInvalid = isSubmitting || Object.values(formErrors).some(error => error) || snackbarOpen;
 
   return (
     <div> 
@@ -290,11 +298,18 @@ function CreateListing() {
             onChange={handleInputChange}
           />
 
-        <Button type="submit" variant="contained" color="primary">
-          Submit
+        <Button
+          name="submit"
+          type="submit"
+          variant="contained"
+          color="primary"
+          disabled={isFormInvalid}
+        >
+          {isSubmitting ? 'Submitting...' : 'Submit'}
         </Button>
 
         {submitError && <Alert severity="error">{submitError}</Alert>}
+        {error && <Alert severity="error">{error}</Alert>}
       </Box>
     </div>
   );
