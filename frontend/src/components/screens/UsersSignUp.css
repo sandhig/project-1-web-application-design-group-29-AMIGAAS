@@ -1,0 +1,84 @@
+.signup-container {
+    max-width: 500px;
+    margin: 0 auto;
+    padding: 2rem;
+    background-color: #f9f9f9; /* Light background */
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.signup-container h2 {
+    font-size: 2rem;
+    color: #001f3f; /* Navy blue */
+    margin-bottom: 1.5rem;
+}
+
+.signup-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.signup-form label {
+    font-size: 1rem;
+    color: #333;
+    margin-bottom: 0.5rem;
+    text-align: left;
+}
+
+.signup-form input {
+    padding: 0.8rem;
+    font-size: 1rem;
+    border-radius: 4px;
+    border: 1px solid #ddd;
+    transition: border-color 0.3s;
+}
+
+.signup-form input:focus {
+    border-color: #001f3f; /* Navy blue */
+    outline: none;
+}
+
+.signup-form button[type="submit"] {
+    background-color: #001f3f; /* Navy blue */
+    color: white;
+    padding: 0.8rem;
+    font-size: 1rem;
+    font-weight: bold;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 1rem;
+}
+
+.signup-form button[type="submit"]:hover {
+    background-color: #003366; /* Darker navy blue */
+}
+
+.signup-container p {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 1rem;
+}
+
+.signup-container p a {
+    color: #001f3f; /* Navy blue */
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.signup-container p a:hover {
+    text-decoration: underline;
+}
+
+.error-message {
+    color: red;
+    margin-top: 1rem;
+}
+
+.success-message {
+    color: green;
+    margin-top: 1rem;
+}
