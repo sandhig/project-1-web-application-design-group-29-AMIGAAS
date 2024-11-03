@@ -33,7 +33,16 @@ def get_product_choices(request):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def get_user_products(request, user_id):
-    products = Product.objects.select_related('user').filter(user__id=user_id)
+    products = Product.objects.select_related('user').filter(user__id=user_id).exclude(sold=True)
+    serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_sold_products(request):
+    current_user = request.user.profile
+    products = Product.objects.select_related('user').filter(user__id=current_user.id).filter(sold=True)
     serializer = ProductSerializer(products, many=True)
     return Response(serializer.data)
 
