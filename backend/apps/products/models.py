@@ -37,6 +37,7 @@ class Product(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     edited_at = models.DateTimeField(auto_now=True)
     image = models.ImageField(upload_to='images/', null=True, blank=True)
+    sold = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name

@@ -14,10 +14,11 @@ class ProfilesSerializer(serializers.ModelSerializer):
     bio = serializers.CharField(allow_blank=True)
     profilePic = serializers.ImageField(required=False)
     profilePic_url = serializers.CharField(read_only=True)
+    date_joined = serializers.DateTimeField(source='user.date_joined', read_only=True)
 
     class Meta:
         model = Profile
-        fields = ['user_id', 'email', 'first_name', 'last_name', 'password', 'bio', 'profilePic', 'profilePic_url']
+        fields = ['user_id', 'email', 'first_name', 'last_name', 'password', 'bio', 'profilePic', 'profilePic_url', 'date_joined']
 
     def validate_email(self, value):
         if '@mail.utoronto.ca' not in value:
