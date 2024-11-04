@@ -10,4 +10,5 @@ urlpatterns = [
     path('user/<int:userId>/', views.get_profile, name='get-profile'),
     path('profiles/edit-profile/', views.edit_profile, name='edit-profile'),
     path('wishlist/', views.WishlistAPIView.as_view(), name='wishlist'),
+    path('wishlist/<int:pk>/', views.WishlistAPIView.as_view(), name='check_wishlist'),
 ]

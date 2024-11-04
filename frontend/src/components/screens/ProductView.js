@@ -21,9 +21,30 @@ const ProductView = ({
     const timestamp = new Date(product.created_at);
     const currentDate = new Date();
     const days = Math.floor((currentDate - timestamp) / (1000 * 60 * 60 * 24));
+
+    useEffect(() => {
+        fetch(`http://3.87.240.14:8000/api/wishlist/${product.id}`, {
+                method: 'GET',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => setIsFavorited(data));
+    }, [product, currentUser, token]);
     
     const handleToggleFavorite = () => {
-        setIsFavorited(prev => !prev);
+        fetch(`http://3.87.240.14:8000/api/wishlist/`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ product_id: product.id })
+            })
+            .then(response => response.json())
+            .then(setIsFavorited(prev => !prev));
     };
 
     const sendMessageToSeller = () => {

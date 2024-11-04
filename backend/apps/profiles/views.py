@@ -94,7 +94,7 @@ def get_profile (request, userId):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def edit_profile(request):
-    profile = get_object_or_404(Profile, user=request.user)
+    profile = request.user.profile
 
     # Unauthorized user
     if request.user.id != profile.user.id:
@@ -140,15 +140,18 @@ def edit_profile(request):
 @permission_classes([IsAuthenticated])
 class WishlistAPIView(APIView):
 
+    # Check if item in wishlist
+    def get(self, request, pk):
+        current_user = request.user.profile
+        product = get_object_or_404(Product, id=pk)
+        return Response(Wishlist.objects.select_related('user').filter(product=product, profile=current_user).exists())
+
     # Add to wishlist
     def post(self, request):
-        profile_id = request.data.get("profile_id")
-        product_id = request.data.get("product_id")
+        current_user = request.user.profile
+        product = get_object_or_404(Product, id=request.data.get("product_id"))
 
-        profile = get_object_or_404(Profile, id=profile_id)
-        product = get_object_or_404(Product, id=product_id)
-
-        wishlist_item, created = Wishlist.objects.get_or_create(profile=profile, product=product)
+        wishlist_item, created = Wishlist.objects.get_or_create(profile=current_user, product=product)
 
         if not created:
             return Response({"message": "Product already in wishlist."}, status=status.HTTP_200_OK)
@@ -158,14 +161,11 @@ class WishlistAPIView(APIView):
 
     # Remove from Wishlist
     def delete(self, request):
-        profile_id = request.data.get("profile_id")
-        product_id = request.data.get("product_id")
-
-        profile = get_object_or_404(Profile, id=profile_id)
-        product = get_object_or_404(Product, id=product_id)
+        current_user = request.user.profile
+        product = get_object_or_404(Product, id=request.data.get("product_id"))
 
         try:
-            wishlist_item = Wishlist.objects.get(profile=profile, product=product)
+            wishlist_item = Wishlist.objects.get(profile=current_user, product=product)
             wishlist_item.delete()
             return Response({"message": "Product removed from wishlist."}, status=status.HTTP_204_NO_CONTENT)
         except Wishlist.DoesNotExist:
