@@ -9,6 +9,7 @@ WAIT_TO_LOAD_SHORT = 1000  # 1000 milliseconds = 1 sec
 # CONSTANT URL PATHS
 LOGIN_PAGE_URL = 'http://localhost:3000/profiles/login'
 PRODUCTS_PAGE_URL = 'http://localhost:3000/products'
+CREATE_LISTING_URL = 'http://localhost:3000/products/create'
 
 # LOCATOR SELECTORS
 EMAIL = 'input[name="email"]'
@@ -27,6 +28,7 @@ PRODUCT_PRICE = '.product-price'
 PRODUCT_TITLE = '.product-title'
 PRICE_SLIDER_TRACK = ".MuiSlider-track"
 CLEAR_FILTERS = 'Clear Filters'
+CREATE_LISTING = 'Create Listing'
 
 # ROLES
 ROLE_BUTTON = 'button'
@@ -535,3 +537,100 @@ def test_search_sort_by_filter(page):
     sorted_expected, after_sorting, page = create_random_sort_by_choice(page)
     assert after_sorting == sorted_expected
     print("Test: Random combination of search, sort by and filtering works as expected")
+
+
+def navigate_to_create_listing_page(page):
+    page.goto(PRODUCTS_PAGE_URL)
+    page.get_by_role(ROLE_BUTTON, name=CREATE_LISTING).click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    assert page.get_by_text("Create Listing").is_visible(), "Title not displayed"
+    print("Test: Navigate to Create Listing page works as expected")
+
+def test_can_submit_valid_form(page):
+    page.goto(CREATE_LISTING_URL)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+
+    # fill in all required fields
+    page.get_by_label("Name").fill("Test Product")
+    page.get_by_label("Price").fill("200") 
+    page.get_by_label("Category").click()
+    page.get_by_role(ROLE_OPTION, name=CATEGORY_CHOICES[0]).click()
+    page.get_by_label("Condition").click()
+    page.get_by_role(ROLE_OPTION, name=CONDITION_CHOICES[0]).click()
+    page.get_by_label("Location").click()
+    page.get_by_role(ROLE_OPTION, name=LOCATION_CHOICES[0]).click() 
+
+    # Submit the form 
+    page.get_by_role(ROLE_BUTTON, name="Submit").click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    # Check that the submit button is disabled
+    submit_button = page.get_by_role(ROLE_BUTTON, name="Submit")
+    assert submit_button.is_disabled(), "Submit button is not disabled when form has been submitted"
+
+    # Check that snackbar with success message is displayed
+    assert page.get_by_text("Listing Created!").is_visible(), "Successful creation message not displayed"
+
+    print("Test: Can submit valid form works as expected")
+
+
+def test_submit_empty_create_listing_form(page):
+    page.goto(CREATE_LISTING_URL)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+
+    # Submit empty form
+    page.get_by_role(ROLE_BUTTON, name="Submit").click()
+    
+    # Wait for error messages to appear
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    # Check for error messages
+    assert page.get_by_text("Please enter a name.").is_visible(), "Name error message not displayed"
+    assert page.get_by_text("Please enter a valid price.").is_visible(), "Price error message not displayed"
+    assert page.get_by_text("Please select a category.").is_visible(), "Category error message not displayed"
+    assert page.get_by_text("Please select a condition.").is_visible(), "Condition error message not displayed"
+    assert page.get_by_text("Please select a location.").is_visible(), "Location error message not displayed"
+
+    # Check that the submit button is disabled
+    submit_button = page.get_by_role(ROLE_BUTTON, name="Submit")
+    assert submit_button.is_disabled(), "Submit button is not disabled when there are errors"
+
+    # Check that snackbar with error message is displayed
+    snackbarErrorMessage = "New listing was not created. Please fix the errors and try again.";
+    assert page.get_by_text(snackbarErrorMessage).is_visible(), "Error snackbar not displayed"
+
+    print("Test: Submit empty Create Listing form works as expected")
+
+
+def test_create_listing_with_invalid_price(page):
+    page.goto(CREATE_LISTING_URL)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+
+    # fill in other required fields
+    page.get_by_label("Name").fill("Test Product")
+    page.get_by_label("Category").click()
+    page.get_by_role(ROLE_OPTION, name=CATEGORY_CHOICES[0]).click()
+    page.get_by_label("Condition").click()
+    page.get_by_role(ROLE_OPTION, name=CONDITION_CHOICES[0]).click()
+    page.get_by_label("Location").click()
+    page.get_by_role(ROLE_OPTION, name=LOCATION_CHOICES[0]).click() 
+
+    # Set an invalid price 
+    page.get_by_label("Price").fill("1000000000") 
+    page.get_by_role(ROLE_BUTTON, name="Submit").click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    # Check for the specific error message for price
+    assert page.get_by_text("Price must be less than $100,000,000.").is_visible(), "Invalid price error message not displayed"
+
+    # Check that the submit button is disabled
+    submit_button = page.get_by_role(ROLE_BUTTON, name="Submit")
+    assert submit_button.is_disabled(), "Submit button is not disabled when there are errors"
+
+    # Check that snackbar with error message is displayed
+    snackbarErrorMessage = "New listing was not created. Please fix the errors and try again.";
+    assert page.get_by_text(snackbarErrorMessage).is_visible(), "Error snackbar not displayed"
+
+    print("Test: Create listing with invalid price works as expected")
+
