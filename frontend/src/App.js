@@ -18,6 +18,7 @@ import WelcomePage from './components/screens/WelcomePage';
 import EditProfile from './components/screens/EditProfile';
 import ProductListing from './components/screens/ProductListing';
 import SearchResults from './components/screens/SearchResults';
+import Wishlist from './components/screens/Wishlist';
 
 
 function App() {
@@ -47,6 +48,7 @@ function App() {
               <Route path="/messages" element={<PrivateRoute element={<PrivateMessage />} />} />
               <Route path="/profile/:userId" element={<UserProfile />} />
               <Route path="/profiles/edit-profile" element={<EditProfile />} />
+              <Route path="/wishlist" element={<Wishlist />} />
             </Routes>
     </div>
           </Router>
