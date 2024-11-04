@@ -8,13 +8,14 @@ from apps.profiles.serializers import ProfilesSerializer
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import authentication_classes, permission_classes, api_view
+from django.db.models import Count
 
 @api_view(['GET'])
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def get_user_conversations(request):
     current_user = request.user.profile
-    conversations = Conversation.objects.filter(participants=current_user)
+    conversations = Conversation.objects.filter(participants=current_user).annotate(message_count=Count('messages')).filter(message_count__gt=0)
 
     data = {
         'conversations': [
