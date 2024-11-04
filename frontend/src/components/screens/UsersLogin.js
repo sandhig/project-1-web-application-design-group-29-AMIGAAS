@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import HeaderPre from "../../components/HeaderPre"
+import "./UsersSignUp.css"; 
 
 const UsersLogin = () => {
   const [formData, setFormData] = useState({
@@ -48,40 +49,40 @@ const UsersLogin = () => {
   };
 
   return (
-    <div>
+    <div className="signup-page">
       <HeaderPre />
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>UofT Email:</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
-            name="password"
-            value={formData.password}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type="submit">Login</button>
-      </form>
-
-      <p> 
-          Not a User? 
+      <div className="signup-container">
+        <h2>Login</h2>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label>UofT Email: </label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <label>Password: </label>
+            <input
+              type="password"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <button type="submit">Login</button>
+        </form>
+        <p>
+          Not a User?
           <Link to="/profiles/signup"> Signup</Link>
-      </p>
-
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+        </p>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
+        {successMessage && <p className="success-message">{successMessage}</p>}
+      </div>
     </div>
   );
 };
