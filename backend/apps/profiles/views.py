@@ -4,14 +4,17 @@ from django.shortcuts import render
 from rest_framework import status
 from rest_framework.response import Response
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
-from .models import Profile
-from .serializers import ProfilesSerializer, LoginSerializer, EmailVerificationSerializer
+from .models import Profile, Wishlist
+from .serializers import ProfilesSerializer, LoginSerializer, EmailVerificationSerializer, WishlistSerializer
 from django.core.mail import send_mail
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import AllowAny
 from django.shortcuts import get_object_or_404
+from rest_framework.views import APIView
+from ..products.models import Product
+
 
 import boto3
 from django.conf import settings
@@ -131,3 +134,40 @@ def edit_profile(request):
     except Exception as e:
         logger.error(f'Error: {str(e)}')
         return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+    
+
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+class WishlistAPIView(APIView):
+
+    # Add to wishlist
+    def post(self, request):
+        profile_id = request.data.get("profile_id")
+        product_id = request.data.get("product_id")
+
+        profile = get_object_or_404(Profile, id=profile_id)
+        product = get_object_or_404(Product, id=product_id)
+
+        wishlist_item, created = Wishlist.objects.get_or_create(profile=profile, product=product)
+
+        if not created:
+            return Response({"message": "Product already in wishlist."}, status=status.HTTP_200_OK)
+
+        serializer = WishlistSerializer(wishlist_item)
+        return Response(serializer.data, status=status.HTTP_201_CREATED)
+
+    # Remove from Wishlist
+    def delete(self, request):
+        profile_id = request.data.get("profile_id")
+        product_id = request.data.get("product_id")
+
+        profile = get_object_or_404(Profile, id=profile_id)
+        product = get_object_or_404(Product, id=product_id)
+
+        try:
+            wishlist_item = Wishlist.objects.get(profile=profile, product=product)
+            wishlist_item.delete()
+            return Response({"message": "Product removed from wishlist."}, status=status.HTTP_204_NO_CONTENT)
+        except Wishlist.DoesNotExist:
+            return Response({"error": "Product not found in wishlist."}, status=status.HTTP_404_NOT_FOUND)
+        

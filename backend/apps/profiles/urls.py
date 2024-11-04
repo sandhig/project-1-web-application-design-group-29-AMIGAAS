@@ -9,4 +9,5 @@ urlpatterns = [
     path('profiles/', views.list_all_profiles, name='list_all_profiles'),
     path('user/<int:userId>/', views.get_profile, name='get-profile'),
     path('profiles/edit-profile/', views.edit_profile, name='edit-profile'),
+    path('wishlist/', views.WishlistAPIView.as_view(), name='wishlist'),
 ]
