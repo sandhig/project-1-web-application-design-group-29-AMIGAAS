@@ -4,6 +4,7 @@ from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from ..products.serializers import ProductSerializer
 
 class ProfilesSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(source='user.id', read_only=True)
@@ -125,9 +126,12 @@ class LoginSerializer(serializers.Serializer):
 
         data['user'] = user
         return data
+    
 
 class WishlistSerializer(serializers.ModelSerializer):
+    product = ProductSerializer()
+
     class Meta:
         model = Wishlist
-        fields = ['id', 'profile', 'product', 'added_on']
+        fields = ['id', 'product', 'added_on']
         read_only_fields = ['added_on']

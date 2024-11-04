@@ -28,13 +28,13 @@ class Profile(models.Model):
         return self.profilePic.url if self.profilePic else None
 
 class Wishlist(models.Model):
-    profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="wishlisted_products")
+    user = models.ForeignKey(User, on_delete=models.CASCADE, related_name="wishlisted_users")
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="wishlisted_by")
     added_on = models.DateTimeField(auto_now_add=True)
 
     class Meta:
-        unique_together = ('profile', 'product')
+        unique_together = ('user', 'product')
 
     def __str__(self):
-        return f"{self.profile.user.first_name}'s wishlist item: {self.product.name}"
+        return f"{self.user.first_name}'s wishlist item: {self.product.name}"
     

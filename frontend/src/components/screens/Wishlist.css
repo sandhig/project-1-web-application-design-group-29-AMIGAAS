@@ -1,0 +1,20 @@
+.product-grid-wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+.transparent-bg {
+    background-color: transparent !important;
+    max-width: 1000px;
+}
+
+.remove-from-wishlist {
+    position: absolute !important;
+    background-color: rgba(0, 0, 0, 0.5) !important;
+    top: 5px !important;
+    right: 5px !important;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.8) !important;
+    }
+}
