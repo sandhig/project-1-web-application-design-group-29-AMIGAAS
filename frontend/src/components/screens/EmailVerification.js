@@ -58,37 +58,38 @@ const EmailVerification = () => {
   };
 
   return (
-    <div>
-      <HeaderPre/>
-      <h2>Email Verification</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>UofT Email:</label>
-          <input
-            type="email"
-            name="email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <div>
-          <label>Verification Code:</label>
-          <input
-            type="text"
-            name="verification_code"
-            value={formData.verification_code}
-            onChange={handleChange}
-            required
-          />
-        </div>
-        <button type="submit" disabled={loading}>
-          {loading ? 'Verifying...' : 'Verify Email'}
-        </button>
-      </form>
-
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+    <div className="signup-page">
+      <HeaderPre />
+      <div className="signup-container">
+        <h2>Email Verification</h2>
+        <form onSubmit={handleSubmit}>
+          <div>
+            <label>UofT Email: </label>
+            <input
+              type="email"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <div>
+            <label>Verification Code: </label>
+            <input
+              type="text"
+              name="verification_code"
+              value={formData.verification_code}
+              onChange={handleChange}
+              required
+            />
+          </div>
+          <button type="submit" disabled={loading}>
+            {loading ? 'Verifying...' : 'Verify Email'}
+          </button>
+        </form>
+        {errorMessage && <p className="error-message">{errorMessage}</p>}
+        {successMessage && <p className="success-message">{successMessage}</p>}
+      </div>
     </div>
   );
 };
