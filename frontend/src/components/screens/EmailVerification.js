@@ -62,7 +62,7 @@ const EmailVerification = () => {
       <HeaderPre />
       <div className="signup-container">
         <h2>Email Verification</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className='signup-form'>
           <div>
             <label>UofT Email: </label>
             <input

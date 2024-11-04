@@ -51,9 +51,9 @@ const UsersLogin = () => {
   return (
     <div className="signup-page">
       <HeaderPre />
-      <div className="signup-container">
+      <div className='signup-container'>
         <h2>Login</h2>
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} className="signup-form">
           <div>
             <label>UofT Email: </label>
             <input
