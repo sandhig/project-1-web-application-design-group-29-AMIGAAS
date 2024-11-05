@@ -12,7 +12,7 @@ class ProfilesSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(source='user.first_name')
     last_name = serializers.CharField(source='user.last_name')
     password = serializers.CharField(write_only=True, source='user.password', required=False)
-    bio = serializers.CharField(allow_blank=True)
+    bio = serializers.CharField(required=False, allow_blank=True)
     profilePic = serializers.ImageField(required=False)
     profilePic_url = serializers.CharField(read_only=True)
     date_joined = serializers.DateTimeField(source='user.date_joined', read_only=True)

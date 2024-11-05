@@ -28,10 +28,13 @@ logger = logging.getLogger('django')
 @permission_classes([AllowAny])
 def add_user(request):
     serializer = ProfilesSerializer(data=request.data)
+    logger.debug(f'SERIALIZER: {serializer}')
+    logger.debug('REQUEST DATA: %s', request.data)
     if serializer.is_valid():
         serializer.save()
         return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
-    return Response({'error': 'Email already exists'}, status=status.HTTP_400_BAD_REQUEST)
+    logger.debug('SERIALIZER ERRORS: %s', serializer.errors)
+    return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
