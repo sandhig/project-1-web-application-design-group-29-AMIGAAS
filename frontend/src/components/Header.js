@@ -13,7 +13,7 @@ import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
 function Header() {
-    const { currentUser, setCurrentUser } = useUser();
+    const { currentUser, logout } = useUser();
     const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
     const [searchTerm, setSearchTerm] = useState("");
     const navigate = useNavigate();
@@ -36,8 +36,7 @@ function Header() {
     };
 
     const handleLogout = () => {
-      localStorage.removeItem('authToken');
-      setCurrentUser(null);
+      logout();
       navigate('/profiles/login');
     };
     
