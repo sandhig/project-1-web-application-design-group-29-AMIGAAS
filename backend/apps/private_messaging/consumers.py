@@ -76,7 +76,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         user = Profile.objects.prefetch_related(
             'conversations__messages',
             'conversations__participants'
-        ).get(id=user_id)
+        ).get(user__id=user_id)
         conversations = user.conversations.all()
         return list(conversations)
 
