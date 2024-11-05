@@ -78,6 +78,7 @@ def get_current_user(request):
     user = request.user
     return Response({
         'id': user.id,
+        'profile_id': user.profile.id,
         'username': user.username,
         'email': user.email,
         'first_name': user.first_name,

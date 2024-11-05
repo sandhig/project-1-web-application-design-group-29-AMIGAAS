@@ -83,6 +83,6 @@ class ChatConsumer(AsyncWebsocketConsumer):
     @database_sync_to_async
     def create_message(self, conversation_id, sender_id, content ):
         conversation = Conversation.objects.get(id=conversation_id)
-        sender = Profile.objects.get(id=sender_id)
+        sender = Profile.objects.get(user__id=sender_id)
         message = Message.objects.create(conversation=conversation, sender=sender, content=content)
         return message
