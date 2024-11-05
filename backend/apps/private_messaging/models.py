@@ -15,6 +15,14 @@ class Conversation(models.Model):
                 return f"{other_profile.user.first_name} {other_profile.user.last_name}"
         return 'Unknown'
 
+    def get_other_participant_photo(self, current_user):
+        other_participants = self.participants.exclude(id=current_user.id)
+        if other_participants.exists():
+            other_profile = other_participants.first()
+            if other_profile.user.profile.profile_pic_url:
+                return f"{other_profile.user.profile.profile_pic_url}"
+        return None
+
     def get_last_message(self):
         return self.messages.order_by('-timestamp').first()
     

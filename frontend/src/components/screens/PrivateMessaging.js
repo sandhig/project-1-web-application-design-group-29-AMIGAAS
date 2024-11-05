@@ -31,10 +31,11 @@ function PrivateMessage() {
                     'Authorization': `Token ${currentUser.token}`,
                 }
             })
-                .then(response => response.json())
-                .then(data => {
-                    setConversations(data.conversations);
-                });
+            .then(response => response.json())
+            .then(data => {
+                setConversations(data.conversations);
+            });
+            console.log(conversations)
         }
     };
 
@@ -134,6 +135,7 @@ function PrivateMessage() {
                             return [...prevConversations, {
                                 id: data.conversation_id,
                                 name: data.name,
+                                profile_pic: data.profile_pic,
                                 last_message: '',
                                 last_sender_name: '',
                                 last_sender_id: '',
@@ -276,10 +278,17 @@ function PrivateMessage() {
                             className={conversation.id === selectedConversationId ? 'selected' : '' || !conversation.is_read ? 'unread' : ''}>
                             <span className={!conversation.is_read ? 'dot' : ''}></span>
 
-                            <span className="message-title">
-
-                                {conversation.name}
-                                <p>{conversation.last_sender_id == currentUser.id ? 'You' : conversation.last_sender_name}: {conversation.last_message}</p>
+                            <span style={{display:"flex", gap:"10px"}}>
+                                {conversation.profile_pic ? (
+                                    <img src={conversation.profile_pic} alt="Profile" className="header-profile"/>
+                                    ) : (
+                                    <img src="/profile-icon.jpg" alt="Default Profile" className="header-profile"/>
+                                )}
+                                        
+                                <span className="message-title">
+                                    {conversation.name}
+                                    <p>{conversation.last_sender_id == currentUser.id ? 'You' : conversation.last_sender_name}: {conversation.last_message}</p>
+                                </span>
                             </span>
                         </div>
                     ))}

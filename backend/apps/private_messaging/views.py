@@ -22,6 +22,7 @@ def get_user_conversations(request):
             {
                 'id': convo.id,
                 'name': convo.get_other_participant_name(current_user),
+                'profile_pic': convo.get_other_participant_photo(current_user),
                 'last_message': convo.get_last_message().content if convo.get_last_message() else "No messages",
                 'last_sender_id': convo.get_last_message().sender.id if convo.get_last_message() and convo.get_last_message().sender else "Unknown",
                 'last_sender_name': f"{convo.get_last_message().sender.user.first_name} {convo.get_last_message().sender.user.last_name}" if convo.get_last_message() and convo.get_last_message().sender and convo.get_last_message().sender.user else "Unknown Sender",
