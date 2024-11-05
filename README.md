@@ -26,15 +26,16 @@ We will be maintaining our codebase on [GitHub.](https://github.com/UofT-ECE444-
 
 We will be tracking our progress, report bugs and fixes, as well as maintain an up-to-date list of tasks to be accomplished in each sprint on [Jira](https://amigaas.atlassian.net/jira/software/projects/SCRUM/boards/1)
 
-### Requirements 
+### Requirements
 
-- Python 
-- Flask 
-- HTML/CSS
-- JavaScript
-- Flake8
-- Black 
-- Pytest
+- [Python](https://www.python.org/)
+- [HTML/CSS](https://html.com/)
+- [JavaScript](https://www.javascript.com/)
+- [React](https://react.dev/)
+- [Node.js](https://nodejs.org/en)
+- [Pytest](https://docs.pytest.org/en/stable/)
+- [Playwright](https://playwright.dev/)
+- [AWS](https://aws.amazon.com) 
 
 ### Getting Started 
 
