@@ -37,6 +37,10 @@ We will be tracking our progress, report bugs and fixes, as well as maintain an 
 - [Playwright](https://playwright.dev/)
 - [AWS](https://aws.amazon.com) 
 
+### Resources
+
+- [Chatgpt](https://chatgpt.com/)
+
 ### Getting Started 
 
 - Clone this repo using : https://github.com/UofT-ECE444-Fall2024/project-1-web-application-design-group-29-AMIGAAS.git.
