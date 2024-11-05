@@ -1,13 +1,10 @@
-.column-container {
+.align-left {
     display: flex;
     flex-direction: column; /* Arrange children in a column */
-    align-items: center;    /* Center items horizontally (optional) */
+    text-align: left;
 }
+
+.padding-top {
+    padding-top: 20px; /* Adjust the value as needed */
+  }
   
-.column-item {
-    margin: 10px; /* Space between items */
-}
-  
-.space-right {
-    margin-right: 10px;
-}

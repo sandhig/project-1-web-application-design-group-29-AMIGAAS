@@ -309,7 +309,7 @@ function PrivateMessage() {
                                                         })}
                                                     </div>
                                                 )}
-                                                <div className={message.sender_id === currentUser.id ? 'from' : 'to'}>
+                                                <div className={message.sender_id === currentUser.profile_id ? 'from' : 'to'}>
                                                     <div className="message-container">
                                                         <div className='message'>
                                                             {message.content}

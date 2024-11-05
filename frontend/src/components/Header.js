@@ -10,6 +10,7 @@ import MessageIcon from '@mui/icons-material/Message';
 import TextField from "@mui/material/TextField";
 import LogoutIcon from '@mui/icons-material/Logout';
 import AddCircleOutlineIcon from '@mui/icons-material/AddCircleOutline';
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 function Header() {
     const { currentUser, setCurrentUser } = useUser();
@@ -74,6 +75,12 @@ function Header() {
               <MessageIcon style={{ fill: "white", fontSize: "larger" }} />
             </IconButton>
             <p>Messages</p>
+          </Link>
+          <Link to="/wishlist" className="icon-button">
+            <IconButton aria-label="message">
+              <FavoriteIcon style={{ fill: "white", fontSize: "larger" }} />
+            </IconButton>
+            <p>My Wishlist</p>
           </Link>
           <div className="icon-button">
             <IconButton aria-label="message" onClick={handleLogout}>

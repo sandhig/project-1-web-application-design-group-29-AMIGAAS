@@ -29,6 +29,7 @@ export const UserProvider = ({ children }) => {
         .then(data => {
             setCurrentUser({
               id: data.id,
+              profile_id: data.profile_id,
               username: data.username,
               email: data.email,
               first_name: data.first_name,

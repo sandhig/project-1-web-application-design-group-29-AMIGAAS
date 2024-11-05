@@ -1,9 +1,10 @@
 from rest_framework import serializers
-from .models import Profile
+from .models import Profile, Wishlist
 from django.utils.crypto import get_random_string
 from django.core.mail import send_mail
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate
+from ..products.serializers import ProductSerializer
 
 class ProfilesSerializer(serializers.ModelSerializer):
     user_id = serializers.IntegerField(source='user.id', read_only=True)
@@ -11,13 +12,14 @@ class ProfilesSerializer(serializers.ModelSerializer):
     first_name = serializers.CharField(source='user.first_name')
     last_name = serializers.CharField(source='user.last_name')
     password = serializers.CharField(write_only=True, source='user.password', required=False)
-    bio = serializers.CharField(allow_blank=True)
+    bio = serializers.CharField(required=False, allow_blank=True)
     profilePic = serializers.ImageField(required=False)
     profilePic_url = serializers.CharField(read_only=True)
+    date_joined = serializers.DateTimeField(source='user.date_joined', read_only=True)
 
     class Meta:
         model = Profile
-        fields = ['user_id', 'email', 'first_name', 'last_name', 'password', 'bio', 'profilePic', 'profilePic_url']
+        fields = ['user_id', 'email', 'first_name', 'last_name', 'password', 'bio', 'profilePic', 'profilePic_url', 'date_joined']
 
     def validate_email(self, value):
         if '@mail.utoronto.ca' not in value:
@@ -124,3 +126,12 @@ class LoginSerializer(serializers.Serializer):
 
         data['user'] = user
         return data
+    
+
+class WishlistSerializer(serializers.ModelSerializer):
+    product = ProductSerializer()
+
+    class Meta:
+        model = Wishlist
+        fields = ['id', 'product', 'added_on']
+        read_only_fields = ['added_on']
