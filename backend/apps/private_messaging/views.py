@@ -1,3 +1,5 @@
+from datetime import timedelta
+from django.utils import timezone
 from django.shortcuts import get_object_or_404
 from django.http import JsonResponse
 from rest_framework.response import Response
@@ -16,7 +18,8 @@ from django.db.models import Count
 def get_user_conversations(request):
     current_user = request.user.profile
     conversations = Conversation.objects.filter(participants=current_user).annotate(message_count=Count('messages')).filter(message_count__gt=0)
-
+    now = timezone.now()
+    
     data = {
         'conversations': [
             {
@@ -24,6 +27,7 @@ def get_user_conversations(request):
                 'name': convo.get_other_participant_name(current_user),
                 'profile_pic': convo.get_other_participant_photo(current_user),
                 'last_message': convo.get_last_message().content if convo.get_last_message() else "No messages",
+                'last_message_time': convo.get_last_message().timestamp,
                 'last_sender_id': convo.get_last_message().sender.id if convo.get_last_message() and convo.get_last_message().sender else "Unknown",
                 'last_sender_name': f"{convo.get_last_message().sender.user.first_name} {convo.get_last_message().sender.user.last_name}" if convo.get_last_message() and convo.get_last_message().sender and convo.get_last_message().sender.user else "Unknown Sender",
                 'is_read': convo.is_read(current_user)
