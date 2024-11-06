@@ -28,7 +28,6 @@ const UsersLogin = () => {
   
   const validatePassword = (password) => {
     if (!password) return 'Please enter your password.';
-    else if (password.length < 6) return 'Password must be at least 6 characters long.'
     else return '';
   };
 
