@@ -171,16 +171,18 @@ const UsersLogin = () => {
             <Link color="primary" to="/profiles/reset">Signup</Link>
           </div>
         </div>
-        {errorMessage && (
-          <Typography variant="body1" className="error-message">
-            {errorMessage}
-          </Typography>
-        )}
-        {successMessage && (
-          <Typography variant="body1" className="success-message">
-            {successMessage}
-          </Typography>
-        )}
+        <div className='top-padding'>
+          {errorMessage && (
+            <Typography variant="body1" className="error-message">
+              {errorMessage}
+            </Typography>
+          )}
+          {successMessage && (
+            <Typography variant="body1" className="success-message">
+              {successMessage}
+            </Typography>
+          )}
+        </div>
       </div>
     </div>
   );
