@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import HeaderPre from "../../components/HeaderPre"
 import "./UsersSignUp.css"; 
+import { useUser } from '../../context/UserContext';
 
 const UsersLogin = () => {
   const [formData, setFormData] = useState({
@@ -16,6 +17,7 @@ const UsersLogin = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate()
+  const { fetchUserData } = useUser();
 
   const isFormInvalid = isSubmitting || Object.values(formErrors).some(error => error) || successMessage;
 
@@ -78,6 +80,7 @@ const UsersLogin = () => {
       if (response.status === 200) {
         const token = response.data.token;
         localStorage.setItem('authToken', token);
+        fetchUserData(token);
         
         setSuccessMessage('Login successful!');
         setErrorMessage('');

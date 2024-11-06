@@ -91,12 +91,13 @@ function UserProfile() {
                         <div className="profile-name">
 
                             <h1>{user.first_name} {user.last_name}</h1>
-
+                            {/*
                             {parseInt(currentUser.id) !== parseInt(userId) && (
                                 <Button onClick={handleMessageMe} variant="outlined">
                                     Send Message
                                 </Button>
                             )}
+                            */}
 
                             {parseInt(currentUser.id) == parseInt(userId) && (
                                 <Button onClick={handleEditProfile} variant="outlined">

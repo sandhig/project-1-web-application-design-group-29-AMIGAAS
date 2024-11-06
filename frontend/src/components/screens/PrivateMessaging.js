@@ -31,10 +31,11 @@ function PrivateMessage() {
                     'Authorization': `Token ${currentUser.token}`,
                 }
             })
-                .then(response => response.json())
-                .then(data => {
-                    setConversations(data.conversations);
-                });
+            .then(response => response.json())
+            .then(data => {
+                setConversations(data.conversations);
+            });
+            console.log(conversations)
         }
     };
 
@@ -134,6 +135,7 @@ function PrivateMessage() {
                             return [...prevConversations, {
                                 id: data.conversation_id,
                                 name: data.name,
+                                profile_pic: data.profile_pic,
                                 last_message: '',
                                 last_sender_name: '',
                                 last_sender_id: '',
@@ -271,15 +273,44 @@ function PrivateMessage() {
                 
                 <div className="conversations">
                     <h2>Chats</h2>
-                    {conversations.map(conversation => (
+                    {conversations
+                        .sort((a, b) => new Date(b.last_message_time) - new Date(a.last_message_time))
+                        .map(conversation => (
                         <div key={conversation.id} onClick={() => setSelectedConversationId(conversation.id)}
                             className={conversation.id === selectedConversationId ? 'selected' : '' || !conversation.is_read ? 'unread' : ''}>
-                            <span className={!conversation.is_read ? 'dot' : ''}></span>
+                            
+                            
 
-                            <span className="message-title">
-
-                                {conversation.name}
-                                <p>{conversation.last_sender_id == currentUser.id ? 'You' : conversation.last_sender_name}: {conversation.last_message}</p>
+                            <span style={{display:"flex", alignItems:"center"}}>
+                                <span className={!conversation.is_read ? 'dot' : ''}></span>
+                                {conversation.profile_pic ? (
+                                    <img src={conversation.profile_pic} alt="Profile" className="header-profile"/>
+                                    ) : (
+                                    <img src="/profile-icon.jpg" alt="Default Profile" className="header-profile"/>
+                                )}
+                                        
+                                <span className="message-title">
+                                    {conversation.name}
+                                    <p>
+                                    <span className="message-text">
+                                        {conversation.last_sender_id == currentUser.id ? 'You' : conversation.last_sender_name}: {conversation.last_message}
+                                    </span>
+                                    <span className="message-time">
+                                        {new Date(conversation.last_message_time).toDateString() === new Date().toDateString()
+                                            ? new Date(conversation.last_message_time).toLocaleString('en-US', {
+                                                hour: 'numeric',
+                                                minute: 'numeric',
+                                                hour12: true
+                                            })
+                                            : new Date(conversation.last_message_time).toLocaleDateString('en-US', {
+                                                month: '2-digit',
+                                                day: '2-digit',
+                                                year: '2-digit'
+                                            })
+                                        }
+                                    </span>
+                                    </p>
+                                </span>
                             </span>
                         </div>
                     ))}
@@ -318,7 +349,8 @@ function PrivateMessage() {
                                                                     hour: 'numeric',
                                                                     minute: 'numeric',
                                                                     hour12: true
-                                                                })}</span>
+                                                                })}
+                                                            </span>
                                                         </div>
                                                         {/*
                                             <div className="read-receipt">
