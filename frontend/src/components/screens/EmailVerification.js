@@ -144,15 +144,17 @@ const EmailVerification = () => {
             error={!!formErrors.verification_code}
             helperText={formErrors.verification_code}
           />
-          <Button
-            name="verify"
-            type="submit"
-            variant="contained"
-            color="primary"
-            disabled={isFormInvalid}
-          >
-            {loading || successMessage ? 'Verifying Email...' : 'Verify Email'}
-          </Button>
+            <div className='bottom-padding'>
+            <Button
+              name="verify"
+              type="submit"
+              variant="contained"
+              color="primary"
+              disabled={isFormInvalid}
+            >
+              {loading || successMessage ? 'Verifying Email...' : 'Verify Email'}
+            </Button>
+          </div>
         </form>
         <div className='top-padding'>
           {errorMessage && (
