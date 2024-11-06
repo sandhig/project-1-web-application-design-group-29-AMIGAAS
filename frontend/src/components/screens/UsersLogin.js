@@ -90,7 +90,6 @@ const UsersLogin = () => {
 
       }
     } catch (error) {
-      console.log(error);
       if (error.response && error.response.data) {
         const backendErrors = error.response.data;
         const fieldErrors = {};
