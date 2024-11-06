@@ -55,6 +55,10 @@ const UsersLogin = () => {
     setFormErrors({ ...formErrors, [name]: errorMessage });
   };
 
+  const handleSignUpButton = () => {
+    navigate('/profiles/signup');
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -168,7 +172,14 @@ const UsersLogin = () => {
             <Typography>Not a User?</Typography>
           </div>
           <div className='top-padding'>
-            <Link color="primary" to="/profiles/reset">Signup</Link>
+            <Button
+              name="signup"
+              variant="text"
+              color="primary"
+              onClick={handleSignUpButton}
+            >
+              <Typography color='primary'>Sign Up</Typography>
+            </Button>
           </div>
         </div>
         <div className='top-padding'>
