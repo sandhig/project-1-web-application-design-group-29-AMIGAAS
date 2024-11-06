@@ -19,7 +19,7 @@ const UsersLogin = () => {
   const navigate = useNavigate()
   const { fetchUserData } = useUser();
 
-  const isFormInvalid = isSubmitting || Object.values(formErrors).some(error => error) || successMessage;
+  const isFormInvalid = isSubmitting || Object.values(formErrors).some(error => error) || !!successMessage;
 
   const validateEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@mail\.utoronto\.ca$/;
