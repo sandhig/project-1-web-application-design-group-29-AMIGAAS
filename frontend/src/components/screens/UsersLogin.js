@@ -104,9 +104,13 @@ const UsersLogin = () => {
         // form field specific errors
         Object.keys(backendErrors).forEach(key => {
           if (key !== 'non_field_errors') {
-            fieldErrors[key] = backendErrors[key].join(' '); // if multiple messages for a field
+            console.log(Object.keys(backendErrors[key]));
+            const fieldError = backendErrors[key];
+
+              fieldErrors[Object.keys(fieldError)] = Object.values(fieldError).map(errorArray => errorArray.join(' ')).join(' ');
           }
         });
+        
         setFormErrors(fieldErrors);
       } else {
         // in case of unexpected errors
