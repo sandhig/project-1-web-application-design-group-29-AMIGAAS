@@ -87,4 +87,20 @@
         color: white;
         font-size: small;
     }
+
+    .icon {
+        fill: white;
+        font-size: larger;
+    }
+
+    &:hover {
+        p {
+            color: #007FA3;
+        }
+
+        .icon {
+            fill: #007FA3 !important;
+            transition: none;
+        }
+    }
 }
