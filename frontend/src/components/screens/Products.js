@@ -20,6 +20,8 @@ const Products = () => {
   const { currentUser } = useUser();
   const navigate = useNavigate();
 
+  const scrollContainerRefs = useRef([]);
+
   const hour = parseInt(new Date().getHours());
   let greeting = '';
   if (5 <= hour && hour <= 11) {
@@ -61,17 +63,21 @@ const Products = () => {
     navigate(`/products/${id}`);
   };
 
-  const scrollContainerRef = useRef(null);
-
-  const scrollLeft = () => {
-    const itemWidth = scrollContainerRef.current.children[0].offsetWidth;
-    scrollContainerRef.current.scrollBy({ left: -itemWidth, behavior: "smooth" });
+  const scrollLeft = (index) => {
+    const itemWidth = scrollContainerRefs.current[index].children[0].offsetWidth;
+    scrollContainerRefs.current[index].scrollBy({ left: -itemWidth, behavior: "smooth" });
   };
 
-  const scrollRight = () => {
-    const itemWidth = scrollContainerRef.current.children[0].offsetWidth;
-    scrollContainerRef.current.scrollBy({ left: itemWidth, behavior: "smooth" });
+  const scrollRight = (index) => {
+    const itemWidth = scrollContainerRefs.current[index].children[0].offsetWidth;
+    scrollContainerRefs.current[index].scrollBy({ left: itemWidth, behavior: "smooth" });
   };
+
+  const categories = [
+    { name: "Textbook", title: "Page Turners" },
+    { name: "Clothing", title: "Fashion Finds" },
+    { name: "Furniture", title: "Dorm Essentials" }
+  ];
 
   return (
     <div>
@@ -104,127 +110,51 @@ const Products = () => {
               {isPlaying ? (<PauseIcon style={{ fill: "white" }} />) : (<PlayArrowIcon style={{ fill: "white" }} />)}
             </IconButton>
           </div>
-        
-          <div className="title">Page Turners</div>
 
-          <div style={{ display: "flex", alignItems: "center" }}>
+          {categories.map((category, index) => (
+            <div key={index}>
+              <div className="title">{category.title}</div>
 
-            <IconButton onClick={scrollLeft}>
-              <ArrowLeftIcon style={{ fontSize: "xxx-large" }} />
-            </IconButton>
+              <div style={{ display: "flex", alignItems: "center" }}>
 
-            <div className="scroll-container" ref={scrollContainerRef}>
-              {loading ? (
-                <span className="product-loader"></span>
-              ) : (
-                <>
-                {products
-                  .filter(product => product.category === "Textbook")
-                  .map(product => (
-                  <div key={product.id} className="product-item">
-                    <div onClick={() => handleOpenProduct(product.id)}>
-                  
-                      {product.image_url ? 
-                      (<img className="product-image" src={product.image_url}></img>) 
-                      : <img className="product-image" src="/images/no-image-icon.png"></img>}
+                <IconButton onClick={() => scrollLeft(index)}>
+                  <ArrowLeftIcon style={{ fontSize: "xxx-large" }} />
+                </IconButton>
+
+                <div className="scroll-container" ref={(el) => (scrollContainerRefs.current[index] = el)}>
+                  {loading ? (
+                    <span className="product-loader"></span>
+                  ) : (
+                    <>
+                    {products
+                      .filter(product => product.category === category.name)
+                      .map(product => (
+                      <div key={product.id} className="product-item">
+                        <div onClick={() => handleOpenProduct(product.id)}>
                       
-                      <div className="product-text">
-                        <div className="product-price">${product.price}</div>
-                        <div className="product-title">{product.name}</div>
-                        <div className="product-location">{product.pickup_location}</div>
+                          {product.image_url ? 
+                          (<img className="product-image" src={product.image_url}></img>) 
+                          : <img className="product-image" src="/images/no-image-icon.png"></img>}
+                          
+                          <div className="product-text">
+                            <div className="product-price">${product.price}</div>
+                            <div className="product-title">{product.name}</div>
+                            <div className="product-location">{product.pickup_location}</div>
+                          </div>
+                        </div>
                       </div>
-                    </div>
-                  </div>
-                ))}
-                </>
-              )}
+                    ))}
+                    </>
+                  )}
+                </div>
+
+                <IconButton onClick={() => scrollRight(index)}>
+                  <ArrowRightIcon style={{ fontSize: "xxx-large" }} />
+                </IconButton>
+
+              </div>
             </div>
-
-            <IconButton onClick={scrollRight}>
-              <ArrowRightIcon style={{ fontSize: "xxx-large" }} />
-            </IconButton>
-
-          </div>
-
-          <div className="title">Fashion Finds</div>
-
-          <div style={{ display: "flex", alignItems: "center" }}>
-
-            <IconButton onClick={scrollLeft}>
-              <ArrowLeftIcon style={{ fontSize: "xxx-large" }} />
-            </IconButton>
-
-            <div className="scroll-container" ref={scrollContainerRef}>
-            {loading ? (
-                <span className="product-loader"></span>
-              ) : (
-                <>
-                {products
-                  .filter(product => product.category === "Clothing")
-                  .map(product => (
-                  <div key={product.id} className="product-item">
-                    <div onClick={() => handleOpenProduct(product.id)}>
-                      {product.image_url ? 
-                      (<img className="product-image" src={product.image_url}></img>) 
-                      : <img className="product-image" src="/images/no-image-icon.png"></img>}
-                      
-                      <div className="product-text">
-                        <div className="product-price">${product.price}</div>
-                        <div className="product-title">{product.name}</div>
-                        <div className="product-location">{product.pickup_location}</div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                </>
-              )}
-            </div>
-
-            <IconButton onClick={scrollRight}>
-              <ArrowRightIcon style={{ fontSize: "xxx-large" }} />
-            </IconButton>
-
-          </div>
-
-          <div className="title">Dorm Essentials</div>
-
-          <div style={{ display: "flex", alignItems: "center" }}>
-
-            <IconButton onClick={scrollLeft}>
-              <ArrowLeftIcon style={{ fontSize: "xxx-large" }} />
-            </IconButton>
-
-            <div className="scroll-container" ref={scrollContainerRef}>
-            {loading ? (
-                <span className="product-loader"></span>
-              ) : (
-                <>
-                {products
-                  .filter(product => product.category === "Furniture")
-                  .map(product => (
-                  <div key={product.id} className="product-item">
-                    <div onClick={() => handleOpenProduct(product.id)}>
-                      {product.image_url ? 
-                      (<img className="product-image" src={product.image_url}></img>) 
-                      : <img className="product-image" src="/images/no-image-icon.png"></img>}
-                      
-                      <div className="product-text">
-                        <div className="product-price">${product.price}</div>
-                        <div className="product-title">{product.name}</div>
-                        <div className="product-location">{product.pickup_location}</div>
-                      </div>
-                    </div>
-                  </div>
-                ))}
-                </>
-              )}
-            </div>
-
-            <IconButton onClick={scrollRight}>
-              <ArrowRightIcon style={{ fontSize: "xxx-large" }} />
-            </IconButton>
-
-          </div>
+          ))}
 
         </div>
     </div>
