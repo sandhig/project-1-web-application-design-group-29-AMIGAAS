@@ -192,3 +192,25 @@ a:active {
     width: 100%;
     padding: 10px;
 }
+
+.product-loader {
+    margin: 10px;
+    width: 190px;
+    height: 220px;
+    background:
+        linear-gradient(0.25turn, transparent, #f2f2f2, transparent),
+        linear-gradient(#DDD, #DDD),
+        linear-gradient(#DDD, #DDD),
+        linear-gradient(#DDD, #DDD);
+    background-color: #f2f2f2;
+    background-repeat: no-repeat;
+    background-size: 190px 220px, 190px 130px, 100px 15px, 150px 15px;
+    background-position: -190px 0, 0 0, 15px 150px, 15px 180px;
+    animation: product-loading 1.5s infinite;
+}
+
+@keyframes product-loading {
+  to {
+    background-position: 190px 0, 0 0, 15px 150px, 15px 180px;
+  }
+}

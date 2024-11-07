@@ -3,9 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { useUser } from '../../context/UserContext';
 import "./UserProfile.css"
 import Header from "../../components/Header"
-import { Button } from '@mui/material';
+import { Button, Snackbar } from '@mui/material';
 import axios from 'axios';
-
+import { IoSend } from "react-icons/io5";
 
 function UserProfile() {
     const { userId } = useParams();
@@ -13,6 +13,8 @@ function UserProfile() {
     const [products, setProducts] = useState([]);
     const [soldProducts, setSoldProducts] = useState([]);
     const navigate = useNavigate();
+    const [message, setMessage] = useState('');
+    const [confirmation, setConfirmation] = useState(false);
 
     const { currentUser } = useUser();
     const token = localStorage.getItem('authToken');
@@ -56,8 +58,47 @@ function UserProfile() {
 
     }, [userId, currentUser, token]);
 
-    const handleMessageMe = () => {
-        navigate(`/messages?userId=${userId}`);
+    useEffect(() => {
+        if (user && currentUser) {
+          setMessage(`Hi ${user.first_name}, I'm interested in purchasing a product.`);
+        }
+    }, [user, currentUser]);
+
+    const sendMessageToSeller = () => {
+        if (userId) {
+
+            // Fetch or create conversation with seller
+            fetch(`http://3.87.240.14:8000/api/conversation/start/${userId}/`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                
+                axios.post('http://3.87.240.14:8000/api/send_message/', {
+                    conversation_id: data.conversation_id,
+                    content: message,
+                }, {
+                    headers: {
+                      'Authorization': `Token ${token}`,
+                      'Content-Type': 'application/json',
+                    },
+                })
+                .then(response => {
+                    console.log('Message sent:', response.data);
+                    setConfirmation(true);
+                })
+                .catch(error => console.error('Error sending message:', error));
+ 
+            });
+        }
+    };
+
+    const handleCloseConfirmation = () => {
+        setConfirmation(false);
     };
 
     const handleEditProfile = () => {
@@ -72,7 +113,7 @@ function UserProfile() {
         <div>
             <Header />
 
-            {!user ? (<div>Loading...</div>) : (
+            {!user ? (<span className="profile-loader"></span>) : (
 
             <div className="profile-page-container">
 
@@ -91,13 +132,19 @@ function UserProfile() {
                         <div className="profile-name">
 
                             <h1>{user.first_name} {user.last_name}</h1>
-                            {/*
+
                             {parseInt(currentUser.id) !== parseInt(userId) && (
-                                <Button onClick={handleMessageMe} variant="outlined">
-                                    Send Message
-                                </Button>
+                                <div className="text-input">
+                                    <input type="text" value={message} onChange={e => setMessage(e.target.value)}
+                                                    onKeyPress={e => {
+                                                        if (e.key === 'Enter') {
+                                                            sendMessageToSeller()
+                                                        }
+                                                    }}
+                                                />
+                                    <button onClick={() => sendMessageToSeller()}><IoSend /></button>
+                                </div>
                             )}
-                            */}
 
                             {parseInt(currentUser.id) == parseInt(userId) && (
                                 <Button onClick={handleEditProfile} variant="outlined">
@@ -168,6 +215,14 @@ function UserProfile() {
 
             </div>
             )}
+
+<Snackbar
+                    open={confirmation}
+                    autoHideDuration={3000}
+                    onClose={handleCloseConfirmation}
+                    message="Message sent successfully!"
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                />
                     
         </div>
     );

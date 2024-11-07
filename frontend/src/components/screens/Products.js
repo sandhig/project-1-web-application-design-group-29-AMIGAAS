@@ -14,6 +14,7 @@ import "react-multi-carousel/lib/styles.css";
 const Products = () => {
   const [products, setProducts] = useState([]);
   const [isPlaying, setIsPlaying] = useState(true);
+  const [loading, setLoading] = useState(true);
 
   const token = localStorage.getItem('authToken');
   const { currentUser } = useUser();
@@ -49,7 +50,10 @@ const Products = () => {
       }
     })
       .then(response => response.json())
-      .then(data => setProducts(data))
+      .then((data) => {
+        setProducts(data);
+        setLoading(false);
+      })
       .catch(error => console.error('Error fetching products:', error));
   }, []);
 
@@ -110,23 +114,30 @@ const Products = () => {
             </IconButton>
 
             <div className="scroll-container" ref={scrollContainerRef}>
-            {products
-              .filter(product => product.category === "Textbook")
-              .map(product => (
-              <div key={product.id} className="product-item">
-                <div onClick={() => handleOpenProduct(product.id)}>
-                  {product.image_url ? 
-                  (<img className="product-image" src={product.image_url}></img>) 
-                  : <img className="product-image" src="/images/no-image-icon.png"></img>}
+              {loading ? (
+                <span className="product-loader"></span>
+              ) : (
+                <>
+                {products
+                  .filter(product => product.category === "Textbook")
+                  .map(product => (
+                  <div key={product.id} className="product-item">
+                    <div onClick={() => handleOpenProduct(product.id)}>
                   
-                  <div className="product-text">
-                    <div className="product-price">${product.price}</div>
-                    <div className="product-title">{product.name}</div>
-                    <div className="product-location">{product.pickup_location}</div>
+                      {product.image_url ? 
+                      (<img className="product-image" src={product.image_url}></img>) 
+                      : <img className="product-image" src="/images/no-image-icon.png"></img>}
+                      
+                      <div className="product-text">
+                        <div className="product-price">${product.price}</div>
+                        <div className="product-title">{product.name}</div>
+                        <div className="product-location">{product.pickup_location}</div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            ))}
+                ))}
+                </>
+              )}
             </div>
 
             <IconButton onClick={scrollRight}>
@@ -144,23 +155,29 @@ const Products = () => {
             </IconButton>
 
             <div className="scroll-container" ref={scrollContainerRef}>
-            {products
-              .filter(product => product.category === "Clothing")
-              .map(product => (
-              <div key={product.id} className="product-item">
-                <div onClick={() => handleOpenProduct(product.id)}>
-                  {product.image_url ? 
-                  (<img className="product-image" src={product.image_url}></img>) 
-                  : <img className="product-image" src="/images/no-image-icon.png"></img>}
-                  
-                  <div className="product-text">
-                    <div className="product-price">${product.price}</div>
-                    <div className="product-title">{product.name}</div>
-                    <div className="product-location">{product.pickup_location}</div>
+            {loading ? (
+                <span className="product-loader"></span>
+              ) : (
+                <>
+                {products
+                  .filter(product => product.category === "Clothing")
+                  .map(product => (
+                  <div key={product.id} className="product-item">
+                    <div onClick={() => handleOpenProduct(product.id)}>
+                      {product.image_url ? 
+                      (<img className="product-image" src={product.image_url}></img>) 
+                      : <img className="product-image" src="/images/no-image-icon.png"></img>}
+                      
+                      <div className="product-text">
+                        <div className="product-price">${product.price}</div>
+                        <div className="product-title">{product.name}</div>
+                        <div className="product-location">{product.pickup_location}</div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            ))}
+                ))}
+                </>
+              )}
             </div>
 
             <IconButton onClick={scrollRight}>
@@ -178,23 +195,29 @@ const Products = () => {
             </IconButton>
 
             <div className="scroll-container" ref={scrollContainerRef}>
-            {products
-              .filter(product => product.category === "Furniture")
-              .map(product => (
-              <div key={product.id} className="product-item">
-                <div onClick={() => handleOpenProduct(product.id)}>
-                  {product.image_url ? 
-                  (<img className="product-image" src={product.image_url}></img>) 
-                  : <img className="product-image" src="/images/no-image-icon.png"></img>}
-                  
-                  <div className="product-text">
-                    <div className="product-price">${product.price}</div>
-                    <div className="product-title">{product.name}</div>
-                    <div className="product-location">{product.pickup_location}</div>
+            {loading ? (
+                <span className="product-loader"></span>
+              ) : (
+                <>
+                {products
+                  .filter(product => product.category === "Furniture")
+                  .map(product => (
+                  <div key={product.id} className="product-item">
+                    <div onClick={() => handleOpenProduct(product.id)}>
+                      {product.image_url ? 
+                      (<img className="product-image" src={product.image_url}></img>) 
+                      : <img className="product-image" src="/images/no-image-icon.png"></img>}
+                      
+                      <div className="product-text">
+                        <div className="product-price">${product.price}</div>
+                        <div className="product-title">{product.name}</div>
+                        <div className="product-location">{product.pickup_location}</div>
+                      </div>
+                    </div>
                   </div>
-                </div>
-              </div>
-            ))}
+                ))}
+                </>
+              )}
             </div>
 
             <IconButton onClick={scrollRight}>
