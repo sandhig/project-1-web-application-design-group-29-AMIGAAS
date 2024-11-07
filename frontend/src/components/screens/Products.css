@@ -4,6 +4,7 @@
     width: 100%;
     overflow: hidden;
     height: -webkit-fill-available;
+    background-color: #f2f2f2;
 }
 
 /* Filters */
@@ -21,11 +22,8 @@
 /* Products */
 
 .product-grid {
-    flex-grow: 1;
     overflow-y: auto;
-    display: flex;
-    flex-direction: column;
-    background-color: #f2f2f2;
+    flex-grow: 1;
 }
 
 .title {
@@ -35,6 +33,7 @@
     padding: 10px 30px 0 45px;
     font-size: 25px;
     font-weight: 600;
+    height: fit-content;
 }
 
 .sort-by {
@@ -214,3 +213,26 @@ a:active {
     background-position: 190px 0, 0 0, 15px 150px, 15px 180px;
   }
 }
+
+.loader {
+    width: 48px;
+    height: 48px;
+    border: 5px solid #001f3f;
+    border-bottom-color: transparent;
+    border-radius: 50%;
+    display: inline-block;
+    box-sizing: border-box;
+    animation: rotation 1s linear infinite;
+    align-self: center;
+    justify-self: center;
+    margin-top: 150px;
+}
+
+@keyframes rotation {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+} 
