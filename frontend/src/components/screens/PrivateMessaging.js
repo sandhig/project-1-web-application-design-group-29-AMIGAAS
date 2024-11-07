@@ -266,7 +266,7 @@ function PrivateMessage() {
         <div style={{display: 'contents'}}>
             <Header/>
 
-            {hasConversations === null ? (<div>Loading...</div>) : (
+            {hasConversations === null ? (<span className="loader"></span>) : (
                 hasConversations === false ? (<div>No messages</div>) :
         
             <div className="container">
