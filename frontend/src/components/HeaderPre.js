@@ -6,8 +6,8 @@ function HeaderPre() {
     return (
       <div className="header">
         <div className="logo-container">
-            <img className="header-logo" src="/images/logo-white.png"></img>
-            <div className="site-title">Too Good To Throw</div>
+            <img className="header-logo" src="/images/header-logo-navy-cyan-white.png" alt="Website logo"></img>
+            <div className="site-title">TOO GOOD TO THROW</div>
         </div>
       </div>
     );

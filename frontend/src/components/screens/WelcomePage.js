@@ -19,7 +19,7 @@ function WelcomePage() {
             <HeaderPre />
         
             <div className="welcome-container">
-                <img src="/images/welcome-page-logo-navy.gif" alt="Website Logo" className="welcome-logo" />
+                <img src="/images/welcome-page-logo-navy-2.gif" alt="Website Logo" className="welcome-logo" />
                 {/* <h1 className="website-name">TooGoodToThrow</h1> */}
                 <div className="button-group">
                     <button className="welcome-button" onClick={handleSignUp}>Sign Up</button>
