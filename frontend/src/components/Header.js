@@ -59,7 +59,7 @@ function Header() {
             size="small"
           />
           <IconButton type="submit" aria-label="search" onClick={handleSearch}>
-            <SearchIcon style={{ fill: "white" }} />
+            <SearchIcon className="search-icon" />
           </IconButton>
         </div>
         <div className="profile-container">

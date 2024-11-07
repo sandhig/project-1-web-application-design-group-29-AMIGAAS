@@ -104,3 +104,11 @@
         }
     }
 }
+
+.search-icon {
+    fill: white !important;
+
+    &:hover {
+        fill: #007FA3 !important;
+    }
+}

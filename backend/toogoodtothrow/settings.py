@@ -164,7 +164,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://127.0.0.1:8000",
     "http://3.87.240.14",
-    "http://444-frontend.s3-website.us-east-2.amazonaws.com",
+    "http://toogoodtothrow.s3-website.us-east-2.amazonaws.com",
 ]
 
 ASGI_APPLICATION = 'toogoodtothrow.asgi.application'
