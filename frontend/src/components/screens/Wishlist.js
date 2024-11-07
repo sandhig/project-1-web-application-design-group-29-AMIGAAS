@@ -12,6 +12,7 @@ function Wishlist() {
     const { currentUser } = useUser();
     const [wishlistItems, setWishlistItems] = useState([]);
     const navigate = useNavigate();
+    const [loading, setLoading] = useState(true);
 
     const fetchWishlistItems = () => {
         fetch('http://3.87.240.14:8000/api/wishlist/', {
@@ -20,7 +21,10 @@ function Wishlist() {
             }
         })
         .then(response => response.json())
-        .then(data => setWishlistItems(data))
+        .then((data) => {
+            setWishlistItems(data);
+            setLoading(false);
+        })
         .catch(error => console.error('Error fetching wishlist:', error));
     };
 
@@ -64,6 +68,7 @@ function Wishlist() {
             <h1>My Wishlist</h1>
             <div className="product-grid-wrapper">
                 <div className="product-grid transparent-bg">
+                {loading ? (<span className="loader"></span>) : (
                     <div className="products">
                         {wishlistItems.map(item => (
                             <div key={item.id} className="product-item">
@@ -94,6 +99,7 @@ function Wishlist() {
                             </div>
                         ))}
                     </div>
+                    )}
                 </div>
             </div>
         </div>

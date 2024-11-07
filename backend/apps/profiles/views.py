@@ -15,7 +15,9 @@ from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from ..products.models import Product
 from ..products.serializers import ProductSerializer
-
+import tempfile
+import uuid
+import os
 
 import boto3
 from django.conf import settings
@@ -110,28 +112,27 @@ def edit_profile(request):
         serializer = ProfilesSerializer(instance=profile, data=request.data, partial=True)
 
         if serializer.is_valid():
-            serializer.save()
 
             # If there is no profile image
-            if 'profilePic' not in request.FILES:
-                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            if 'profilePic' in request.FILES:
+                image_file = request.FILES['profilePic']
+                image_file.open()
+                image_file.read()
+                filename = f"{uuid.uuid4().hex}_{os.path.splitext(image_file.name.replace(' ', '_'))[0]}.jpeg"
             
-            image_file = request.FILES['profilePic']
-            filename = image_file.name.replace(" ", "_")
-        
-            s3 = boto3.client(
-                's3',
-                aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-                aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-                region_name=settings.AWS_S3_REGION_NAME
-            )
+                s3 = boto3.client(
+                    's3',
+                    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+                    region_name=settings.AWS_S3_REGION_NAME
+                )
+                
+                image_file.seek(0)
+                s3.upload_fileobj(image_file, settings.AWS_STORAGE_BUCKET_NAME, f'images/{filename}')
+                
+                logger.debug('Uploaded')
 
-            logger.debug(f's3: {s3}')
-            
-            image_file.seek(0)
-            s3.upload_fileobj(image_file, settings.AWS_STORAGE_BUCKET_NAME, f'images/{filename}')
-            logger.debug('Uploaded')
-
+            serializer.save(profilePic=f'images/{filename}')
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

@@ -1,32 +1,79 @@
+import { Button, Link, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import HeaderPre from "../../components/HeaderPre"
+import "./UsersSignUp.css"; 
 import { useUser } from '../../context/UserContext';
-
 
 const UsersLogin = () => {
   const [formData, setFormData] = useState({
     email: '',
     password: '',
   });
-
   
   const [errorMessage, setErrorMessage] = useState('');
+  const [formErrors, setFormErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const navigate = useNavigate()
   const { fetchUserData } = useUser();
 
-  const handleChange = (e) => {
+  const isFormInvalid = isSubmitting || Object.values(formErrors).some(error => error) || !!successMessage;
+
+  const validateEmail = (email) => {
+    const emailRegex = /^[a-zA-Z0-9._%+-]+@mail\.utoronto\.ca$/;
+    return emailRegex.test(email) ? '' : 'Please enter a valid UofT email address.';
+  };
+  
+  const validatePassword = (password) => {
+    if (!password) return 'Please enter your password.';
+    else return '';
+  };
+
+  const handleInputChange = (event) => {
+    const { name, value } = event.target;
+    setFormErrors({ ...formErrors, [name]: '' });
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value
     });
+  };
+
+  const handleBlur = (event) => {
+    const { name, value } = event.target;
+    let errorMessage = '';
+
+    if (name === 'email') {
+      errorMessage = validateEmail(value);
+    } else if (name === 'password') {
+      errorMessage = validatePassword(value);
+    }
+
+    setFormErrors({ ...formErrors, [name]: errorMessage });
+  };
+
+  const handleSignUpButton = () => {
+    navigate('/profiles/signup');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const errors = {
+      email: validateEmail(formData.email),
+      password: validatePassword(formData.password),
+    };
+
+    const hasErrors = Object.values(errors).some(error => error !== '');
+    if (hasErrors) {
+      setFormErrors(errors);
+      return;
+    }
+
+    setIsSubmitting(true);
+
     try {
       const response = await axios.post('http://3.87.240.14:8000/api/profiles/login', formData, {
         headers: {
@@ -46,46 +93,107 @@ const UsersLogin = () => {
 
       }
     } catch (error) {
-      setErrorMessage('Invalid email or password.');
+      if (error.response && error.response.data) {
+        const backendErrors = error.response.data;
+        const fieldErrors = {};
+  
+        // generic errors
+        if (backendErrors.non_field_errors) {
+          setErrorMessage(backendErrors.non_field_errors.join(' '));
+        } else {
+          setErrorMessage('');
+        }
+  
+        // form field specific errors
+        Object.keys(backendErrors).forEach(key => {
+          if (key !== 'non_field_errors') {
+            console.log(Object.keys(backendErrors[key]));
+            const fieldError = backendErrors[key];
+
+              fieldErrors[Object.keys(fieldError)] = Object.values(fieldError).map(errorArray => errorArray.join(' ')).join(' ');
+          }
+        });
+        
+        setFormErrors(fieldErrors);
+      } else {
+        // in case of unexpected errors
+        setErrorMessage('An unexpected error occurred. Please try again.');
+      }
+
       setSuccessMessage('');
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   return (
-    <div>
+    <div className="signup-page">
       <HeaderPre />
-      <h2>Login</h2>
-      <form onSubmit={handleSubmit}>
-        <div>
-          <label>UofT Email:</label>
-          <input
-            type="email"
+      <div className='signup-container'>
+        <h1>Login</h1>
+        <form noValidate onSubmit={handleSubmit} className="signup-form">
+          <TextField
+            label="UofT Email"
             name="email"
+            type="email"
             value={formData.email}
-            onChange={handleChange}
+            onChange={handleInputChange}
+            onBlur={handleBlur}
+            variant="outlined"
             required
+            error={!!formErrors.email}
+            helperText={formErrors.email}
           />
-        </div>
-        <div>
-          <label>Password:</label>
-          <input
-            type="password"
+          <TextField
+            label="Password"
             name="password"
+            type="password"
             value={formData.password}
-            onChange={handleChange}
+            onChange={handleInputChange}
+            onBlur={handleBlur}
+            variant="outlined"
             required
+            error={!!formErrors.password}
+            helperText={formErrors.password}
           />
+          <Button
+            name="login"
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={isFormInvalid}
+          >
+            {isSubmitting || successMessage ? 'Logging In...' : 'Login'}
+          </Button>
+        </form>
+        <div className='side-by-side'>
+          <div className='typography'>
+            <Typography>Not a User?</Typography>
+          </div>
+          <div className='top-padding'>
+            <Button
+              name="signup"
+              variant="text"
+              color="primary"
+              onClick={handleSignUpButton}
+            >
+              <Typography color='primary'>Sign Up</Typography>
+            </Button>
+          </div>
         </div>
-        <button type="submit">Login</button>
-      </form>
-
-      <p> 
-          Not a User? 
-          <Link to="/profiles/signup"> Signup</Link>
-      </p>
-
-      {errorMessage && <p style={{ color: 'red' }}>{errorMessage}</p>}
-      {successMessage && <p style={{ color: 'green' }}>{successMessage}</p>}
+        <div className='top-padding'>
+          {errorMessage && (
+            <Typography variant="body1" className="error-message">
+              {errorMessage}
+            </Typography>
+          )}
+          {successMessage && (
+            <Typography variant="body1" className="success-message">
+              {successMessage}
+            </Typography>
+          )}
+        </div>
+      </div>
     </div>
   );
 };

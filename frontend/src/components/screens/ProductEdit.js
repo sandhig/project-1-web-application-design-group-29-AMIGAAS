@@ -17,7 +17,6 @@ import {
   } from '@mui/material';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { CheckBox } from '@mui/icons-material';
 
 const ProductEdit = ({
         product, 

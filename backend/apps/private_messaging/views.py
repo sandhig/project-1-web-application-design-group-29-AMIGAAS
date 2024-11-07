@@ -18,13 +18,13 @@ from django.db.models import Count
 def get_user_conversations(request):
     current_user = request.user.profile
     conversations = Conversation.objects.filter(participants=current_user).annotate(message_count=Count('messages')).filter(message_count__gt=0)
-    now = timezone.now()
     
     data = {
         'conversations': [
             {
                 'id': convo.id,
                 'name': convo.get_other_participant_name(current_user),
+                'other_user_id': convo.get_other_participant_id(current_user),
                 'profile_pic': convo.get_other_participant_photo(current_user),
                 'last_message': convo.get_last_message().content if convo.get_last_message() else "No messages",
                 'last_message_time': convo.get_last_message().timestamp,

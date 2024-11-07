@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 
 import os
 from pathlib import Path
+from dotenv import load_dotenv
+load_dotenv()
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -84,21 +86,14 @@ WSGI_APPLICATION = 'toogoodtothrow.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-"""
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
-"""
+DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD")
 
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': 'postgres',
         'USER': 'postgres',
-        'PASSWORD': 'sppA2VDWWAK3O4q7CF9i',
+        'PASSWORD': DATABASE_PASSWORD,
         'HOST': 'database-1.cvy8o4eg6hpb.us-east-2.rds.amazonaws.com',
         'PORT': '5432',
     }
@@ -154,10 +149,6 @@ EMAIL_HOST_USER = 'toogoodtothrow59@gmail.com'
 EMAIL_HOST_PASSWORD = 'vgiu enpv scek afod'
 DEFAULT_FROM_EMAIL = 'toogoodtothrow59@gmail.com'
 
-# settings.py
-
-
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
@@ -173,7 +164,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://127.0.0.1:3000",
     "http://127.0.0.1:8000",
     "http://3.87.240.14",
-    "http://444-frontend.s3-website.us-east-2.amazonaws.com",
+    "http://toogoodtothrow.s3-website.us-east-2.amazonaws.com",
 ]
 
 ASGI_APPLICATION = 'toogoodtothrow.asgi.application'
@@ -197,8 +188,10 @@ REST_FRAMEWORK = {
     ]
 }
 
+SECRET_KEY = os.getenv("SECRET_KEY")
+
 AWS_ACCESS_KEY_ID = 'AKIAXNGUU57HQ7X3DJKW'
-AWS_SECRET_ACCESS_KEY = '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'
+AWS_SECRET_ACCESS_KEY = SECRET_KEY
 AWS_STORAGE_BUCKET_NAME = 'ece444-s3-2'
 
 AWS_S3_REGION_NAME = 'us-east-2'

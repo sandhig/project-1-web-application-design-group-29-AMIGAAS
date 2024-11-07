@@ -4,7 +4,7 @@ import './PrivateMessage.css';
 import { IoSend } from "react-icons/io5";
 import { useUser } from '../../context/UserContext';
 import Header from "../../components/Header"
-
+import {Link} from 'react-router-dom'; 
 
 function PrivateMessage() {
     const [conversations, setConversations] = useState([]);
@@ -35,7 +35,6 @@ function PrivateMessage() {
             .then(data => {
                 setConversations(data.conversations);
             });
-            console.log(conversations)
         }
     };
 
@@ -266,7 +265,7 @@ function PrivateMessage() {
         <div style={{display: 'contents'}}>
             <Header/>
 
-            {hasConversations === null ? (<div>Loading...</div>) : (
+            {hasConversations === null ? (<span className="loader"></span>) : (
                 hasConversations === false ? (<div>No messages</div>) :
         
             <div className="container">
@@ -318,9 +317,11 @@ function PrivateMessage() {
                 <div className="messages">
                     {selectedConversationId ? (
                         <div className='messages-container'>
-                            <h2>
-                                {selectedConversation ? selectedConversation.name : ''}
-                            </h2>
+                            <Link to={`/user/${selectedConversation.other_user_id}`} className="seller-info" >
+                                <h2>
+                                    {selectedConversation ? selectedConversation.name : ''}
+                                </h2>
+                            </Link>
                             {loading ? (
                                 <div>Loading...</div>
                             ) : (

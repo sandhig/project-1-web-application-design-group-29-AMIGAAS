@@ -78,7 +78,7 @@ const ProductView = ({
  
             });
         }
-    }
+    };
 
     const handleCloseConfirmation = () => {
         setConfirmation(false);
@@ -135,14 +135,14 @@ const ProductView = ({
                         </Link>)
                     : (<p>Loading user info...</p>)}
                     <div className="text-input">
-                    <input type="text" value={message} onChange={e => setMessage(e.target.value)}
-                                    onKeyPress={e => {
-                                        if (e.key === 'Enter') {
-                                            sendMessageToSeller()
-                                        }
-                                    }}
-                                />
-                    <button onClick={() => sendMessageToSeller()}><IoSend /></button>
+                        <input type="text" value={message} onChange={e => setMessage(e.target.value)}
+                                        onKeyPress={e => {
+                                            if (e.key === 'Enter') {
+                                                sendMessageToSeller()
+                                            }
+                                        }}
+                                    />
+                        <button onClick={() => sendMessageToSeller()}><IoSend /></button>
                     </div>
                 </span>
                 <Snackbar

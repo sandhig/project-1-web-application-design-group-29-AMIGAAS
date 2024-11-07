@@ -59,31 +59,31 @@ function Header() {
             size="small"
           />
           <IconButton type="submit" aria-label="search" onClick={handleSearch}>
-            <SearchIcon style={{ fill: "white" }} />
+            <SearchIcon className="search-icon" />
           </IconButton>
         </div>
         <div className="profile-container">
           <Link to="/products/create" className="icon-button">
             <IconButton aria-label="message">
-              <AddCircleOutlineIcon style={{ fill: "white", fontSize: "larger" }} />
+              <AddCircleOutlineIcon className="icon"/>
             </IconButton>
             <p>New Listing</p>
           </Link>
           <Link to="/messages" className="icon-button">
             <IconButton aria-label="message">
-              <MessageIcon style={{ fill: "white", fontSize: "larger" }} />
+              <MessageIcon className="icon"/>
             </IconButton>
             <p>Messages</p>
           </Link>
           <Link to="/wishlist" className="icon-button">
             <IconButton aria-label="message">
-              <FavoriteIcon style={{ fill: "white", fontSize: "larger" }} />
+              <FavoriteIcon className="icon"/>
             </IconButton>
             <p>My Wishlist</p>
           </Link>
           <div className="icon-button">
             <IconButton aria-label="message" onClick={handleLogout}>
-              <LogoutIcon style={{ fill: "white", fontSize: "larger" }} />
+              <LogoutIcon className="icon"/>
             </IconButton>
             <p>Logout</p>
           </div>

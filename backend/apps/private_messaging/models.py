@@ -14,6 +14,14 @@ class Conversation(models.Model):
             if other_profile.user:
                 return f"{other_profile.user.first_name} {other_profile.user.last_name}"
         return 'Unknown'
+    
+    def get_other_participant_id(self, current_user):
+        other_participants = self.participants.exclude(id=current_user.id)
+        if other_participants.exists():
+            other_profile = other_participants.first()
+            if other_profile.user:
+                return other_profile.user.id
+        return None
 
     def get_other_participant_photo(self, current_user):
         other_participants = self.participants.exclude(id=current_user.id)

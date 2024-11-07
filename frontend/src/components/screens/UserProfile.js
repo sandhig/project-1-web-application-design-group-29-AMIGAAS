@@ -1,11 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { useUser } from '../../context/UserContext';
-import "./UserProfile.css"
+import "./UserProfile.css";
+import './Products.css';
 import Header from "../../components/Header"
-import { Button } from '@mui/material';
+import { Button, Snackbar } from '@mui/material';
 import axios from 'axios';
-
+import { IoSend } from "react-icons/io5";
+import IconButton from "@mui/material/IconButton";
+import ArrowRightIcon from '@mui/icons-material/ArrowRight';
+import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 
 function UserProfile() {
     const { userId } = useParams();
@@ -13,51 +17,96 @@ function UserProfile() {
     const [products, setProducts] = useState([]);
     const [soldProducts, setSoldProducts] = useState([]);
     const navigate = useNavigate();
+    const [message, setMessage] = useState('');
+    const [confirmation, setConfirmation] = useState(false);
+    const [loading, setLoading] = useState(true);
 
     const { currentUser } = useUser();
     const token = localStorage.getItem('authToken');
+    const currentScrollRef = useRef();
+    const pastScrollRef = useRef();
 
     useEffect(() => {
         if (currentUser) {
             fetch(`http://3.87.240.14:8000/api/user/${userId}/`, {
                 method: 'GET',
                 headers: {
-                  'Authorization': `Token ${token}`,
-                  'Content-Type': 'application/json',
-                },
-              })
-            .then(response => response.json())
-            .then((data) => {
-                setUser(data);
-
-                fetch(`http://3.87.240.14:8000/api/user-products/${userId}/`, {
-                    method: 'GET',
-                    headers: {
                     'Authorization': `Token ${token}`,
                     'Content-Type': 'application/json',
-                    },
-                })
+                },
+            })
                 .then(response => response.json())
-                .then(data => setProducts(data));
+                .then((data) => {
+                    setUser(data);
 
-                if (userId == currentUser.id) {
-                    fetch(`http://3.87.240.14:8000/api/sold-products/`, {
+                    fetch(`http://3.87.240.14:8000/api/user-products/${userId}/`, {
                         method: 'GET',
                         headers: {
-                        'Authorization': `Token ${token}`,
-                        'Content-Type': 'application/json',
+                            'Authorization': `Token ${token}`,
+                            'Content-Type': 'application/json',
                         },
                     })
-                    .then(response => response.json())
-                    .then(data => setSoldProducts(data));
-                }
-            });
+                        .then(response => response.json())
+                        .then(data => setProducts(data));
+
+                    if (userId == currentUser.id) {
+                        fetch(`http://3.87.240.14:8000/api/sold-products/`, {
+                            method: 'GET',
+                            headers: {
+                                'Authorization': `Token ${token}`,
+                                'Content-Type': 'application/json',
+                            },
+                        })
+                            .then(response => response.json())
+                            .then(data => setSoldProducts(data));
+                    }
+                    setLoading(false);
+                });
         }
 
     }, [userId, currentUser, token]);
 
-    const handleMessageMe = () => {
-        navigate(`/messages?userId=${userId}`);
+    useEffect(() => {
+        if (user && currentUser) {
+            setMessage(`Hi ${user.first_name}, I'm interested in purchasing a product.`);
+        }
+    }, [user, currentUser]);
+
+    const sendMessageToSeller = () => {
+        if (userId) {
+
+            // Fetch or create conversation with seller
+            fetch(`http://3.87.240.14:8000/api/conversation/start/${userId}/`, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                    'Content-Type': 'application/json',
+                }
+            })
+                .then(response => response.json())
+                .then(data => {
+
+                    axios.post('http://3.87.240.14:8000/api/send_message/', {
+                        conversation_id: data.conversation_id,
+                        content: message,
+                    }, {
+                        headers: {
+                            'Authorization': `Token ${token}`,
+                            'Content-Type': 'application/json',
+                        },
+                    })
+                        .then(response => {
+                            console.log('Message sent:', response.data);
+                            setConfirmation(true);
+                        })
+                        .catch(error => console.error('Error sending message:', error));
+
+                });
+        }
+    };
+
+    const handleCloseConfirmation = () => {
+        setConfirmation(false);
     };
 
     const handleEditProfile = () => {
@@ -68,107 +117,173 @@ function UserProfile() {
         navigate(`/products/${id}`);
     };
 
+    const scrollLeft = (ref) => {
+        const itemWidth = ref.current.children[0].offsetWidth;
+        ref.current.scrollBy({ left: -itemWidth, behavior: "smooth" });
+    };
+
+    const scrollRight = (ref) => {
+        const itemWidth = ref.current.children[0].offsetWidth;
+        ref.current.scrollBy({ left: itemWidth, behavior: "smooth" });
+    };
+
     return (
         <div>
             <Header />
 
-            {!user ? (<div>Loading...</div>) : (
-
             <div className="profile-page-container">
 
                 <div className="profile-info-container">
+                    {!user ? (<span className="profile-loader"></span>) : (
+                        <>
+                            <div className="profile-header">
 
-                    <div className="profile-header">
+                                <div className="profile-icon">
+                                    {user.profilePic ? (
+                                        <img src={user.profilePic} alt="Profile" className="profile-pic" />
+                                    ) : (
+                                        <img src="/profile-icon.jpg" alt="Default Profile" className="profile-pic" />
+                                    )}
+                                </div>
 
-                        <div className="profile-icon">
-                            {user.profilePic ? (
-                                <img src={user.profilePic} alt="Profile" className="profile-pic" />
-                            ) : (
-                                <img src="/profile-icon.jpg" alt="Default Profile" className="profile-pic" />
-                            )}
-                        </div>
-                        
-                        <div className="profile-name">
+                                <div className="profile-name">
 
-                            <h1>{user.first_name} {user.last_name}</h1>
-                            {/*
-                            {parseInt(currentUser.id) !== parseInt(userId) && (
-                                <Button onClick={handleMessageMe} variant="outlined">
-                                    Send Message
-                                </Button>
-                            )}
-                            */}
+                                    <h1>{user.first_name} {user.last_name}</h1>
 
-                            {parseInt(currentUser.id) == parseInt(userId) && (
-                                <Button onClick={handleEditProfile} variant="outlined">
-                                    Edit Profile
-                                </Button>
-                            )}
-                            
-                        </div>
-                        
-                    </div>
+                                    {parseInt(currentUser.id) !== parseInt(userId) && (
+                                        <div className="text-input">
+                                            <input type="text" value={message} onChange={e => setMessage(e.target.value)}
+                                                onKeyPress={e => {
+                                                    if (e.key === 'Enter') {
+                                                        sendMessageToSeller()
+                                                    }
+                                                }}
+                                            />
+                                            <button onClick={() => sendMessageToSeller()}><IoSend /></button>
+                                        </div>
+                                    )}
 
-                    <span style={{fontWeight:"bold", marginBottom:"10px"}}>About me</span>
-                    <p>{user.bio || "This user hasn't added a bio yet."}</p>
-                    
-                    <span style={{fontWeight:"bold", marginBottom:"10px", marginTop:"30px"}}>Email</span>
-                    <p>{user.email}</p>
+                                    {parseInt(currentUser.id) == parseInt(userId) && (
+                                        <Button onClick={handleEditProfile} variant="outlined">
+                                            Edit Profile
+                                        </Button>
+                                    )}
 
-                    <span style={{fontWeight:"bold", marginBottom:"10px", marginTop:"30px"}}>Joined</span>
-                    <p>{(new Date(user.date_joined)).toLocaleDateString(undefined, { year: 'numeric', month: 'long' })}</p>
-                    
+                                </div>
+
+                            </div>
+
+                            <span style={{ fontWeight: "bold", marginBottom: "10px" }}>About me</span>
+                            <p>{user.bio || "This user hasn't added a bio yet."}</p>
+
+                            <span style={{ fontWeight: "bold", marginBottom: "10px", marginTop: "30px" }}>Email</span>
+                            <p>{user.email}</p>
+
+                            <span style={{ fontWeight: "bold", marginBottom: "10px", marginTop: "30px" }}>Joined</span>
+                            <p>{(new Date(user.date_joined)).toLocaleDateString(undefined, { year: 'numeric', month: 'long' })}</p>
+                        </>)}
                 </div>
 
                 <div className="listings-info-container">
 
                     {parseInt(currentUser.id) == parseInt(userId) ? (
-                        <h2 style={{marginTop:"0"}}>My Current Listings</h2>
+                        <h2 style={{ margin: "0" }}>My Current Listings</h2>
                     ) : (
-                        <h2 style={{marginTop:"0"}}>{user.first_name}'s Listings</h2>
+                        <h2 style={{ margin: "0" }}>{user.first_name}'s Listings</h2>
                     )}
 
-                    <div className="profile-products-list">
-                        {products.map(product => (
-                            <div key={product.id} className="profile-product-item" onClick={() => handleOpenProduct(product.id)}>
-                                    {product.image_url ? 
-                                    (<img className="profile-product-image" src={product.image_url}></img>) 
-                                    : <img className="profile-product-image" src="/images/no-image-icon.png"></img>}
-                                    
-                                    <div className="product-text">
-                                        <div className="product-price">${product.price}</div>
-                                        <div className="product-title">{product.name}</div>
-                                        <div className="product-location">{product.pickup_location}</div>
-                                    </div>
-                            </div>
-                        ))}
+                    <div style={{ display: "flex", alignItems: "center" }}>
+
+                        <IconButton onClick={() => scrollLeft(currentScrollRef)}>
+                            <ArrowLeftIcon style={{ fontSize: "xxx-large" }} />
+                        </IconButton>
+
+                        <div className="scroll-container" ref={currentScrollRef}>
+                            {loading ? (
+                                <span className="product-loader"></span>
+                            ) : (
+                                <>
+                                    {products.map(product => (
+                                        <div key={product.id} className="product-item">
+                                            <div onClick={() => handleOpenProduct(product.id)}>
+
+                                                {product.image_url ?
+                                                    (<img className="product-image" src={product.image_url}></img>)
+                                                    : <img className="product-image" src="/images/no-image-icon.png"></img>}
+
+                                                <div className="product-text">
+                                                    <div className="product-price">${product.price}</div>
+                                                    <div className="product-title">{product.name}</div>
+                                                    <div className="product-location">{product.pickup_location}</div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </>
+                            )}
+                        </div>
+
+                        <IconButton onClick={() => scrollRight(currentScrollRef)}>
+                            <ArrowRightIcon style={{ fontSize: "xxx-large" }} />
+                        </IconButton>
+
                     </div>
 
                     {parseInt(currentUser.id) == parseInt(userId) && (
-                        <h2>Past Listings</h2>
-                    )}
+                        <>
+                            <h2 style={{ marginBottom: "0" }}>My Past Listings</h2>
 
-                    <div className="profile-products-list">
-                        {soldProducts.map(product => (
-                            <div key={product.id} className="profile-product-item" onClick={() => handleOpenProduct(product.id)}>
-                                    {product.image_url ? 
-                                    (<img className="profile-product-image" src={product.image_url}></img>) 
-                                    : <img className="profile-product-image" src="/images/no-image-icon.png"></img>}
-                                    
-                                    <div className="product-text">
-                                        <div className="product-price">${product.price}</div>
-                                        <div className="product-title">{product.name}</div>
-                                        <div className="product-location">{product.pickup_location}</div>
-                                    </div>
+                            <div style={{ display: "flex", alignItems: "center" }}>
+
+                                <IconButton onClick={() => scrollLeft(currentScrollRef)}>
+                                    <ArrowLeftIcon style={{ fontSize: "xxx-large" }} />
+                                </IconButton>
+
+                                <div className="scroll-container" ref={currentScrollRef}>
+                                    {loading ? (
+                                        <span className="product-loader"></span>
+                                    ) : (
+                                        <>
+                                            {soldProducts.map(product => (
+                                                <div key={product.id} className="product-item">
+                                                    <div onClick={() => handleOpenProduct(product.id)}>
+
+                                                        {product.image_url ?
+                                                            (<img className="product-image" src={product.image_url}></img>)
+                                                            : <img className="product-image" src="/images/no-image-icon.png"></img>}
+
+                                                        <div className="product-text">
+                                                            <div className="product-price">${product.price}</div>
+                                                            <div className="product-title">{product.name}</div>
+                                                            <div className="product-location">{product.pickup_location}</div>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            ))}
+                                        </>
+                                    )}
+                                </div>
+
+                                <IconButton onClick={() => scrollRight(currentScrollRef)}>
+                                    <ArrowRightIcon style={{ fontSize: "xxx-large" }} />
+                                </IconButton>
+
                             </div>
-                        ))}
-                    </div>
+                        </>
+                    )}
 
                 </div>
 
             </div>
-            )}
-                    
+
+            <Snackbar
+                open={confirmation}
+                autoHideDuration={3000}
+                onClose={handleCloseConfirmation}
+                message="Message sent successfully!"
+                anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+            />
+
         </div>
     );
 }
