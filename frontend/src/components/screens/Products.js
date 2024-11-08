@@ -10,6 +10,8 @@ import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import Header from "../../components/Header"
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import { Link } from 'react-router-dom';
+
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -83,15 +85,18 @@ const Products = () => {
     <div>
       <Header />
       <div className="product-grid">
-          {currentUser ? (<h1 style={{textAlign: "left", padding: "0 45px", margin: "35px 0 0 0"}}>{greeting}, {currentUser.first_name}</h1>) : null} 
           
-          {currentUser && (
-              <div className="help-settings-container">
-                  <Link to="/help-settings" className="help-settings-button">
-                      Help & Settings
-                  </Link>
-              </div>
-          )}
+          {currentUser ? (
+              <div className="header-container">
+                  <h1 style={{ textAlign: "left", padding: "0 45px", margin: "35px 0 0 0" }}>
+                      {greeting}, {currentUser.first_name}
+                  </h1>
+                  <div className="help-settings-container">
+                      <Link to="/help-settings" className="help-settings-button">
+                          Help & Settings
+                      </Link>
+                  </div>
+              </div>) : null}
 
           <div className="carousel-container">
             <Carousel

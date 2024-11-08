@@ -237,15 +237,23 @@ a:active {
     }
 } 
 
+/* Container for greeting and Help & Settings button */
+.header-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 45px;
+    margin: 35px 0;
+}
+
+/* Help & Settings Button Styles */
 .help-settings-container {
-    position: absolute;
-    top: 20px;
-    right: 45px; /* Adjusted to align with the right side of the header */
+    margin-left: auto;
 }
 
 .help-settings-button {
     font-size: 1rem;
-    color: #00204E; /* navy blue for consistency */
+    color: #00204E; /* Navy blue */
     padding: 8px 16px;
     border: 1px solid #00204E;
     border-radius: 5px;
