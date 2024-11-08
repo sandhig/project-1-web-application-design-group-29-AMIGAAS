@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import HeaderPre from "../../HeaderPre"
-import "./UsersSignUp.css"; 
+import "./UsersSignUp.css";
 import { useUser } from '../../../context/UserContext';
 
 const UsersLogin = () => {
@@ -11,7 +11,7 @@ const UsersLogin = () => {
     email: '',
     password: '',
   });
-  
+
   const [errorMessage, setErrorMessage] = useState('');
   const [formErrors, setFormErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
@@ -25,7 +25,7 @@ const UsersLogin = () => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@mail\.utoronto\.ca$/;
     return emailRegex.test(email) ? '' : 'Please enter a valid UofT email address.';
   };
-  
+
   const validatePassword = (password) => {
     if (!password) return 'Please enter your password.';
     else return '';
@@ -58,6 +58,10 @@ const UsersLogin = () => {
     navigate('/profiles/signup');
   };
 
+  const handleForgotPassword = () => {
+    navigate('/password_reset_request');
+  }
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -84,36 +88,36 @@ const UsersLogin = () => {
         const token = response.data.token;
         localStorage.setItem('authToken', token);
         fetchUserData(token);
-        
+
         setSuccessMessage('Login successful!');
         setErrorMessage('');
         setTimeout(() => {
           navigate('/products');  //was /homepage is not /products
-        }, 2000);  
+        }, 2000);
 
       }
     } catch (error) {
       if (error.response && error.response.data) {
         const backendErrors = error.response.data;
         const fieldErrors = {};
-  
+
         // generic errors
         if (backendErrors.non_field_errors) {
           setErrorMessage(backendErrors.non_field_errors.join(' '));
         } else {
           setErrorMessage('');
         }
-  
+
         // form field specific errors
         Object.keys(backendErrors).forEach(key => {
           if (key !== 'non_field_errors') {
             console.log(Object.keys(backendErrors[key]));
             const fieldError = backendErrors[key];
 
-              fieldErrors[Object.keys(fieldError)] = Object.values(fieldError).map(errorArray => errorArray.join(' ')).join(' ');
+            fieldErrors[Object.keys(fieldError)] = Object.values(fieldError).map(errorArray => errorArray.join(' ')).join(' ');
           }
         });
-        
+
         setFormErrors(fieldErrors);
       } else {
         // in case of unexpected errors
@@ -157,6 +161,14 @@ const UsersLogin = () => {
             helperText={formErrors.password}
           />
           <Button
+            name="signup"
+            variant="text"
+            color="primary"
+            onClick={handleForgotPassword}
+          >
+            <Typography color='primary'>Forgot Password?</Typography>
+          </Button>
+          <Button
             name="login"
             type="submit"
             variant="contained"
@@ -166,6 +178,7 @@ const UsersLogin = () => {
             {isSubmitting || successMessage ? 'Logging In...' : 'Login'}
           </Button>
         </form>
+
         <div className='side-by-side'>
           <div className='typography'>
             <Typography>Not a User?</Typography>

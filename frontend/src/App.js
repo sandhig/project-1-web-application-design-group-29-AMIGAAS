@@ -19,6 +19,8 @@ import ProductListing from './components/screens/products/ProductListing';
 import SearchResults from './components/screens/products/SearchResults';
 import Wishlist from './components/screens/products/Wishlist';
 import CategoryPage from './components/screens/products/CategoryPage';
+import PasswordReset from './components/screens/profiles/PasswordReset';
+import PasswordResetConfirm from './components/screens/profiles/PasswordResetConfirm';
 
 const theme = createTheme({
   palette: {
@@ -42,6 +44,8 @@ function App() {
                 <Route path = "/" element={<WelcomePage/>}></Route>
                 <Route path = "/profiles/signup" element={<UsersSignUp/>}></Route>
                 <Route path = "/profiles/verify-email" element={<EmailVerification/>}></Route>
+                <Route path = "/password_reset_request" element={<PasswordReset/>}></Route>
+                <Route path = "/password_reset_confirm" element={<PasswordResetConfirm/>}></Route>
                 <Route path = "/profiles/login" element={<UsersLogin/>}></Route>
 
                 {/* Protected pages */}
