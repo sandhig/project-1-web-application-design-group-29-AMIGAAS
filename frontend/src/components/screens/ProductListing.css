@@ -127,6 +127,30 @@ hr {
 
 .align-left {
     display: flex;
-    flex-direction: column; /* Arrange children in a column */
+    flex-direction: column; /* Arrange in a column */
     text-align: left;
+}
+
+/* Help & Settings Button */
+.help-settings-button-container {
+    position: fixed; /* Fixes the button in the viewport */
+    top: 15px;       /* Adjust the vertical position to avoid overlapping with the header */
+    right: 20px;     /* Adjust the horizontal position */
+    z-index: 1000;   /* Ensure it appears above other elements */
+}
+
+.help-settings-button {
+    font-size: 1rem;
+    color: #001f3f; /* Consistent dark blue from your primary color */
+    padding: 8px 16px;
+    border: 1px solid #001f3f; /* Dark blue border */
+    border-radius: 5px;
+    text-decoration: none;
+    background-color: #fff;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.help-settings-button:hover {
+    background-color: #001f3f; /* Dark blue on hover */
+    color: #ffffff;            /* White text on hover */
 }
