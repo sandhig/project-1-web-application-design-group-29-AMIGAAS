@@ -50,7 +50,127 @@ We will be tracking our progress, report bugs and fixes, as well as maintain an 
 
 ## File Structure 
 
-TBD. 
+```sh
+PROJECT1-WEB-APPLICATION-DESIGN-GROUP-29-AMIGAAS:.
+|   .gitignore
+|   CODE_OF_CONDUCT.md
+|   CONTRIBUTION.md
+|   db.sqlite3
+|   dump.rdb
+|   package-lock.json
+|   package.json
+|   README.md   
++---backend
+|   |   .DS_Store
+|   |   .gitignore
+|   |   django_debug.log
+|   |   manage.py
+|   |   requirements.txt  
+|   +---apps 
+|   |   +---private_messaging
+|   |   |   |   admin.py
+|   |   |   |   apps.py
+|   |   |   |   consumers.py
+|   |   |   |   models.py
+|   |   |   |   routing.py
+|   |   |   |   serializers.py
+|   |   |   |   tests.py
+|   |   |   |   urls.py
+|   |   |   |   views.py
+|   |   |   |   __init__.py          
+|   |   +---products
+|   |   |   |   admin.py
+|   |   |   |   apps.py
+|   |   |   |   models.py
+|   |   |   |   serializers.py
+|   |   |   |   tests.py
+|   |   |   |   test_image_textbook.jpg
+|   |   |   |   urls.py
+|   |   |   |   views.py
+|   |   |   |   __init__.py
+|   |   +---profiles
+|   |       |   admin.py
+|   |       |   apps.py
+|   |       |   models.py
+|   |       |   serializers.py
+|   |       |   tests.py
+|   |       |   test_profile_pic.jpg
+|   |       |   urls.py
+|   |       |   views.py
+|   |       |   __init__.py              
+|   \---toogoodtothrow
+|       |   asgi.py
+|       |   settings.py
+|       |   urls.py
+|       |   wsgi.py
+|       |   __init__.py
++---frontend       
+|   +---public
+|   |   |   favicon.ico
+|   |   |   index.html
+|   |   |   logo192.png
+|   |   |   logo512.png
+|   |   |   manifest.json
+|   |   |   profile-icon.jpg
+|   |   |   robots.txt
+|   |   |   uoft-logo4.png
+|   |   \---images
+|   |       |   logo-icon.png
+|   |       |   logo-white.png
+|   |       |   logo.png
+|   |       |   no-image-icon.png
+|   |       |   profile.png
+|   |       |   
+|   |       \---carousel
+|   |               1.png
+|   |               2.png
+|   |               3.png         
+|   \---src
+|       |   App.css
+|       |   App.js
+|       |   App.test.js
+|       |   index.css
+|       |   index.js
+|       |   logo.svg
+|       |   reportWebVitals.js
+|       |   setupTests.js
+|       +---components
+|       |   |   Header.css
+|       |   |   Header.js
+|       |   |   HeaderPre.js
+|       |   |   PrivateRoute.js
+|       |   |   UploadAndDisplayImage.js   
+|       |   \---screens
+|       |           CreateListing.css
+|       |           CreateListing.js
+|       |           EditProfile.css
+|       |           EditProfile.js
+|       |           EmailVerification.js
+|       |           HomeScreen.js
+|       |           PrivateMessage.css
+|       |           PrivateMessaging.js
+|       |           ProductEdit.js
+|       |           ProductListing.css
+|       |           ProductListing.js
+|       |           Products.css
+|       |           Products.js
+|       |           ProductView.js
+|       |           SearchResults.js
+|       |           UserProfile.css
+|       |           UserProfile.js
+|       |           UsersLogin.js
+|       |           UsersLogOut.js
+|       |           UsersSignUp.css
+|       |           UsersSignUp.js
+|       |           WelcomePage.css
+|       |           WelcomePage.js
+|       |           Wishlist.css
+|       |           Wishlist.js        
+|       +---context
+|       |       UserContext.js
+|       \---tests
+|               test_products.py
+```
 
 ## Contributing
 
