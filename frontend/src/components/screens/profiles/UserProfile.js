@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useUser } from '../../context/UserContext';
+import { useUser } from '../../../context/UserContext';
 import "./UserProfile.css";
-import './Products.css';
-import Header from "../../components/Header"
+import '../products/Products.css';
+import Header from "../../Header"
 import { Button, Snackbar } from '@mui/material';
 import axios from 'axios';
 import { IoSend } from "react-icons/io5";
@@ -190,7 +190,7 @@ function UserProfile() {
                     {parseInt(currentUser.id) == parseInt(userId) ? (
                         <h2 style={{ margin: "0" }}>My Current Listings</h2>
                     ) : (
-                        <h2 style={{ margin: "0" }}>{user.first_name}'s Listings</h2>
+                        <>{user && (<h2 style={{ margin: "0" }}>{user.first_name}'s Listings</h2>)}</>
                     )}
 
                     <div style={{ display: "flex", alignItems: "center" }}>

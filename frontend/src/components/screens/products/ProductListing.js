@@ -4,8 +4,8 @@ import IconButton from "@mui/material/IconButton";
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import './ProductListing.css';
 import { useParams } from 'react-router-dom';
-import { useUser } from '../../context/UserContext';
-import Header from "../../components/Header";
+import { useUser } from '../../../context/UserContext';
+import Header from "../../Header";
 import ProductView from "./ProductView";
 import ProductEdit from './ProductEdit';
 

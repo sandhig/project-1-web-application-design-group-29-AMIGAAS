@@ -1,3 +1,10 @@
+.header-container {
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0px 2px 5px #00000041;
+    position: relative;
+}
+
 .header {
     height: 70px;
     padding: 10px 20px;
@@ -5,7 +12,6 @@
     display: flex;
     background-color: #001f3f;
     justify-content: space-between;
-    box-shadow: 0px 2px 5px #00000077;
     overflow: auto;
     position: relative;
     z-index: 100;
@@ -110,5 +116,22 @@
 
     &:hover {
         fill: #007FA3 !important;
+    }
+}
+
+.header-categories {
+    background-color: white;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    padding: 0 30px;
+
+    h2 {
+        font-size: 15px;
+
+        &:hover {
+            cursor: pointer;
+            color: #007FA3;
+        }
     }
 }
