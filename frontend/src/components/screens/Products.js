@@ -85,6 +85,14 @@ const Products = () => {
       <div className="product-grid">
           {currentUser ? (<h1 style={{textAlign: "left", padding: "0 45px", margin: "35px 0 0 0"}}>{greeting}, {currentUser.first_name}</h1>) : null} 
           
+          {currentUser && (
+              <div className="help-settings-container">
+                  <Link to="/help-settings" className="help-settings-button">
+                      Help & Settings
+                  </Link>
+              </div>
+          )}
+
           <div className="carousel-container">
             <Carousel
               responsive={responsive}
