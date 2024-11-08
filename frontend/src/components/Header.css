@@ -1,3 +1,10 @@
+@font-face {
+    font-family: 'Zombies';
+    src: url('./fonts/Zombies.ttf') format('truetype');
+    font-style: normal;
+}
+
+
 .header {
     height: 70px;
     padding: 10px 20px;
@@ -21,7 +28,7 @@
 }
 
 .header-logo {
-    height: 60px;
+    height: 70px;
 }
 
 @media (max-width: 970px) {
@@ -31,9 +38,9 @@
 }
 
 .site-title {
-    font-size: larger;
+    font-size: x-large;
+    font-family: 'Zombies';
     color: white;
-    font-weight: 800;
 }
 
 .search-container {

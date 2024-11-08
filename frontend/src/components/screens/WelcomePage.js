@@ -1,3 +1,4 @@
+import {Button, Stack} from '@mui/material';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import './WelcomePage.css';  // CSS for styling
@@ -19,12 +20,36 @@ function WelcomePage() {
             <HeaderPre />
         
             <div className="welcome-container">
-                <img src="/uoft-logo4.png" alt="Website Logo" className="welcome-logo" />
-                <h1 className="website-name">TooGoodToThrow</h1>
-                <div className="button-group">
-                    <button className="welcome-button" onClick={handleSignUp}>Sign Up</button>
-                    <button className="welcome-button" onClick={handleLogin}>Log In</button>
-                </div>
+                <img src="/images/welcome-page-logo-navy-2.gif" alt="Website Logo" className="welcome-logo" />
+                
+                <Stack direction="row" spacing={2}>
+                    <Button
+                        name="signup-button"
+                        variant="contained"
+                        onClick={handleSignUp}
+                        sx={{
+                            backgroundColor: '#00204E',         // Default color
+                            '&:hover': {
+                            backgroundColor: '#007fa3',       // Custom hover color
+                            },
+                        }}
+                    >
+                        Sign Up
+                    </Button>
+                    <Button
+                        name="login-button"
+                        variant="contained"
+                        onClick={handleLogin}
+                        sx={{
+                            backgroundColor: '#00204E',         // Default color
+                            '&:hover': {
+                            backgroundColor: '#007fa3',       // Custom hover color
+                            },
+                        }}
+                    >
+                        Log In
+                    </Button>
+                </Stack>
             </div>
         </div>
     );

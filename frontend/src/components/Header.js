@@ -44,8 +44,8 @@ function Header() {
       <div className="header">
         <div className="logo-container">
           <Link to="/products" style={{display:'flex', alignItems:'center', gap:'20px'}}>
-            <img className="header-logo" src="/images/logo-white.png"></img>
-            <div className="site-title">Too Good To Throw</div>
+            <img className="header-logo" src="/images/header-logo-navy-cyan-white.png" alt="Website Logo"></img>
+            <div className="site-title">TOO GOOD TO THROW</div>
           </Link>
         </div>
         <div className="search-container">
