@@ -20,6 +20,8 @@ import EditProfile from './components/screens/EditProfile';
 import ProductListing from './components/screens/ProductListing';
 import SearchResults from './components/screens/SearchResults';
 import Wishlist from './components/screens/Wishlist';
+import HelpAndSettings from './components/screens/HelpAndSettings'; 
+
 
 const theme = createTheme({
   palette: {
@@ -57,6 +59,7 @@ function App() {
                 <Route path="/profile/:userId" element={<UserProfile />} />
                 <Route path="/profiles/edit-profile" element={<EditProfile />} />
                 <Route path="/wishlist" element={<Wishlist />} />
+                <Route path="/help-settings" element={<HelpAndSettings />} />
               </Routes>
             </div>
             
