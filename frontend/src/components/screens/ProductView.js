@@ -91,14 +91,7 @@ const ProductView = ({
     }, [product, currentUser]);
     
     return (
-        <>
-        {/* Help & Settings Button */}
-        <div className="help-settings-button-container">
-            <Link to="/help-settings" className="help-settings-button">
-                Help & Settings
-            </Link>
-        </div>
-            
+        <>    
         {product ? (
             <div className="listing-container">
                 <div className="listing-image-container">
