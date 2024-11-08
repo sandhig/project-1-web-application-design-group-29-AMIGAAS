@@ -37,27 +37,23 @@ function HomeScreen() {
       return (
         <div>
           <Header />
-          {/* Flex container for welcome message and button */}
-          <div className="welcome-container">
-                <h1>Welcome, {currentUser.first_name}!</h1>
+          {/* Container for welcome message and Help & Settings button */}
+          <div className="welcome-settings-container">
+                <h1 className="welcome-message">Welcome, {currentUser.first_name}!</h1>
                 <Link to="/help-settings" className="help-settings-button">
                     Help & Settings
                 </Link>
-            </div>
+          </div>
 
-            <h2>Users:</h2>
-            <ul>
-                {profiles.map(profile => (
-                    <li key={profile.user_id}>
-                        <Link to={`/user/${profile.user_id}`}>
-                            {profile.first_name} {profile.last_name}
-                        </Link>
-                    </li>
-                ))}
-            </ul>
-
+          <h2>Users:</h2>
+          <ul>
+              {profiles.map(profile => (
+                  <li key={profile.user_id}>
+                      <Link to={`/user/${profile.user_id}`}>{profile.first_name} {profile.last_name}</Link>
+                  </li>
+              ))}
+          </ul>
         </div>
-        
       );
 }
 
