@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import './Header.css'
 import { useUser } from '../context/UserContext';
@@ -17,6 +17,8 @@ function Header() {
   const [unreadMessagesCount, setUnreadMessagesCount] = useState(0);
   const [searchTerm, setSearchTerm] = useState("");
   const navigate = useNavigate();
+  const isUnmounting = useRef(false);
+  const ws = useRef(null);
 
   useEffect(() => {
   }, [currentUser]);
@@ -43,6 +45,54 @@ function Header() {
     logout();
     navigate('/profiles/login');
   };
+
+  useEffect(() => {
+    const token = localStorage.getItem('authToken');
+
+    const fetchUnreadMessageCount = async () => {
+      try {
+        const response = await fetch('http://3.87.240.14:8000/api/unread_messages/', {
+          headers: {
+            'Authorization': `Token ${token}`,
+            'Content-Type': 'application/json',
+          }
+        });
+
+        const data = await response.json();
+        setUnreadMessagesCount(data.unread_message_count);
+      } catch (error) {
+        console.error("Error fetching unread messages count:", error);
+      }
+    };
+
+    if (currentUser && token) {
+      fetchUnreadMessageCount();
+
+      ws.current = new WebSocket(`ws://3.87.240.14:8000/ws/chat/user/${currentUser.id}/`);
+
+      ws.current.onopen = function () {
+        console.log("WebSocket connection opened");
+      };
+
+      ws.current.onmessage = function () {
+        fetchUnreadMessageCount();
+      };
+
+      ws.current.onclose = function () {
+        console.log("WebSocket connection closed");
+      };
+
+      ws.current.onerror = (error) => {
+        console.error("WebSocket error:", error);
+      };
+
+      return () => {
+        if (ws.current) {
+          ws.current.close();
+        }
+      };
+    }
+  }, [currentUser]);
 
   return (
     <div className="header-container">
@@ -81,9 +131,14 @@ function Header() {
           </Link>
 
           <Link to="/messages" className="icon-button">
-            <IconButton aria-label="message">
-              <MessageIcon className="icon" />
-            </IconButton>
+            <div className="message-button-container">
+              <IconButton aria-label="message">
+                <MessageIcon className="icon" />
+              </IconButton>
+              {unreadMessagesCount > 0 && (
+                <span className="bubble">{unreadMessagesCount}</span>
+              )}
+            </div>
             <p>Messages</p>
           </Link>
 
@@ -117,14 +172,14 @@ function Header() {
       </div>
 
       <div className="header-categories">
-        <h2>New Arrivals</h2>
+        <h2></h2>
         <h2 onClick={() => handleCategorySelect('textbook')}>Textbooks</h2>
         <h2 onClick={() => handleCategorySelect('clothing')}>Clothing</h2>
         <h2 onClick={() => handleCategorySelect('furniture')}>Furniture</h2>
         <h2 onClick={() => handleCategorySelect('electronics')}>Electronics</h2>
         <h2 onClick={() => handleCategorySelect('stationary')}>Stationary</h2>
         <h2 onClick={() => handleCategorySelect('miscellaneous')}>Miscellaneous</h2>
-        <h2>Free Items</h2>
+        <h2></h2>
       </div>
     </div>
   );

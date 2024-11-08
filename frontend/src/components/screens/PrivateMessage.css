@@ -1,5 +1,5 @@
 .container {
-    height: calc(100% - 90px);
+    height: calc(100% - 132px);
     display: flex;
     flex-direction: row;
     text-align: left;
@@ -8,7 +8,7 @@
 .conversations {
     width: 30%;
     min-width: 300px;
-    padding: 20px;
+    padding: 0 20px;
 
     div {
         border-radius: 10px;
