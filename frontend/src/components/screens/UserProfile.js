@@ -118,6 +118,7 @@ function UserProfile() {
     };
 
     const scrollLeft = (ref) => {
+        console.log(ref)
         const itemWidth = ref.current.children[0].offsetWidth;
         ref.current.scrollBy({ left: -itemWidth, behavior: "smooth" });
     };
@@ -235,11 +236,11 @@ function UserProfile() {
 
                             <div style={{ display: "flex", alignItems: "center" }}>
 
-                                <IconButton onClick={() => scrollLeft(currentScrollRef)}>
+                                <IconButton onClick={() => scrollLeft(pastScrollRef)}>
                                     <ArrowLeftIcon style={{ fontSize: "xxx-large" }} />
                                 </IconButton>
 
-                                <div className="scroll-container" ref={currentScrollRef}>
+                                <div className="scroll-container" ref={pastScrollRef}>
                                     {loading ? (
                                         <span className="product-loader"></span>
                                     ) : (
@@ -264,7 +265,7 @@ function UserProfile() {
                                     )}
                                 </div>
 
-                                <IconButton onClick={() => scrollRight(currentScrollRef)}>
+                                <IconButton onClick={() => scrollRight(pastScrollRef)}>
                                     <ArrowRightIcon style={{ fontSize: "xxx-large" }} />
                                 </IconButton>
 
