@@ -93,7 +93,7 @@ const Products = () => {
                   </h1>
                   <div className="help-settings-container">
                       <Link to="/help-settings" className="help-settings-button">
-                          Help & Settings
+                          Frequently Asked Questions
                       </Link>
                   </div>
               </div>) : null}
