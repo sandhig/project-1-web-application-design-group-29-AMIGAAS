@@ -20,6 +20,7 @@ import EditProfile from './components/screens/EditProfile';
 import ProductListing from './components/screens/ProductListing';
 import SearchResults from './components/screens/SearchResults';
 import Wishlist from './components/screens/Wishlist';
+import Footer from './components/Footer';
 import About from './components/screens/About';
 import FAQ from './components/screens/FAQ';
 
@@ -63,11 +64,15 @@ function App() {
                 <Route path="/about" element={<About />} />
                 <Route path="/faq" element={<FAQ />} />
               </Routes>
+              <Footer /> {/* Footer appears on every page */}
             </div>
             
-            </Router>
-          </UserProvider>
-        </ThemeProvider>
+          </Router>
+        </UserProvider>
+      </ThemeProvider>
+
+
+
       </div>
     );
   }

@@ -1,7 +1,11 @@
 import React from 'react';
 import './Footer.css'
+
 import { Button } from '@mui/material';
 import { useNavigate } from 'react-router-dom';
+import About from "./screens/About";
+import FAQ from "./screens/FAQ";
+import { Link } from 'react-router-dom'; // Import Link for navigation
 
 function Footer() {
 
