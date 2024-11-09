@@ -64,14 +64,13 @@ function App() {
                 <Route path="/about" element={<About />} />
                 <Route path="/faq" element={<FAQ />} />
               </Routes>
-              <Footer /> {/* Footer appears on every page */}
+              
             </div>
+            <Footer /> {/* Footer appears on every page */}
             
           </Router>
         </UserProvider>
       </ThemeProvider>
-
-
 
       </div>
     );
