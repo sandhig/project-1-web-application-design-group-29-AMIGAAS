@@ -41,8 +41,11 @@
   }
 }
 
+/* Make the main content area flexible */
 .App-scroll-container {
   height: 100vh;
+  flex: 1;
+  overflow-y: auto;
 }
 
 @media (max-width: 768px) {
@@ -60,8 +63,3 @@
   min-height: 100vh;
 }
 
-/* Make the main content area flexible */
-.App-scroll-container {
-  flex: 1;
-  overflow-y: auto;
-}
