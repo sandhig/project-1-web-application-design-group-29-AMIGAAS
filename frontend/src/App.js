@@ -24,7 +24,7 @@ import Wishlist from './components/screens/Wishlist';
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#001f3f', // header navy blue
+      main: '#003366', // title navy blue
     },
   },
 });
