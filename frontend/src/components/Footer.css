@@ -45,3 +45,17 @@ a:hover {
 .footer p {
     font-size: 0.9em;
 }
+
+.footer-links {
+    margin-top: 15px;
+}
+
+.footer-links .MuiButton-root {
+    background-color: #193552;
+    color: white;
+    margin: 5px;
+}
+
+.footer-links .MuiButton-root:hover {
+    background-color: #1c4d72;
+}
