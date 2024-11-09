@@ -86,7 +86,8 @@ WSGI_APPLICATION = 'toogoodtothrow.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.1/ref/settings/#databases
 
-DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD")
+# DATABASE_PASSWORD = os.getenv("DATABASE_PASSWORD")
+DATABASE_PASSWORD = 'sppA2VDWWAK3O4q7CF9i'
 
 DATABASES = {
     'default': {
@@ -188,7 +189,7 @@ REST_FRAMEWORK = {
     ]
 }
 
-SECRET_KEY = os.getenv("SECRET_KEY")
+# SECRET_KEY = os.getenv("SECRET_KEY")
 
 AWS_ACCESS_KEY_ID = 'AKIAXNGUU57HQ7X3DJKW'
 AWS_SECRET_ACCESS_KEY = SECRET_KEY
