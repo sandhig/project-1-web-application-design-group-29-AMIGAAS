@@ -1,11 +1,9 @@
 import React from 'react';
 import './Footer.css';
 import { Link } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
 
 function Footer() {
-    const navigate = useNavigate();
-
+    
     return (
         <div className="footer-container">
             <div className="company-info">
@@ -16,9 +14,9 @@ function Footer() {
             </div>
             <div className="footer-links">
                 {/* About and FAQ buttons */}
-                <Link onClick={() => navigate('/about')} style={{ marginRight: '3px' }}>About Us</Link>
+                <Link to='/about' style={{ marginRight: '3px' }}>About Us</Link>
                 <span className='separator'>|</span>
-                <Link onClick={() => navigate('/faq')} style={{ marginLeft: '3px' }}>FAQ</Link>
+                <Link to='/faq' style={{ marginLeft: '3px' }}>FAQ</Link>
             </div>
         </div>
     );
