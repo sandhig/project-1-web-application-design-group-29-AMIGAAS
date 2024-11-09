@@ -20,6 +20,9 @@ import EditProfile from './components/screens/EditProfile';
 import ProductListing from './components/screens/ProductListing';
 import SearchResults from './components/screens/SearchResults';
 import Wishlist from './components/screens/Wishlist';
+import About from './components/screens/About';
+import FAQ from './components/screens/FAQ';
+
 
 const theme = createTheme({
   palette: {
@@ -57,6 +60,8 @@ function App() {
                 <Route path="/profile/:userId" element={<UserProfile />} />
                 <Route path="/profiles/edit-profile" element={<EditProfile />} />
                 <Route path="/wishlist" element={<Wishlist />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/faq" element={<FAQ />} />
               </Routes>
             </div>
             
