@@ -501,6 +501,14 @@ class ProductViewTests(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(response.data["name"], self.product.name)
         print('Test: Get Product Detail Authenticated - PASS')
+        
+
+    def test_get_product_detail_non_existent_authenticated(self):
+        """Test that an authenticated user cannot get a product detail for a non-existent product"""
+        url = reverse('product-detail', kwargs={"pk": 9999}) # A non existent product
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        print('Test: Get Product Detail Non-Existent Authenticated - PASS')
 
 
     def test_create_product_authenticated(self):
@@ -602,5 +610,29 @@ class ProductViewTests(TestCase):
         self.assertIn(self.product_other2.name, product_names)
         self.assertNotIn(self.product.name, product_names)
         print("Test: Search Product Functionality - PASS")
+    
+
+    def test_category_filter_functionality(self):
+        """Test category filter returns products of specified category."""
+        url = self.product_list_url + '?category=Furniture'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Ensure only products with Furniture category are returned
+        product_categories = [product['category'] for product in response.data]
+        self.assertTrue(all(result == "Furniture" for result in product_categories))
+        print("Test: Category Filter Functionality - PASS")
+    
+
+    def test_search_over_category(self):
+        """Test search is prioritized over category when both are provided."""
+        url = self.product_list_url + '?search=Another&category=Electronics'
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # Make sure only search filter applied, not category
+        self.assertTrue(any('Another' in product['name'] for product in response.data))
+        print("Test: Search Over Category - PASS")
+
 
     
