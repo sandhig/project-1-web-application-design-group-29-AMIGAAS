@@ -1,11 +1,10 @@
-// FAQ.js file
 import React, { useState } from 'react';
 import Header from "../../components/Header"
 
 function FAQ() {
   const faqData = [
     { question: 'How do I buy items on this platform?', answer: 'Simply browse listings and contact the seller for further details.' },
-    { question: 'Can we meet sellers outside of UofT locations?', answer: 'For safety, we do not reccommend it, but that can be discussed with the seller of the item(s).' },
+    { question: 'Can we meet sellers outside of UofT locations?', answer: 'For safety, we do not recommend it, but that can be discussed with the seller of the item(s).' },
     // Add more FAQs as needed
   ];
 
@@ -13,7 +12,7 @@ function FAQ() {
     <div className="faq-section">
         <Header/>
          <div style={{ padding: '20px' }}></div>
-      <h2>Frequently Asked Questions</h2>
+      <h2 style={{ textAlign: 'center' }}>Frequently Asked Questions</h2>
       {faqData.map((faq, index) => (
         <FAQItem key={index} question={faq.question} answer={faq.answer} />
       ))}
@@ -27,9 +26,13 @@ function FAQItem({ question, answer }) {
   const toggleOpen = () => setIsOpen(!isOpen);
 
   return (
-    <div className="faq-item">
-      <div className="faq-question" onClick={toggleOpen}>
-        <h3>{question}</h3>
+    <div className="faq-item" style={{ textAlign: 'center' }}>
+      <div 
+        className="faq-question" 
+        onClick={toggleOpen} 
+        style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+      >
+        <h3 style={{ marginRight: '10px' }}>{question}</h3>
         <span>{isOpen ? '-' : '+'}</span>
       </div>
       {isOpen && <p className="faq-answer">{answer}</p>}
@@ -38,3 +41,5 @@ function FAQItem({ question, answer }) {
 }
 
 export default FAQ;
+
+
