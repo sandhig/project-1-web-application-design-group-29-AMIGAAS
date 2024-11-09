@@ -7,7 +7,6 @@ function FAQ() {
   const faqData = [
     { question: 'How do I buy items on this platform?', answer: 'Simply browse listings and contact the seller for further details.' },
     { question: 'Can we meet sellers outside of UofT locations?', answer: 'For safety, we do not recommend it, but that can be discussed with the seller of the item(s).' },
-    { question: 'Can we meet sellers outside of UofT locations?', answer: 'For safety, we do not recommend it, but that can be discussed with the seller of the item(s).' },
     // Add more FAQs as needed
   ];
 
