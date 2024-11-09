@@ -1,6 +1,8 @@
 // FAQ.js file
 import React, { useState } from 'react';
 import Header from "../../components/Header"
+import './FAQ.css';
+
 
 function FAQ() {
   const faqData = [
@@ -13,7 +15,7 @@ function FAQ() {
     <div className="faq-section">
         <Header/>
          <div style={{ padding: '20px' }}></div>
-      <h2>Frequently Asked Questions</h2>
+      <h2 className="faq-title">Frequently Asked Questions</h2>
       {faqData.map((faq, index) => (
         <FAQItem key={index} question={faq.question} answer={faq.answer} />
       ))}
