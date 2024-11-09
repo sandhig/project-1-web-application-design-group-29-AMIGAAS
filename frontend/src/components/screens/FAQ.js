@@ -1,4 +1,4 @@
-// FAQ.js
+// FAQ.js file
 import React, { useState } from 'react';
 import Header from "../../components/Header"
 

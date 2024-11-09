@@ -1,6 +1,7 @@
+ /* App.css */
 .App {
   text-align: center;
-  height: 100vh;
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
   font-family: 'Roboto', Arial, sans-serif;
@@ -44,7 +45,7 @@
 
 /* Make the main content area flexible */
 .App-scroll-container {
-  height: 100vh;
+  
   flex: 1;
   overflow-y: auto;
 }
@@ -58,11 +59,12 @@
 
  /* Adjustment for Sticky Footer Layout  to ensure Footer stays at bottom of the page */
 
-.app-container {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
+ .footer-container {
+  background-color: #001f3f;
+  color: rgb(235, 235, 235);
+  text-align: center;
+  padding: 5px;
+  position: relative; /* Keeps it positioned within the flow at the bottom of App-scroll-container */
 }
-
 
 
