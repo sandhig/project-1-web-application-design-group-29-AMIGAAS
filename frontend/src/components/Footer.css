@@ -1,6 +1,6 @@
 .footer-container {
     background-color: #193552;
-    padding: 20px;
+    padding: 5px;
     text-align: center;
 
     p, a {
@@ -47,15 +47,11 @@ a:hover {
 }
 
 .footer-links {
-    margin-top: 15px;
+    margin-top: 5px;
 }
 
-.footer-links .MuiButton-root {
-    background-color: #193552;
-    color: white;
-    margin: 5px;
-}
-
-.footer-links .MuiButton-root:hover {
-    background-color: #1c4d72;
+.footer-links .separator {
+    color: #fff; /* Make the separator white */
+    margin: 0 12px; /* Equal spacing between the separator and links */
+    font-weight: bold;
 }

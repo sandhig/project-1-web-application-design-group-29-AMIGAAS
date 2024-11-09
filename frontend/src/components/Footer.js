@@ -1,6 +1,6 @@
 import React from 'react';
 import './Footer.css';
-import { Button } from '@mui/material';
+import { Link } from 'react-router-dom';
 import { useNavigate } from 'react-router-dom';
 
 function Footer() {
@@ -13,32 +13,12 @@ function Footer() {
             </div>
             <div className="contact-info">
                 <p>Contact us at: <a href="mailto:toogoodtothrow59@gmail.com">toogoodtothrow59@gmail.com</a></p>
-                <p>27 King's College Circle, Toronto, ON</p>
-                <p>(416) 978-2011</p>
-            </div>
-            <div className="mission-statement">
-                <p>Connecting students with affordable, second-hand goods.</p>
-            </div>
-            <div className="social-icons">
-                <span className="icon">📷</span>
-                <span className="icon">📘</span>
-                <span className="icon">💼</span>
-                <span className="icon">🐦</span>
-            </div>
-            <div className="policies">
-                <p>Privacy Policy | Terms of Service | Refund Policy</p>
             </div>
             <div className="footer-links">
                 {/* About and FAQ buttons */}
-                <Button variant="contained" color="primary" onClick={() => navigate('/about')} style={{ marginRight: '10px' }}>
-                    About Us
-                </Button>
-                <Button variant="contained" color="primary" onClick={() => navigate('/faq')}>
-                    FAQ
-                </Button>
-            </div>
-            <div className="university-notice">
-                <p>This is a student project for educational purposes under the ECE444 course at the University of Toronto.</p>
+                <Link onClick={() => navigate('/about')} style={{ marginRight: '3px' }}>About Us</Link>
+                <span className='separator'>|</span>
+                <Link onClick={() => navigate('/faq')} style={{ marginLeft: '3px' }}>FAQ</Link>
             </div>
         </div>
     );
