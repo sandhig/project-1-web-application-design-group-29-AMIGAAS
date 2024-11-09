@@ -13,7 +13,9 @@ VERIFY_PAGE_URL = 'http://localhost:3000/profiles/verify-email'
 
 # LOCATOR SELECTORS
 SIGNUP = "Sign Up"
-LOGIN = "Log In"
+LOG_IN = "Log In"
+LOGIN = "Login"
+VERIFY = "Verify Email"
 FIRST_NAME = "First Name *"
 LAST_NAME = "Last Name *"
 EMAIL = "UofT Email *"
@@ -25,6 +27,10 @@ ROLE_BUTTON = 'button'
 ROLE_OPTION = 'option'
 ROLE_LINK = 'link'
 ROLE_HEADING = 'heading'
+
+# AUTHORIZED TEST USER TODO: delete/change later
+AUTHORIZED_USER_EMAIL = 'raisa.aishy@mail.utoronto.ca'
+AUTHORIZED_USER_PASSWORD = 'Raisa1234!'
 
 @pytest.fixture(scope="session")
 def setup_playwright():
@@ -51,6 +57,7 @@ def page(authenticated_context):
     yield page
     page.close()
 
+# Test for navigating to the urls
 def test_navigate_signup_button(page):
     '''Test the signup button navigates to the signup page'''
     # Click on Sign Up Button
@@ -67,7 +74,7 @@ def test_navigate_login_button(page):
     '''Test the login button navigates to the login page'''
     # Click on Sign Up Button
     page.goto(WELCOME_PAGE_URL)
-    login_button = page.get_by_role(ROLE_BUTTON, LOGIN)
+    login_button = page.get_by_role(ROLE_BUTTON, LOG_IN)
     login_button.click()
 
     assert page.url == LOGIN_PAGE_URL
@@ -81,6 +88,8 @@ def test_navigate_to_verify_email_page(page):
     expect(page.get_by_role("heading")).to_contain_text("Email Verification")
     print("Verify email page displayed as expected")
 
+
+# Test for signups with edge cases
 def test_no_input_signup(page):
     '''Test for no input given'''
     page.goto(SIGNUP_PAGE_URL)
@@ -352,10 +361,11 @@ def test_valid_input_signup(page):
     print("Test: Signup with valid inputs works as expected")
 
 
+# Tests for verification with edge cases
 def test_verification_no_input(page):
     '''Test for verifying account after signing up with no input'''
     page.goto(VERIFY_PAGE_URL)
-    submit_verify_button = page.get_by_role(ROLE_BUTTON, name="Verify Email")
+    submit_verify_button = page.get_by_role(ROLE_BUTTON, name=VERIFY)
     submit_verify_button.click()
     page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
 
@@ -364,7 +374,7 @@ def test_verification_no_input(page):
     assert page.get_by_text("Please enter your verification code.").is_visible(), "Empty code error message not displayed"
 
     # Check that the submit button is disabled
-    submit_verify_button = page.get_by_role(ROLE_BUTTON, name="Verify Email")
+    submit_verify_button = page.get_by_role(ROLE_BUTTON, name=VERIFY)
     assert submit_verify_button.is_disabled(), "Submit button is not disabled when there are errors"
     print("Test: Verification with no input works as expected")
 
@@ -380,7 +390,7 @@ def test_verification_no_email(page):
     code_box.click()
     code_box.fill("123456")
 
-    submit_verify_button = page.get_by_role(ROLE_BUTTON, name="Verify Email")
+    submit_verify_button = page.get_by_role(ROLE_BUTTON, name=VERIFY)
     submit_verify_button.click()
     page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
 
@@ -388,7 +398,7 @@ def test_verification_no_email(page):
     assert page.get_by_text("Please enter a valid UofT email address.").is_visible(), "Invalid email error message not displayed"
 
     # Check that the submit button is disabled
-    submit_verify_button = page.get_by_role(ROLE_BUTTON, name="Verify Email")
+    submit_verify_button = page.get_by_role(ROLE_BUTTON, name=VERIFY)
     assert submit_verify_button.is_disabled(), "Submit button is not disabled when there are errors"
     print("Test: Verification with no email input works as expected")
 
@@ -404,7 +414,7 @@ def test_verification_no_code(page):
     email_box.click()
     email_box.fill("playwright.test@mail.utoronto.ca")
 
-    submit_verify_button = page.get_by_role(ROLE_BUTTON, name="Verify Email")
+    submit_verify_button = page.get_by_role(ROLE_BUTTON, name=VERIFY)
     submit_verify_button.click()
     page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
 
@@ -412,7 +422,7 @@ def test_verification_no_code(page):
     assert page.get_by_text("Please enter your verification code.").is_visible(), "Empty code error message not displayed"
 
     # Check that the submit button is disabled
-    submit_verify_button = page.get_by_role(ROLE_BUTTON, name="Verify Email")
+    submit_verify_button = page.get_by_role(ROLE_BUTTON, name=VERIFY)
     assert submit_verify_button.is_disabled(), "Submit button is not disabled when there are errors"
     print("Test: Verification with no code works as expected")
 
@@ -431,7 +441,7 @@ def test_verification_wrong_code(page):
     code_box.click()
     code_box.fill("123456")  # assuming this is wrong code
 
-    submit_verify_button = page.get_by_role(ROLE_BUTTON, name="Verify Email")
+    submit_verify_button = page.get_by_role(ROLE_BUTTON, name=VERIFY)
     submit_verify_button.click()
     page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
 
@@ -454,7 +464,7 @@ def test_verification_wrong_email(page):
     code_box.click()
     code_box.fill("123456")  # assuming this is wrong code
 
-    submit_verify_button = page.get_by_role(ROLE_BUTTON, name="Verify Email")
+    submit_verify_button = page.get_by_role(ROLE_BUTTON, name=VERIFY)
     submit_verify_button.click()
     page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
 
@@ -466,6 +476,121 @@ def test_verification_wrong_email(page):
 # TODO how to know the verification code sent for this fake test email without accessing backend 
 def test_verification_valid_input(page):
     pass
+
+# Tests for login with edge cases
+def test_login_no_input(page):
+    '''Test for logging in to an account with no input'''
+    page.goto(LOGIN_PAGE_URL)
+    submit_login_button = page.get_by_role(ROLE_BUTTON, name=LOGIN)
+    submit_login_button.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    # Check for the specific error message for price
+    assert page.get_by_text("Please enter a valid UofT email address.").is_visible(), "Invalid email error message not displayed"
+    assert page.get_by_text("Please enter your password.").is_visible(), "Empty password error message not displayed"
+
+    # Check that the submit button is disabled
+    submit_login_button = page.get_by_role(ROLE_BUTTON, name=LOGIN)
+    assert submit_login_button.is_disabled(), "Submit button is not disabled when there are errors"
+    print("Test: Login with no input works as expected")
+
+
+def test_login_no_email(page):
+    '''Test for logging in to an account with no email'''
+    page.goto(LOGIN_PAGE_URL)
+
+    # Find the locators for input boxes
+    password_box = page.get_by_label(PASSWORD)
+
+    # give input
+    password_box.click()
+    password_box.fill(AUTHORIZED_USER_PASSWORD)
+
+    submit_login_button = page.get_by_role(ROLE_BUTTON, name=LOGIN)
+    submit_login_button.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    # Check for the specific error message
+    assert page.get_by_text("Please enter a valid UofT email address.").is_visible(), "Invalid email error message not displayed"
+
+    # Check that the submit button is disabled
+    submit_verify_button = page.get_by_role(ROLE_BUTTON, name=LOGIN)
+    assert submit_verify_button.is_disabled(), "Submit button is not disabled when there are errors"
+    print("Test: Login with no email works as expected")
+
+
+def test_login_no_password(page):
+    '''Test for logging in to an account with no password'''
+    page.goto(LOGIN_PAGE_URL)
+
+    # Find the locators for input boxes
+    email_box = page.get_by_label(EMAIL)
+
+    # give input
+    email_box.click()
+    email_box.fill(AUTHORIZED_USER_EMAIL)
+
+    submit_login_button = page.get_by_role(ROLE_BUTTON, name=LOGIN)
+    submit_login_button.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    # Check for the specific error message
+    assert page.get_by_text("Please enter your password.").is_visible(), "Empty password error message not displayed"
+
+    # Check that the submit button is disabled
+    submit_verify_button = page.get_by_role(ROLE_BUTTON, name=LOGIN)
+    assert submit_verify_button.is_disabled(), "Submit button is not disabled when there are errors"
+    print("Test: Login with no password works as expected")
+
+
+def test_login_wrong_password(page):
+    '''Test for logging in to an account with no password'''
+    page.goto(LOGIN_PAGE_URL)
+
+    # Find the locators for input boxes
+    email_box = page.get_by_label(EMAIL)
+    password_box = page.get_by_label(PASSWORD)
+
+    # give input
+    email_box.click()
+    email_box.fill(AUTHORIZED_USER_EMAIL)
+    password_box.click()
+    password_box.fill("WrongPassword")
+
+    submit_login_button = page.get_by_role(ROLE_BUTTON, name=LOGIN)
+    submit_login_button.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    # Check for the specific error message
+    assert page.get_by_text("Incorrect email or password.").is_visible(), "Error message not displayed"
+    print("Test: Login with wrong password works as expected")
+
+
+def test_login_wrong_email(page):
+    '''Test for logging in to an account with no password'''
+    page.goto(LOGIN_PAGE_URL)
+
+    # Find the locators for input boxes
+    email_box = page.get_by_label(EMAIL)
+    password_box = page.get_by_label(PASSWORD)
+
+    # give input
+    email_box.click()
+    email_box.fill(AUTHORIZED_USER_EMAIL.replace('raisa', 'raisaa'))
+    password_box.click()
+    password_box.fill(AUTHORIZED_USER_PASSWORD)
+
+    submit_login_button = page.get_by_role(ROLE_BUTTON, name=LOGIN)
+    submit_login_button.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    # Check for the specific error message
+    try: # if the incorrect email is someone else's email
+        assert page.get_by_text("Incorrect email or password.").is_visible(), "Error message not displayed"
+    except: # if user doesn't exist for the email provided
+        assert page.get_by_text("User not found.").is_visible(), "Non-existent user email message not displayed"
+    print("Test: Login with wrong password works as expected")
+
 
 
 
