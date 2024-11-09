@@ -547,7 +547,7 @@ class ProductViewTests(TestCase):
             "description": "Updated product description"
         }
         response = self.client.put(self.product_detail_url, data, format="json")
-        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.assertEqual(response.status_code, status.HTTP_201_CREATED)
         self.assertEqual(response.data["name"], data["name"])
         print('Test: Update Product with Image Authenticated - PASS')
 
