@@ -36,6 +36,7 @@ WISHLIST_BUTTON = "message My Wishlist"
 WISHLIST_HEART = "favourite"
 LISTING_TITLE = ".listing-title"
 CLEAR_BUTTON = ".MuiButtonBase-root"
+CAROUSEL_CONTAINER = ".carousel-container"
 
 # ROLES
 ROLE_BUTTON = 'button'
@@ -47,6 +48,7 @@ CATEGORY_CHOICES = ['Textbook', 'Clothing', 'Furniture', 'Electronics', 'Station
 CONDITION_CHOICES = ['New', 'Used - Like New', 'Used - Good', 'Used - Fair', 'None']
 LOCATION_CHOICES = ['Robarts', 'Gerstein', 'Computer Science Library', 'Bahen', 'Galbraith', 'Sanford Fleming', 'None']
 SORT_BY_CHOICES = ['Price: Low to High', 'Price: High to Low', 'Name: A-Z']
+CAROUSEL_SLIDES = ["Go to slide 1", "Go to slide 2", "Go to slide 3"]
 
 
 @pytest.fixture(scope="session")
@@ -665,8 +667,68 @@ def test_logo_navigation(page):
     # Click on logo and see if navigates correctly
     page.get_by_role(ROLE_LINK, name=LOGO).click()
     page.wait_for_timeout(WAIT_TO_LOAD_LONG) 
-    assert page.url = HOMEPAGE_URL
+    assert page.url == HOMEPAGE_URL
     print("Test: Navigates to Homepage as expected")
+
+
+def test_carousel_image_navigation_textbooks(page):
+    """ Test to users are navigated back to appropriate categories when respective image is clicked """
+    # Start here
+    page.goto(HOMEPAGE_URL)
+
+    # Force to be in carousel slide 1
+    carousel_slide = page.get_by_label(CAROUSEL_SLIDES[0])
+    carousel_slide.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    # locate carousel container and click
+    carousel_image = page.locator(CAROUSEL_CONTAINER).first
+    carousel_image.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+
+    # Find the url of the page navigated to
+    assert '/category?query=textbook' in page.url
+    print('Navigation form slide 1 works as expected')
+
+
+def test_carousel_image_navigation_furniture(page):
+    """ Test to users are navigated back to appropriate categories when respective image is clicked """
+    # Start here
+    page.goto(HOMEPAGE_URL)
+
+    # Force to be in carousel slide 2
+    carousel_slide = page.get_by_label(CAROUSEL_SLIDES[1])
+    carousel_slide.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    # locate carousel container and click
+    carousel_image = page.locator(CAROUSEL_CONTAINER).first
+    carousel_image.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+
+    # Find the url of the page navigated to
+    assert '/category?query=furniture' in page.url
+    print('Navigation form slide 2 works as expected')
+
+
+def test_carousel_image_navigation_clothing(page):
+    """ Test to users are navigated back to appropriate categories when respective image is clicked """
+    # Start here
+    page.goto(HOMEPAGE_URL)
+
+    # Force to be in carousel slide 3
+    carousel_slide = page.get_by_label(CAROUSEL_SLIDES[2])
+    carousel_slide.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    # locate carousel container and click
+    carousel_image = page.locator(CAROUSEL_CONTAINER).first
+    carousel_image.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+
+    # Find the url of the page navigated to
+    assert '/category?query=clothing' in page.url
+    print('Navigation form slide 3 works as expected')
 
 
 def test_adding_to_wishlist(page):
