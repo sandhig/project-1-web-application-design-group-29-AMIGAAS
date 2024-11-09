@@ -211,7 +211,6 @@ function PrivateMessage() {
                         )
                         return [...prevMessages];
                     });
-
                     fetchConversations();
                 } else {
                     console.error('Failed to mark messages as read:', data.error);
@@ -266,7 +265,7 @@ function PrivateMessage() {
             <Header/>
 
             {hasConversations === null ? (<span className="loader"></span>) : (
-                hasConversations === false ? (<div>No messages</div>) :
+                hasConversations === false ? (<h3 style={{marginTop:'50px'}}>No messages yet! Start a conversation to see them appear here</h3>) :
         
             <div className="container">
                 
@@ -277,9 +276,7 @@ function PrivateMessage() {
                         .map(conversation => (
                         <div key={conversation.id} onClick={() => setSelectedConversationId(conversation.id)}
                             className={conversation.id === selectedConversationId ? 'selected' : '' || !conversation.is_read ? 'unread' : ''}>
-                            
-                            
-
+ 
                             <span style={{display:"flex", alignItems:"center"}}>
                                 <span className={!conversation.is_read ? 'dot' : ''}></span>
                                 {conversation.profile_pic ? (

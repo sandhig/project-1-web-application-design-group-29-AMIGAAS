@@ -1,6 +1,6 @@
-import { useUser } from '../../context/UserContext';
+import { useUser } from '../../../context/UserContext';
 import React, { useState, useEffect } from 'react';
-import Header from "../../components/Header"
+import Header from "../../Header"
 import { useNavigate } from 'react-router-dom';
 import './Wishlist.css';
 import IconButton from "@mui/material/IconButton";
@@ -69,6 +69,8 @@ function Wishlist() {
             <div className="product-grid-wrapper">
                 <div className="product-grid transparent-bg">
                 {loading ? (<span className="loader"></span>) : (
+                    <>
+                    {wishlistItems.length > 0 ? (
                     <div className="products">
                         {wishlistItems.map(item => (
                             <div key={item.id} className="product-item">
@@ -99,6 +101,9 @@ function Wishlist() {
                             </div>
                         ))}
                     </div>
+                    ) : (
+                    <h3>Products you like will appear here</h3>
+                    )}</>
                     )}
                 </div>
             </div>

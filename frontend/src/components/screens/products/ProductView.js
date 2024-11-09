@@ -95,7 +95,10 @@ const ProductView = ({
         {product ? (
             <div className="listing-container">
                 <div className="listing-image-container">
-                    <img className="listing-image" src={product.image_url}></img>
+                    {product.image_url ? 
+                          (<img className="listing-image" src={product.image_url}></img>) 
+                          : <img className="listing-image" src="/images/no-image-icon.png"></img>}
+                    
                 </div>
                 <span className="listing-details">
                     <div className="listing-header">
