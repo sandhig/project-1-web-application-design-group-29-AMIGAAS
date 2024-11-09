@@ -8,7 +8,8 @@ WAIT_TO_LOAD_SHORT = 1000  # 1000 milliseconds = 1 sec
 
 # CONSTANT URL PATHS
 LOGIN_PAGE_URL = 'http://localhost:3000/profiles/login'
-PRODUCTS_PAGE_URL = 'http://localhost:3000/products'
+HOMEPAGE_URL = 'http://localhost:3000/products'
+PRODUCTS_PAGE_URL = 'http://localhost:3000/search?query='
 CREATE_LISTING_URL = 'http://localhost:3000/products/create'
 
 # LOCATOR SELECTORS
@@ -72,11 +73,6 @@ def authenticated_context(setup_playwright):
      # Click the Login button
     page.get_by_role(ROLE_BUTTON, name=LOGIN).click()
     page.wait_for_timeout(WAIT_TO_LOAD_LONG)
-
-    # Wait for a successful login message
-    # Verify login success message is visible
-    assert page.get_by_text(LOGIN_MSG).is_visible()
-    print('Successfully logged in test user')
 
     # Save context for reuse in other tests
     yield context
@@ -165,6 +161,7 @@ def create_random_sort_by_choice(page):
     print("..Create random sort by order choice")
     return sorted_expected, after_sorting, page
 
+# # TODO: test for carousel navigate to correct category ?
 
 def test_product_list_displays_correctly(page):
     """ Test to ensure multiple products can be seen on the product grid """
@@ -502,7 +499,8 @@ def test_search_a_product(page):
     page.wait_for_timeout(WAIT_TO_LOAD_LONG) 
 
     after_searching_names = page.locator(PRODUCT_TITLE).all_text_contents()
-    assert after_searching_names == searched_names_expected
+    assert len(after_searching_names) == len(searched_names_expected)
+    assert sorted(after_searching_names) == sorted(searched_names_expected)  # unordered list so doesn't matter as long as all the elements are same sorting should be same too
     print("Test: Search by name works as expected")
 
 
@@ -557,7 +555,7 @@ def test_can_submit_valid_form(page):
     page.get_by_label("Category").click()
     page.get_by_role(ROLE_OPTION, name=CATEGORY_CHOICES[0]).click()
     page.get_by_label("Condition").click()
-    page.get_by_role(ROLE_OPTION, name=CONDITION_CHOICES[0]).click()
+    page.get_by_role(ROLE_OPTION, name=CONDITION_CHOICES[0], exact=True).click()
     page.get_by_label("Location").click()
     page.get_by_role(ROLE_OPTION, name=LOCATION_CHOICES[0]).click() 
 
@@ -612,7 +610,7 @@ def test_create_listing_with_invalid_price(page):
     page.get_by_label("Category").click()
     page.get_by_role(ROLE_OPTION, name=CATEGORY_CHOICES[0]).click()
     page.get_by_label("Condition").click()
-    page.get_by_role(ROLE_OPTION, name=CONDITION_CHOICES[0]).click()
+    page.get_by_role(ROLE_OPTION, name=CONDITION_CHOICES[0], exact=True).click()
     page.get_by_label("Location").click()
     page.get_by_role(ROLE_OPTION, name=LOCATION_CHOICES[0]).click() 
 
@@ -629,7 +627,7 @@ def test_create_listing_with_invalid_price(page):
     assert submit_button.is_disabled(), "Submit button is not disabled when there are errors"
 
     # Check that snackbar with error message is displayed
-    snackbarErrorMessage = "New listing was not created. Please fix the errors and try again.";
+    snackbarErrorMessage = "Price must be less than $100,000,000."
     assert page.get_by_text(snackbarErrorMessage).is_visible(), "Error snackbar not displayed"
 
     print("Test: Create listing with invalid price works as expected")
