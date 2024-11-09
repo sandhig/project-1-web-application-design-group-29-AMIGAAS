@@ -1,4 +1,5 @@
-import React from 'react';
+/* About.js */
+import React, { useState } from 'react';
 import Header from "../../components/Header"
 
 function About() {
