@@ -11,6 +11,7 @@ LOGIN_PAGE_URL = 'http://localhost:3000/profiles/login'
 HOMEPAGE_URL = 'http://localhost:3000/products'
 PRODUCTS_PAGE_URL = 'http://localhost:3000/search?query='
 CREATE_LISTING_URL = 'http://localhost:3000/products/create'
+WISHLIST_URL = 'http://localhost:3000/wishlist'
 
 # LOCATOR SELECTORS
 EMAIL = 'input[name="email"]'
@@ -30,10 +31,16 @@ PRODUCT_TITLE = '.product-title'
 PRICE_SLIDER_TRACK = ".MuiSlider-track"
 CLEAR_FILTERS = 'Clear Filters'
 CREATE_LISTING = 'Create Listing'
+LOGO = 'Website Logo TOO GOOD TO THROW'
+WISHLIST_BUTTON = "message My Wishlist"
+WISHLIST_HEART = "favourite"
+LISTING_TITLE = ".listing-title"
+CLEAR_BUTTON = ".MuiButtonBase-root"
 
 # ROLES
 ROLE_BUTTON = 'button'
 ROLE_OPTION = 'option'
+ROLE_LINK = 'link'
 
 # CHOICES
 CATEGORY_CHOICES = ['Textbook', 'Clothing', 'Furniture', 'Electronics', 'Stationary', 'Miscellaneous', 'None']
@@ -161,7 +168,16 @@ def create_random_sort_by_choice(page):
     print("..Create random sort by order choice")
     return sorted_expected, after_sorting, page
 
-# # TODO: test for carousel navigate to correct category ?
+
+# create a dialog handler that will check message text and press yes/no
+def handle_dialog(dialog):
+    if "remove this item from your wishlist" in dialog.message:
+        print(f'clicking "Yes" to {dialog.message}')
+        dialog.accept()  # press "Yes"
+    else:
+        dialog.dismiss()  # press "No"
+    page.on("dialog", handle_dialog)
+
 
 def test_product_list_displays_correctly(page):
     """ Test to ensure multiple products can be seen on the product grid """
@@ -492,7 +508,7 @@ def test_search_a_product(page):
             searched_names_expected.append(name)
 
     # Locate the searchbar and search something
-    search_bar = page.get_by_placeholder("Search...")
+    search_bar = page.get_by_placeholder(SEARCH_BAR)
     search_bar.click()
     search_bar.fill(search_string)
     search_bar.press("Enter")
@@ -631,4 +647,93 @@ def test_create_listing_with_invalid_price(page):
     assert page.get_by_text(snackbarErrorMessage).is_visible(), "Error snackbar not displayed"
 
     print("Test: Create listing with invalid price works as expected")
+
+
+def test_logo_navigation(page):
+    """ Test to users are navigated back to product homepage when logo is clicked"""
+    # Start here
+    page.goto(HOMEPAGE_URL)
+    search_string = 'Book'
+
+    # Locate the searchbar and search something
+    search_bar = page.get_by_placeholder(SEARCH_BAR)
+    search_bar.click()
+    search_bar.fill(search_string)
+    search_bar.press("Enter")
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG) 
+
+    # Click on logo and see if navigates correctly
+    page.get_by_role(ROLE_LINK, name=LOGO).click()
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG) 
+    assert page.url = HOMEPAGE_URL
+    print("Test: Navigates to Homepage as expected")
+
+
+def test_adding_to_wishlist(page):
+    """ Test to users are able to add an item to their wishlist"""
+    # Navigate to wishlist
+    page.goto(WISHLIST_URL)
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+    initial_count = page.locator(PRODUCT_ITEM).count()  # Before adding a new item
+
+    # Search up something to select
+    page.goto(PRODUCTS_PAGE_URL)
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+    chosen_product_locator = page.locator(PRODUCT_ITEM).first
+
+    # click to navigate to the product detail page
+    chosen_product_locator.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+    assert page.url != PRODUCTS_PAGE_URL
+
+    # retain the product name to match later
+    chosen_product_name = page.locator(LISTING_TITLE).text_content()
+
+    # locate the button to add to wishlist and click it
+    heart_button = page.get_by_label(WISHLIST_HEART)
+    heart_button.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    # go to the user's wishlist and see if the product is listed there
+    page.get_by_role(ROLE_LINK, name=WISHLIST_BUTTON).click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+    assert page.url == WISHLIST_URL
+
+    # Locate the products container
+    product_grid = page.locator(PRODUCT_GRID)
+    names_in_wishlist = page.locator(PRODUCT_TITLE).all_text_contents()
+
+    assert product_grid.locator(PRODUCT_ITEM).count() == initial_count + 1 # ensures a new product was added
+    assert chosen_product_name in names_in_wishlist
+    print("Test: Adding to wishlist works as expected")
+
+
+def test_delete_from_wishlist(page):
+    """ Test to users are able to delete an item from their wishlist"""
+    # Navigate to wishlist
+    page.goto(WISHLIST_URL)
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+    initial_count = page.locator(PRODUCT_ITEM).count()  # Before removing a new item
+    
+    # Retain the first product name
+    chosen_product_locator = page.locator(PRODUCT_ITEM).first
+    chosen_product_name = page.locator(PRODUCT_TITLE).first.text_content()
+
+    # intercept pop-ip dialog with handle_dialog function
+    page.on("dialog", handle_dialog)
+
+    # remove the product
+    clear_button = chosen_product_locator.locator(CLEAR_BUTTON)
+    clear_button.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    # Locate the products container
+    product_grid = page.locator(PRODUCT_GRID)
+    names_in_wishlist = page.locator(PRODUCT_TITLE).all_text_contents()
+
+    assert product_grid.locator(PRODUCT_ITEM).count() == initial_count - 1 # ensures product was removed
+    assert chosen_product_name not in names_in_wishlist
+    print("Test: Removing from wishlist works as expected")
+
+
 
