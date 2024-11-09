@@ -8,7 +8,7 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import Header from "../../components/Header"
-import Footer from "../../components/Footer"; // Add Footer import here
+
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 
@@ -158,7 +158,7 @@ const Products = () => {
           ))}
 
         </div>
-        <Footer /> {/* Added Footer here to ensure it appears at the bottom */}
+        
     </div>
   );
 };
