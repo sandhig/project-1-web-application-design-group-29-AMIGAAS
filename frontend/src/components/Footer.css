@@ -1,0 +1,47 @@
+.footer-container {
+    background-color: #193552;
+    padding: 20px;
+    text-align: center;
+
+    p, a {
+        color: rgb(235, 235, 235);
+    }
+}
+
+.company-info,
+.contact-info,
+.mission-statement,
+.social-icons,
+.policies,
+.university-notice {
+    margin: 10px 0;
+}
+
+.contact-info p,
+.mission-statement p,
+.policies p,
+.university-notice p {
+    margin: 5px 0;
+}
+
+.icon {
+    font-size: 20px;
+    margin: 0 5px;
+}
+
+.policies p {
+    font-size: 0.9em;
+    color: #bbb;
+}
+
+a {
+    text-decoration: none;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+.footer p {
+    font-size: 0.9em;
+}

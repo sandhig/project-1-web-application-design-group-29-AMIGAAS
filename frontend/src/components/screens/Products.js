@@ -1,15 +1,17 @@
 import React, { useState, useEffect, useRef } from "react";
 import './Products.css';
-import { useUser } from '../../context/UserContext';
+import { useUser } from '../../../context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import IconButton from "@mui/material/IconButton";
 import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
-import Header from "../../components/Header"
+import Header from "../../Header"
+import Footer from "../../Footer";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import { Link } from 'react-router-dom';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -102,9 +104,9 @@ const Products = () => {
               dotListClass="line-dot-style"
               itemClass="carousel-item-padding-40-px"
             >
-              <img src="/images/carousel/1.png"></img>
-              <img src="/images/carousel/2.png"></img>
-              <img src="/images/carousel/3.png"></img>
+              <Link to="/category?query=textbook"><img src="/images/carousel/1.png"></img></Link>
+              <Link to="/category?query=furniture"><img src="/images/carousel/2.png"></img></Link>
+              <Link to="/category?query=clothing"><img src="/images/carousel/3.png"></img></Link>
             </Carousel>
             <IconButton onClick={handlePlayPause} className="play-pause-button">
               {isPlaying ? (<PauseIcon style={{ fill: "white" }} />) : (<PlayArrowIcon style={{ fill: "white" }} />)}
@@ -157,6 +159,8 @@ const Products = () => {
           ))}
 
         </div>
+
+        <Footer />
     </div>
   );
 };
