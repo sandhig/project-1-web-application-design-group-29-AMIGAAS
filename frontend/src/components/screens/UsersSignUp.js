@@ -197,6 +197,11 @@ const UsersSignUp = () => {
             variant="contained"
             color="primary"
             disabled={isFormInvalid}
+            sx={{
+              '&:hover': {
+              backgroundColor: '#007fa3',       // Custom hover color
+              },
+            }}
           >
             {isSubmitting || successMessage ? 'Signing Up...' : 'Sign Up'}
           </Button>

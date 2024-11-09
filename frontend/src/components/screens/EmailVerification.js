@@ -151,6 +151,11 @@ const EmailVerification = () => {
               variant="contained"
               color="primary"
               disabled={isFormInvalid}
+              sx={{
+                '&:hover': {
+                backgroundColor: '#007fa3',       // Custom hover color
+                },
+              }}
             >
               {loading || successMessage ? 'Verifying Email...' : 'Verify Email'}
             </Button>

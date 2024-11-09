@@ -254,7 +254,16 @@ const ProductEdit = ({
                         style={{ display: 'none' }}
                     />
                     <label htmlFor="imageInput">
-                        <Button variant="contained" color="primary" component="span">
+                        <Button
+                            variant="contained"
+                            color="primary"
+                            component="span"
+                            sx={{
+                                '&:hover': {
+                                backgroundColor: '#007fa3',       // Custom hover color
+                                },
+                              }}
+                        >
                             Choose Image
                         </Button>
                     </label>
@@ -393,6 +402,11 @@ const ProductEdit = ({
                         variant="contained"
                         color="primary"
                         disabled={isFormInvalid}
+                        sx={{
+                            '&:hover': {
+                            backgroundColor: '#007fa3',       // Custom hover color
+                            },
+                          }}
                     >
                         {isSubmitting ? 'Saving changes...' : 'Save changes'}
                     </Button>
