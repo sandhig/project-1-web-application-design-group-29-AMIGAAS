@@ -10,12 +10,15 @@ WELCOME_PAGE_URL = 'http://localhost:3000/'
 SIGNUP_PAGE_URL = 'http://localhost:3000/profiles/signup'
 LOGIN_PAGE_URL = 'http://localhost:3000/profiles/login'
 VERIFY_PAGE_URL = 'http://localhost:3000/profiles/verify-email'
+FORGOT_PASSWORD_URL = 'http://localhost:3000/password_reset_request'
 
 # LOCATOR SELECTORS
 SIGNUP = "Sign Up"
 LOG_IN = "Log In"
 LOGIN = "Login"
 VERIFY = "Verify Email"
+FORGOT_PASSWORD = "Forgot Password?"
+SEND_LINK = "Send me a llink"
 FIRST_NAME = "First Name *"
 LAST_NAME = "Last Name *"
 EMAIL = "UofT Email *"
@@ -64,6 +67,7 @@ def test_navigate_signup_button(page):
     page.goto(WELCOME_PAGE_URL)
     signup_button = page.get_by_role(ROLE_BUTTON, SIGNUP)
     signup_button.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
 
     assert page.url == SIGNUP_PAGE_URL
     expect(page.get_by_role(ROLE_HEADING)).to_contain_text(SIGNUP)
@@ -76,6 +80,7 @@ def test_navigate_login_button(page):
     page.goto(WELCOME_PAGE_URL)
     login_button = page.get_by_role(ROLE_BUTTON, LOG_IN)
     login_button.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
 
     assert page.url == LOGIN_PAGE_URL
     expect(page.get_by_role(ROLE_HEADING)).to_contain_text("Login")
@@ -85,8 +90,22 @@ def test_navigate_login_button(page):
 def test_navigate_to_verify_email_page(page):
     '''Test that anypne can go to the verify email page'''
     page.goto(VERIFY_PAGE_URL)
-    expect(page.get_by_role("heading")).to_contain_text("Email Verification")
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+    expect(page.get_by_role(ROLE_HEADING)).to_contain_text("Email Verification")
     print("Verify email page displayed as expected")
+
+
+def test_navigate_to_forgot_password_page(page):
+    '''Test that anyone can go to the forgot password page'''
+    # Click on the Forgot Password Button
+    page.goto(LOGIN_PAGE_URL)
+    forgot_password_button = page.get_by_role(ROLE_BUTTON, FORGOT_PASSWORD)
+    forgot_password_button.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+
+    assert page.url == FORGOT_PASSWORD_URL
+    expect(page.get_by_role(ROLE_HEADING)).to_contain_text("Forgot Password")
+    print("Forgot Password page displayed as expected")
 
 
 # Test for signups with edge cases
@@ -592,10 +611,70 @@ def test_login_wrong_email(page):
     print("Test: Login with wrong password works as expected")
 
 
+# Test for pasword reset link
+def test_password_reset_no_email(page):
+    '''Test for sending a reseting password link for no provided email'''
+    page.goto(FORGOT_PASSWORD_URL)
+
+    submit_rest_button = page.get_by_role(ROLE_BUTTON, name=SEND_LINK)
+    submit_rest_button.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+    
+    # Check for the specific error message
+    assert page.get_by_text("Please enter a valid UofT email address.").is_visible(), "Email error message not displayed"
+
+    # Check that the submit button is disabled
+    submit_rest_button = page.get_by_role(ROLE_BUTTON, name=SEND_LINK)
+    assert submit_rest_button.is_disabled(), "Submit button is not disabled when there are errors"
+    print("Test: Send password link without email works as expected")
 
 
+def test_password_reset_invalid_email(page):
+    '''Test for sending a reseting password link for a non-UofT provided email'''
+    page.goto(FORGOT_PASSWORD_URL)
+
+     # Find the locators for input boxes
+    email_box = page.get_by_label(EMAIL)
+
+    # give input
+    email_box.click()
+    email_box.fill("playwright.test@email.com")
+
+    submit_rest_button = page.get_by_role(ROLE_BUTTON, name=SEND_LINK)
+    submit_rest_button.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+    
+    # Check for the specific error message
+    assert page.get_by_text("Please enter a valid UofT email address.").is_visible(), "Email error message not displayed"
+
+    # Check that the submit button is disabled
+    submit_rest_button = page.get_by_role(ROLE_BUTTON, name=SEND_LINK)
+    assert submit_rest_button.is_disabled(), "Submit button is not disabled when there are errors"
+    print("Test: Send password link with non uoft email works as expected")
 
 
+def test_password_reset_invalid_email(page):
+    '''Test for sending a reseting password link for a non-UofT provided email'''
+    page.goto(FORGOT_PASSWORD_URL)
+
+     # Find the locators for input boxes
+    email_box = page.get_by_label(EMAIL)
+
+    # give input
+    email_box.click()
+    email_box.fill("playwright.test@mail.utoronto.ca")
+
+    submit_rest_button = page.get_by_role(ROLE_BUTTON, name=SEND_LINK)
+    submit_rest_button.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+    
+    # Check for the specific success message
+    assert page.get_by_text("If this email is registered, a password reset link will be sent shortly. This may take a few minutes.").is_visible(), "Success message not displayed"
+
+    # Check that the submit button is disabled
+    submit_rest_button = page.get_by_role(ROLE_BUTTON, name=SEND_LINK)
+    assert submit_rest_button.is_disabled(), "Submit button is not disabled after submission"
+    print("Test: Send password link with uoft email works as expected")
 
 
 
