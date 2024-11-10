@@ -9,6 +9,8 @@ function FAQ() {
   const faqData = [
     { question: 'How do I buy items on this platform?', answer: 'Simply browse listings and contact the seller for further details.' },
     { question: 'Can we meet sellers outside of UofT locations?', answer: 'For safety, we do not recommend it, but that can be discussed with the seller of the item(s).' },
+    { question: 'What happens to my account after I graduate?', answer: 'A UofT email is required to login, so when you graduate you can still use your account so long as your email is still active. Once your email is deactivated you will not be able to use Too Good to Throw' },
+    { question: 'Are prices listed final?', answer: 'You can negotiate with the seller.' },
     // Add more FAQs as needed
   ];
 
