@@ -46,7 +46,22 @@ function About() {
                 <h1>About Us</h1>
                 <p>We are AMIGAAS, a team of 7 University of Toronto Engineering students who developed "Too Good to Throw" to promote affordable, sustainable shopping for students.</p>
                 
-                
+                {/* Central Globe and Team Members */}
+                <div className="globe-container">
+                    <div className="central-globe">AMIGAAS</div>
+                    <div className="team-member-circles">
+                        {teamMembers.map(member => (
+                            <div 
+                                key={member.id} 
+                                className="team-member-circle" 
+                                onClick={() => handleMemberClick(member)}
+                                style={{ backgroundImage: `url(${member.image})` }}
+                            >
+                                <span className="member-name">{member.name}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
 
                 {/* Popup Modal for Member Details */}
                 {selectedMember && (
