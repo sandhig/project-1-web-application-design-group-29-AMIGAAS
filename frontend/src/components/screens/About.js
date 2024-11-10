@@ -1,5 +1,3 @@
-/* About.js good2 */
-
 import React, { useState } from 'react';
 import Header from "../../components/Header";
 import './About.css';
@@ -45,7 +43,7 @@ function About() {
                             className="team-member-circle"
                             onClick={() => handleMemberClick(member)}
                             style={{
-                                transform: `rotate(${index * (360 / teamMembers.length)}deg) translate(0px, -150px) rotate(-${index * (360 / teamMembers.length)}deg)`,
+                                transform: `rotate(${index * (360 / teamMembers.length)}deg) translate(0px, -200px) rotate(-${index * (360 / teamMembers.length)}deg)`,
                             }}
                         >
                             <img src={member.image} alt={member.name} />
