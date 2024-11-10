@@ -98,14 +98,18 @@ function EditProfile() {
     const handleSave = (e) => {
         e.preventDefault();
 
-        const errors = {
-            image: validateImageType(profile.profilePic),
-        };
-      
-        const hasErrors = Object.values(errors).some(error => error !== '');
-        if (hasErrors) {
-            setFormErrors(errors);
-            return;
+        const newProfilePic = profile.profilePic && typeof profile.profilePic !== 'string';
+
+        if (newProfilePic) {
+            const errors = {
+                image: validateImageType(profile.profilePic),
+            };
+        
+            const hasErrors = Object.values(errors).some(error => error !== '');
+            if (hasErrors) {
+                setFormErrors(errors);
+                return;
+            }
         }
       
         setIsSubmitting(true);
@@ -117,7 +121,7 @@ function EditProfile() {
         formData.append('bio', profile.bio); 
         
         // Only add profile pic to form if it's a new file
-        if (profile.profilePic && typeof profile.profilePic !== 'string') {
+        if (newProfilePic) {
             formData.append('profilePic', profile.profilePic);
         }
     
