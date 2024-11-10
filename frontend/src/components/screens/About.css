@@ -125,6 +125,11 @@ Animation: The @keyframes shine animation alternates between two states:
     padding: 10px; /* Padding to bring content away from edges */
 }
 
+/* Each abbreviation entry on the back side */
+.center-circle .back p {
+    margin: 3px 0; /* Vertical spacing between initials and names */
+}
+
 .team-member-circle {
     position: absolute;
     width: 110px;
