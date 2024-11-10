@@ -50,7 +50,6 @@ function About() {
                         <div className="back">
                             <p>A: Aishy</p>
                             <p>M: Mittal</p>
-                            
                             <p style={{ marginLeft: '4px' }}>I: Islam</p> {/* Inline style for adjustment */}
                             <p>G: Ganjoo</p>
                             <p>A: Alam</p>
