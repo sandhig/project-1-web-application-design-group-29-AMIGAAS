@@ -95,6 +95,11 @@ Animation: The @keyframes shine animation alternates between two states:
     }
 }
 
+/* Applied the flip rotation when the circle has the 'flipped' class */
+.center-circle.flipped {
+    transform: rotateY(180deg); /* Flip the circle horizontally */
+}
+
 .team-member-circle {
     position: absolute;
     width: 110px;
