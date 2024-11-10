@@ -232,9 +232,15 @@ Animation: The @keyframes shine animation alternates between two states:
 }
 
 .description-section {
-    padding: 20px;
-    font-size: 1.1rem;
+    padding: 40px; /* Adds padding around the section for breathing room */
+    font-size: 1rem; /* Font size for readability */
     color: #333;
+    margin-top: 40px; /* Space between the circle layout and the description */
+    line-height: 1.6; /* Improves readability */
+    text-align: center; /* Centers the text for elegance */
+    max-width: 800px; /* Restricts width for easier readability */
+    margin-left: auto; /* Centers the description */
+    margin-right: auto; /* Centers the description */
     margin-top: -70px; /* Pulled "Too Good to Throw" closer to the circle layout */
 }
 

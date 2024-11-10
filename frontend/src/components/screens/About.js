@@ -63,7 +63,7 @@ function About() {
         <div className="about-page">
             <Header />
             <div className="about-content">
-                <h1>About Us</h1>
+                <h1>The Too Good To Throw Developers</h1>
                 
                 <div className="circle-container">
                     <div className={`center-circle ${isFlipped ? 'flipped' : ''}`} onClick={toggleFlip}>
