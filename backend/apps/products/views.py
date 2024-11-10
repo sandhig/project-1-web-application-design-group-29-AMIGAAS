@@ -51,6 +51,7 @@ def get_sold_products(request):
 class ProductAPIView(APIView):
     def get(self, request, pk=None):
         search_term = request.query_params.get('search', None)
+        category = request.query_params.get('category', None)
         current_user = request.user.profile
         
         if pk:
@@ -61,6 +62,8 @@ class ProductAPIView(APIView):
             products = Product.objects.select_related('user').exclude(user=current_user.user).exclude(sold=True)
             if search_term:
                 products = products.filter(name__icontains=search_term)
+            elif category:
+                products = products.filter(category__iexact=category)
 
             serializer = ProductSerializer(products, many=True)
             return Response(serializer.data)

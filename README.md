@@ -68,26 +68,26 @@ PROJECT1-WEB-APPLICATION-DESIGN-GROUP-29-AMIGAAS:.
 |   |   requirements.txt  
 |   +---apps 
 |   |   +---private_messaging
-|   |   |   |   admin.py
-|   |   |   |   apps.py
-|   |   |   |   consumers.py
-|   |   |   |   models.py
-|   |   |   |   routing.py
-|   |   |   |   serializers.py
-|   |   |   |   tests.py
-|   |   |   |   urls.py
-|   |   |   |   views.py
-|   |   |   |   __init__.py          
+|   |       |   admin.py
+|   |       |   apps.py
+|   |       |   consumers.py
+|   |       |   models.py
+|   |       |   routing.py
+|   |       |   serializers.py
+|   |       |   tests.py
+|   |       |   urls.py
+|   |       |   views.py
+|   |       |   __init__.py          
 |   |   +---products
-|   |   |   |   admin.py
-|   |   |   |   apps.py
-|   |   |   |   models.py
-|   |   |   |   serializers.py
-|   |   |   |   tests.py
-|   |   |   |   test_image_textbook.jpg
-|   |   |   |   urls.py
-|   |   |   |   views.py
-|   |   |   |   __init__.py
+|   |       |   admin.py
+|   |       |   apps.py
+|   |       |   models.py
+|   |       |   serializers.py
+|   |       |   tests.py
+|   |       |   test_image_textbook.jpg
+|   |       |   urls.py
+|   |       |   views.py
+|   |       |   __init__.py
 |   |   +---profiles
 |   |       |   admin.py
 |   |       |   apps.py

@@ -22,7 +22,6 @@ import Wishlist from './components/screens/products/Wishlist';
 import Footer from './components/Footer';
 import About from './components/screens/About';
 import FAQ from './components/screens/FAQ';
-
 import CategoryPage from './components/screens/products/CategoryPage';
 import PasswordReset from './components/screens/profiles/PasswordReset';
 import PasswordResetConfirm from './components/screens/profiles/PasswordResetConfirm';
@@ -50,11 +49,10 @@ function App() {
                 <Route path = "/profiles/signup" element={<UsersSignUp/>}></Route>
                 <Route path = "/profiles/verify-email" element={<EmailVerification/>}></Route>
                 <Route path = "/password_reset_request" element={<PasswordReset/>}></Route>
-                <Route path = "/password_reset_confirm" element={<PasswordResetConfirm/>}></Route> 
+                <Route path = "/password_reset_confirm" element={<PasswordResetConfirm/>}></Route>
                 <Route path = "/profiles/login" element={<UsersLogin/>}></Route>
 
                 {/* Protected pages */}
-                {/*<Route path = "/" element={<PrivateRoute element={<HomeScreen />} />}></Route>*/}
                 <Route path="/" element={<Navigate to="/products" replace />} />
                 <Route path="/search" element={<PrivateRoute element={<SearchResults />} />} />
                 <Route path="/category" element={<PrivateRoute element={<CategoryPage />} />} />

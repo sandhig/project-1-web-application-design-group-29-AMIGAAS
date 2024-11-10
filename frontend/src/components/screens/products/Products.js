@@ -8,9 +8,9 @@ import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
 import Header from "../../Header"
-
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
+import { Link } from 'react-router-dom';
 
 const Products = () => {
   const [products, setProducts] = useState([]);
@@ -47,7 +47,7 @@ const Products = () => {
   };
 
   useEffect(() => {
-    fetch('http://3.87.240.14:8000/api/products/', {
+    fetch('http://54.165.176.36:8000/api/products/', {
       headers: {
         'Authorization': `Token ${token}`,
       }
@@ -103,9 +103,9 @@ const Products = () => {
               dotListClass="line-dot-style"
               itemClass="carousel-item-padding-40-px"
             >
-              <img src="/images/carousel/1.png"></img>
-              <img src="/images/carousel/2.png"></img>
-              <img src="/images/carousel/3.png"></img>
+              <Link to="/category?query=textbook"><img src="/images/carousel/1.png"></img></Link>
+              <Link to="/category?query=furniture"><img src="/images/carousel/2.png"></img></Link>
+              <Link to="/category?query=clothing"><img src="/images/carousel/3.png"></img></Link>
             </Carousel>
             <IconButton onClick={handlePlayPause} className="play-pause-button">
               {isPlaying ? (<PauseIcon style={{ fill: "white" }} />) : (<PlayArrowIcon style={{ fill: "white" }} />)}
@@ -158,7 +158,6 @@ const Products = () => {
           ))}
 
         </div>
-        
     </div>
   );
 };

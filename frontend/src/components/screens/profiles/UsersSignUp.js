@@ -89,7 +89,7 @@ const UsersSignUp = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await axios.post('http://3.87.240.14:8000/api/profiles/signup', formData, {
+      const response = await axios.post('http://54.165.176.36:8000/api/profiles/signup', formData, {
         headers: {
           'Content-Type': 'application/json',
         },
