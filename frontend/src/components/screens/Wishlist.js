@@ -65,6 +65,7 @@ function Wishlist() {
     return (
         <div>
             <Header />
+            <div style={{ padding: '10px' }}></div>
             <h1>My Wishlist</h1>
             <div className="product-grid-wrapper">
                 <div className="product-grid transparent-bg">
