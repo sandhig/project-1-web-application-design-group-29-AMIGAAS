@@ -69,7 +69,7 @@ function About() {
                         <div className="popup-content" onClick={(e) => e.stopPropagation()}>
                             <h2>{selectedMember.fullName}</h2>
                             <img src={selectedMember.image} alt={selectedMember.name} className="popup-image" />
-                            <p><strong>Role:</strong> {selectedMember.role}</p>
+                            <p><strong>Major:</strong> {selectedMember.role}</p>
                             <p>{selectedMember.bio}</p>
                             <div className="popup-buttons">
                                 <button onClick={closePopup}>Close</button>
