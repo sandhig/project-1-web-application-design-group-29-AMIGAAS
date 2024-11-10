@@ -20,6 +20,16 @@
     overflow: visible;
 }
 
+/* the animation definition
+Box Shadow: The box-shadow property is used to create a glow around the
+circle. By animating the shadow, it gives the illusion of a pulsing shine.
+
+Animation: The @keyframes shine animation alternates between two states:
+-0%: Starts with a smaller glow.
+-100%: Expands the glow to give a pulsating effect.
+
+*/
+
 .center-circle {
     background-color: #003366;
     color: #ffffff;
@@ -37,15 +47,7 @@
     animation: shine 2s infinite alternate;
 }
 
-/* the animation definition
-Box Shadow: The box-shadow property is used to create a glow around the
-circle. By animating the shadow, it gives the illusion of a pulsing shine.
 
-Animation: The @keyframes shine animation alternates between two states:
--0%: Starts with a smaller glow.
--100%: Expands the glow to give a pulsating effect.
-
-*/
 @keyframes shine {
     0% {
         box-shadow: 0 0 20px rgba(0, 51, 102, 0.7), 0 0 30px rgba(0, 51, 102, 0.5);
@@ -64,29 +66,6 @@ Animation: The @keyframes shine animation alternates between two states:
     border-radius: 50%;
     animation: sparkle 2s infinite ease-in-out;
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
-}
-
-.center-circle::before {
-    top: -15px;
-    left: 25px;
-    animation-delay: 0s;
-}
-
-.center-circle::after {
-    bottom: -15px;
-    right: 25px;
-    animation-delay: 1s;
-}
-
-@keyframes sparkle {
-    0%, 100% {
-        opacity: 0;
-        transform: scale(0.5);
-    }
-    50% {
-        opacity: 1;
-        transform: scale(1);
-    }
 }
 
 .team-member-circle {
