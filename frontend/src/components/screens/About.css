@@ -1,3 +1,4 @@
+/* About.css good4 */
 .about-page {
     text-align: center;
     font-family: 'Roboto', Arial, sans-serif;
@@ -5,7 +6,7 @@
 
 .about-content {
     padding: 20px;
-    margin-top: -10px; /* Adjust space above circle layout */
+    margin-top: -10px;
 }
 
 .circle-container {
@@ -13,21 +14,21 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 20px; /* Reduce space between title and circle layout */
-    height: 600px; /* Increase height for larger layout */
+    margin-top: 20px;
+    height: 600px;
     overflow: visible;
 }
 
 .center-circle {
     background-color: #003366;
     color: #ffffff;
-    width: 160px; /* Increased size */
-    height: 160px; /* Increased size */
+    width: 160px;
+    height: 160px;
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.4rem; /* Slightly larger font */
+    font-size: 1.4rem;
     font-weight: bold;
     position: relative;
     z-index: 1;
@@ -35,8 +36,8 @@
 
 .team-member-circle {
     position: absolute;
-    width: 110px; /* Increased size */
-    height: 110px; /* Increased size */
+    width: 110px;
+    height: 110px;
     border-radius: 50%;
     overflow: hidden;
     text-align: center;
@@ -45,7 +46,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
 }
 
 .team-member-circle:hover {
@@ -54,18 +55,19 @@
 }
 
 .team-member-circle img {
-    width: 85px; /* Adjusted image size */
+    width: 85px;
     height: 85px;
     border-radius: 50%;
-    margin-bottom: 12px; /* More space below image for name */
 }
 
-.team-member-circle p {
-    margin: 0;
+.team-member-name {
+    position: absolute;
+    top: 105%; /* Positioning the name below the circle */
+    font-size: 0.85rem;
     color: #333;
     font-weight: bold;
-    font-size: 0.85rem; /* Adjusted font size */
     text-align: center;
+    width: 100%; /* Make the name width same as the circle */
 }
 
 .popup {
@@ -135,5 +137,5 @@
     padding: 20px;
     font-size: 1.1rem;
     color: #333;
-    margin-top: 20px; /* Reduce space below circle layout */
+    margin-top: 20px;
 }
