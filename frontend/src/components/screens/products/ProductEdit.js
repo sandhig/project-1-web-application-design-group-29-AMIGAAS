@@ -199,7 +199,6 @@ const ProductEdit = ({
         if (formData.image instanceof File) {
             payload.append('image', formData.image);
         }
-
         axios.put(`http://54.165.176.36:8000/api/products/${product.id}/`, payload, {
             headers: {
                 'Authorization': `Token ${token}`,

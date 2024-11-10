@@ -11,13 +11,17 @@ import CreateListing from './components/screens/products/CreateListing';
 import UsersSignUp from "./components/screens/profiles/UsersSignUp";
 import UsersLogin from './components/screens/profiles/UsersLogin';
 import EmailVerification from './components/screens/profiles/EmailVerification';
+import Header from "./components/Header"; 
 import PrivateRoute from './components/PrivateRoute';
 import { UserProvider } from './context/UserContext';
 import WelcomePage from './components/screens/WelcomePage';
-import EditProfile from './components/screens/products/EditProfile';
+import EditProfile from './components/screens/profiles/EditProfile';
 import ProductListing from './components/screens/products/ProductListing';
 import SearchResults from './components/screens/products/SearchResults';
 import Wishlist from './components/screens/products/Wishlist';
+import Footer from './components/Footer';
+import About from './components/screens/About';
+import FAQ from './components/screens/FAQ';
 import CategoryPage from './components/screens/products/CategoryPage';
 import PasswordReset from './components/screens/profiles/PasswordReset';
 import PasswordResetConfirm from './components/screens/profiles/PasswordResetConfirm';
@@ -60,12 +64,17 @@ function App() {
                 <Route path="/profile/:userId" element={<UserProfile />} />
                 <Route path="/profiles/edit-profile" element={<EditProfile />} />
                 <Route path="/wishlist" element={<Wishlist />} />
+                <Route path="/about" element={<About />} />
+                <Route path="/faq" element={<FAQ />} />
               </Routes>
+              
             </div>
+            <Footer /> {/* Footer appears on every page */}
             
-            </Router>
-          </UserProvider>
-        </ThemeProvider>
+          </Router>
+        </UserProvider>
+      </ThemeProvider>
+
       </div>
     );
   }

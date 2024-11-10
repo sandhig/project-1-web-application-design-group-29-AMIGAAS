@@ -166,7 +166,6 @@ function CreateListing() {
     if (formData.image) {
       payload.append('image', formData.image);
     }
-
     axios.post('http://54.165.176.36:8000/api/products/', payload, {
       headers: {
         'Authorization': `Token ${token}`

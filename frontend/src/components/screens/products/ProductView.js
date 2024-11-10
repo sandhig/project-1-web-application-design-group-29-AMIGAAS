@@ -60,7 +60,6 @@ const ProductView = ({
             })
             .then(response => response.json())
             .then(data => {
-                
                 axios.post('http://54.165.176.36:8000/api/send_message/', {
                     conversation_id: data.conversation_id,
                     content: message,
@@ -98,7 +97,6 @@ const ProductView = ({
                     {product.image_url ? 
                           (<img className="listing-image" src={product.image_url}></img>) 
                           : <img className="listing-image" src="/images/no-image-icon.png"></img>}
-                    
                 </div>
                 <span className="listing-details">
                     <div className="listing-header">

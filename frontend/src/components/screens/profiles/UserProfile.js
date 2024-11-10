@@ -28,6 +28,7 @@ function UserProfile() {
 
     useEffect(() => {
         if (currentUser) {
+
             fetch(`http://54.165.176.36:8000/api/user/${userId}/`, {
                 method: 'GET',
                 headers: {
@@ -38,7 +39,6 @@ function UserProfile() {
                 .then(response => response.json())
                 .then((data) => {
                     setUser(data);
-
                     fetch(`http://54.165.176.36:8000/api/user-products/${userId}/`, {
                         method: 'GET',
                         headers: {
@@ -76,7 +76,9 @@ function UserProfile() {
         if (userId) {
 
             // Fetch or create conversation with seller
+
             fetch(`http://54.165.176.36:8000/api/conversation/start/${userId}/`, {
+
                 method: 'POST',
                 headers: {
                     'Authorization': `Token ${token}`,
@@ -87,6 +89,7 @@ function UserProfile() {
                 .then(data => {
 
                     axios.post('http://54.165.176.36:8000/api/send_message/', {
+
                         conversation_id: data.conversation_id,
                         content: message,
                     }, {
@@ -118,6 +121,7 @@ function UserProfile() {
     };
 
     const scrollLeft = (ref) => {
+
         console.log(ref)
         const itemWidth = ref.current.children[0].offsetWidth;
         ref.current.scrollBy({ left: -itemWidth, behavior: "smooth" });
@@ -235,7 +239,6 @@ function UserProfile() {
                             <h2 style={{ marginBottom: "0" }}>My Past Listings</h2>
 
                             <div style={{ display: "flex", alignItems: "center" }}>
-
                                 <IconButton onClick={() => scrollLeft(pastScrollRef)}>
                                     <ArrowLeftIcon style={{ fontSize: "xxx-large" }} />
                                 </IconButton>
@@ -264,7 +267,6 @@ function UserProfile() {
                                         </>
                                     )}
                                 </div>
-
                                 <IconButton onClick={() => scrollRight(pastScrollRef)}>
                                     <ArrowRightIcon style={{ fontSize: "xxx-large" }} />
                                 </IconButton>

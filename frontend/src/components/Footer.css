@@ -1,8 +1,9 @@
-.footer-container {
-    background-color: #193552;
-    padding: 20px;
-    text-align: center;
+/* Footer.css */
 
+.footer-container {
+    background-color: #001f3f;
+    padding: 5px;
+    text-align: center;
     p, a {
         color: rgb(235, 235, 235);
     }
@@ -44,4 +45,15 @@ a:hover {
 
 .footer p {
     font-size: 0.9em;
+}
+
+.footer-links {
+    margin-top: 5px;
+    margin-bottom: 8px; /* Minimal extra space below the links */
+}
+
+.footer-links .separator {
+    color: #fff; /* Make the separator white */
+    margin: 0 12px; /* Equal spacing between the separator and links */
+    font-weight: bold;
 }

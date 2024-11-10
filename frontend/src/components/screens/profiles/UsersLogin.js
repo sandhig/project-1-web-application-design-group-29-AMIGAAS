@@ -26,6 +26,7 @@ const UsersLogin = () => {
     return emailRegex.test(email) ? '' : 'Please enter a valid UofT email address.';
   };
 
+ 
   const validatePassword = (password) => {
     if (!password) return 'Please enter your password.';
     else return '';
@@ -79,6 +80,7 @@ const UsersLogin = () => {
     setIsSubmitting(true);
 
     try {
+
       const response = await axios.post('http://54.165.176.36:8000/api/profiles/login', formData, {
         headers: {
           'Content-Type': 'application/json',
@@ -94,6 +96,7 @@ const UsersLogin = () => {
         setTimeout(() => {
           navigate('/products');  //was /homepage is not /products
         }, 2000);
+
 
       }
     } catch (error) {
@@ -113,7 +116,6 @@ const UsersLogin = () => {
           if (key !== 'non_field_errors') {
             console.log(Object.keys(backendErrors[key]));
             const fieldError = backendErrors[key];
-
             fieldErrors[Object.keys(fieldError)] = Object.values(fieldError).map(errorArray => errorArray.join(' ')).join(' ');
           }
         });
@@ -161,6 +163,7 @@ const UsersLogin = () => {
             helperText={formErrors.password}
           />
           <Button
+
             name="signup"
             variant="text"
             color="primary"
@@ -178,7 +181,6 @@ const UsersLogin = () => {
             {isSubmitting || successMessage ? 'Logging In...' : 'Login'}
           </Button>
         </form>
-
         <div className='side-by-side'>
           <div className='typography'>
             <Typography>Not a User?</Typography>
