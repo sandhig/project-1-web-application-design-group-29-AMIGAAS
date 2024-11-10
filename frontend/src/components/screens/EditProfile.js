@@ -1,11 +1,12 @@
-import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '../../context/UserContext';
+import { Button, TextField, Typography } from '@mui/material';
+import React, { useState, useEffect } from 'react';
+
 import './EditProfile.css';
 import Header from "../../components/Header"
+import { useUser } from '../../context/UserContext';
 
 function EditProfile() {
-    
     const navigate = useNavigate();
 
     const [profile, setProfile] = useState({
