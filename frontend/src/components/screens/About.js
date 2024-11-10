@@ -16,6 +16,7 @@ const teamMembers = [
 
 function About() {
     const [selectedMember, setSelectedMember] = useState(null);
+    const [isFlipped, setIsFlipped] = useState(false);
 
     const handleMemberClick = (member) => {
         setSelectedMember(member);
