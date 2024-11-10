@@ -44,6 +44,10 @@ Animation: The @keyframes shine animation alternates between two states:
     z-index: 1;
     box-shadow: 0 0 10px rgba(0, 51, 102, 0.3), 0 0 20px rgba(0, 51, 102, 0.2);
     animation: shine 3s infinite alternate;
+    cursor: pointer; /* Now clickable */
+    perspective: 1000px; /* 3D perspective for the flip effect */
+    transform-style: preserve-3d; /* Ensured the 3D flip effect */
+    transition: transform 0.8s; /* Smooth flip transition */
 }
 
 /* Softer glow animation */
