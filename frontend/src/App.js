@@ -4,26 +4,28 @@ import { BrowserRouter as Router, Routes, Route, Link } from 'react-router-dom';
 import { Navigate } from "react-router-dom";
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 
-import UserProfile from './components/screens/UserProfile';
+import UserProfile from './components/screens/profiles/UserProfile';
 import PrivateMessage from './components/screens/PrivateMessaging';
-import Products from './components/screens/Products';
-import CreateListing from './components/screens/CreateListing';
-import UsersSignUp from "./components/screens/UsersSignUp";
-import UsersLogin from './components/screens/UsersLogin';
-import HomeScreen from "./components/screens/HomeScreen"; 
-import EmailVerification from './components/screens/EmailVerification';
+import Products from './components/screens/products/Products';
+import CreateListing from './components/screens/products/CreateListing';
+import UsersSignUp from "./components/screens/profiles/UsersSignUp";
+import UsersLogin from './components/screens/profiles/UsersLogin';
+import EmailVerification from './components/screens/profiles/EmailVerification';
 import Header from "./components/Header"; 
 import PrivateRoute from './components/PrivateRoute';
 import { UserProvider } from './context/UserContext';
 import WelcomePage from './components/screens/WelcomePage';
-import EditProfile from './components/screens/EditProfile';
-import ProductListing from './components/screens/ProductListing';
-import SearchResults from './components/screens/SearchResults';
-import Wishlist from './components/screens/Wishlist';
+import EditProfile from './components/screens/products/EditProfile';
+import ProductListing from './components/screens/products/ProductListing';
+import SearchResults from './components/screens/products/SearchResults';
+import Wishlist from './components/screens/products/Wishlist';
 import Footer from './components/Footer';
 import About from './components/screens/About';
 import FAQ from './components/screens/FAQ';
 
+import CategoryPage from './components/screens/products/CategoryPage';
+import PasswordReset from './components/screens/profiles/PasswordReset';
+import PasswordResetConfirm from './components/screens/profiles/PasswordResetConfirm';
 
 const theme = createTheme({
   palette: {
@@ -47,12 +49,15 @@ function App() {
                 <Route path = "/" element={<WelcomePage/>}></Route>
                 <Route path = "/profiles/signup" element={<UsersSignUp/>}></Route>
                 <Route path = "/profiles/verify-email" element={<EmailVerification/>}></Route>
+                <Route path = "/password_reset_request" element={<PasswordReset/>}></Route>
+                <Route path = "/password_reset_confirm" element={<PasswordResetConfirm/>}></Route> 
                 <Route path = "/profiles/login" element={<UsersLogin/>}></Route>
 
                 {/* Protected pages */}
                 {/*<Route path = "/" element={<PrivateRoute element={<HomeScreen />} />}></Route>*/}
                 <Route path="/" element={<Navigate to="/products" replace />} />
                 <Route path="/search" element={<PrivateRoute element={<SearchResults />} />} />
+                <Route path="/category" element={<PrivateRoute element={<CategoryPage />} />} />
                 <Route path="/products" element={<PrivateRoute element={<Products />} />} />
                 <Route path="/products/:id" element={<PrivateRoute element={<ProductListing />} />} />
                 <Route path="/products/create" element={<PrivateRoute element={<CreateListing />} />} />
