@@ -155,7 +155,7 @@ Animation: The @keyframes shine animation alternates between two states:
     color: #333;
     font-weight: bold;
     text-align: center;
-    width: 100%; /* Make the name width same as the circle */
+    width: 100%; /* Made the name width same as the circle */
 }
 
 .popup {
