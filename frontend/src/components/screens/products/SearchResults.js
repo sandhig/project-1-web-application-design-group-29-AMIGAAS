@@ -76,7 +76,7 @@ const SearchResults = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://3.87.240.14:8000/api/products/?search=${searchTerm}`, {
+    fetch(`http://54.165.176.36:8000/api/products/?search=${searchTerm}`, {
       headers: {
         Authorization: `Token ${token}`,
       },
@@ -87,7 +87,7 @@ const SearchResults = () => {
         setLoading(false);
       })
       .catch((error) => console.error("Error fetching products:", error));
-    axios.get('http://3.87.240.14:8000/api/product-choices/', {
+    axios.get('http://54.165.176.36:8000/api/product-choices/', {
       headers: {
         'Authorization': `Token ${token}`,
       }

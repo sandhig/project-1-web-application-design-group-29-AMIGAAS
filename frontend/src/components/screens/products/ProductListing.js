@@ -20,7 +20,7 @@ const ProductListing = () => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        fetch(`http://3.87.240.14:8000/api/products/${id}`, {
+        fetch(`http://54.165.176.36:8000/api/products/${id}`, {
             headers: {
             'Authorization': `Token ${token}`,
             }

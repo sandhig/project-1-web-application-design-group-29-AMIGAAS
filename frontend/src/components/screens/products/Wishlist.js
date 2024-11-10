@@ -15,7 +15,7 @@ function Wishlist() {
     const [loading, setLoading] = useState(true);
 
     const fetchWishlistItems = () => {
-        fetch('http://3.87.240.14:8000/api/wishlist/', {
+        fetch('http://54.165.176.36:8000/api/wishlist/', {
             headers: {
                 'Authorization': `Token ${token}`,
             }
@@ -40,7 +40,7 @@ function Wishlist() {
         const confirmed = window.confirm("Are you sure you want to remove this item from your wishlist?");
 
         if (confirmed) {
-            fetch(`http://3.87.240.14:8000/api/wishlist/`, {
+            fetch(`http://54.165.176.36:8000/api/wishlist/`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Token ${token}`,

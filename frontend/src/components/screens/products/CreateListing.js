@@ -52,7 +52,7 @@ function CreateListing() {
   const isFormInvalid = isSubmitting || Object.values(formErrors).some(error => error) || snackbarOpen;
 
   useEffect(() => {
-    axios.get('http://3.87.240.14:8000/api/product-choices/', {
+    axios.get('http://54.165.176.36:8000/api/product-choices/', {
       headers: {
         'Authorization': `Token ${token}`,
       }
@@ -167,7 +167,7 @@ function CreateListing() {
       payload.append('image', formData.image);
     }
 
-    axios.post('http://3.87.240.14:8000/api/products/', payload, {
+    axios.post('http://54.165.176.36:8000/api/products/', payload, {
       headers: {
         'Authorization': `Token ${token}`
       }

@@ -28,7 +28,7 @@ function UserProfile() {
 
     useEffect(() => {
         if (currentUser) {
-            fetch(`http://3.87.240.14:8000/api/user/${userId}/`, {
+            fetch(`http://54.165.176.36:8000/api/user/${userId}/`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Token ${token}`,
@@ -39,7 +39,7 @@ function UserProfile() {
                 .then((data) => {
                     setUser(data);
 
-                    fetch(`http://3.87.240.14:8000/api/user-products/${userId}/`, {
+                    fetch(`http://54.165.176.36:8000/api/user-products/${userId}/`, {
                         method: 'GET',
                         headers: {
                             'Authorization': `Token ${token}`,
@@ -50,7 +50,7 @@ function UserProfile() {
                         .then(data => setProducts(data));
 
                     if (userId == currentUser.id) {
-                        fetch(`http://3.87.240.14:8000/api/sold-products/`, {
+                        fetch(`http://54.165.176.36:8000/api/sold-products/`, {
                             method: 'GET',
                             headers: {
                                 'Authorization': `Token ${token}`,
@@ -76,7 +76,7 @@ function UserProfile() {
         if (userId) {
 
             // Fetch or create conversation with seller
-            fetch(`http://3.87.240.14:8000/api/conversation/start/${userId}/`, {
+            fetch(`http://54.165.176.36:8000/api/conversation/start/${userId}/`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Token ${token}`,
@@ -86,7 +86,7 @@ function UserProfile() {
                 .then(response => response.json())
                 .then(data => {
 
-                    axios.post('http://3.87.240.14:8000/api/send_message/', {
+                    axios.post('http://54.165.176.36:8000/api/send_message/', {
                         conversation_id: data.conversation_id,
                         content: message,
                     }, {
