@@ -1,8 +1,8 @@
-# ECE444 - UofT Second Hand Hub Web Application Development
+# ECE444 - Too Good To Throw Web Application Development
 
 ## About the Project 
 
-We are building U of T Second Hand Hub; a website application designed by students for students where they can browse and sell secondhand items within the U of T community.  
+As fourth year engineering students at the University of Toronto we have been tasked with designing, creating, implementing and hosting our very own Second Hand Hub - an e-market website that allows UofT students to post and sell second-hand items within the UofT community.   
 
 ## Table of Contents
 
