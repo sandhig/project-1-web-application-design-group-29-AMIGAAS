@@ -1,4 +1,5 @@
 /* Footer.css */
+
 .footer-container {
     background-color: #001f3f;
     padding: 5px;
@@ -49,6 +50,7 @@ a:hover {
 
 .footer-links {
     margin-top: 5px;
+    margin-bottom: 8px; /* Minimal extra space below the links */
 }
 
 .footer-links .separator {
