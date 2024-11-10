@@ -27,3 +27,55 @@ const teamMembers = [
         image: 'https://img.freepik.com/premium-vector/cute-girl-cartoon-hug-sweet-heart-valentines-day-kawaii-character_70350-730.jpg', 
         bio: 'Software developer focusing on User Inferface' },
 ];
+
+function About() {
+    const [selectedMember, setSelectedMember] = useState(null);
+
+    const handleMemberClick = (member) => {
+        setSelectedMember(member);
+    };
+
+    const closePopup = () => {
+        setSelectedMember(null);
+    };
+
+
+
+    return (
+        <div className="about-page">
+            <Header />
+            <div className="about-content">
+                <h1>About Us</h1>
+                <p>We are AMIGAAS, a team of 7 University of Toronto Engineering students who developed "Too Good to Throw" to promote affordable, sustainable shopping for students.</p>
+                <div className="circle-container">
+                    <div className="center-circle">AMIGAAS</div>
+                    {teamMembers.map((member) => (
+                        <div key={member.id} className="team-member-circle" onClick={() => handleMemberClick(member)}>
+                            <img src={member.image} alt={member.name} />
+                            <p>{member.name}</p>
+                        </div>
+                    ))}
+                </div>
+                {selectedMember && (
+                    <div className="popup">
+                        <button className="close-btn" onClick={closePopup}>X</button>
+                        <img src={selectedMember.image} alt={selectedMember.fullName} className="popup-img" />
+                        <h2>{selectedMember.fullName}</h2>
+                        <h3>{selectedMember.role}</h3>
+                        <p>{selectedMember.bio}</p>
+                        <div className="navigation-buttons">
+                            <button onClick={() => handleNavigation(-1)}>&larr;</button>
+                            <button onClick={() => handleNavigation(1)}>&rarr;</button>
+                        </div>
+                    </div>
+                )}
+            </div>
+            <div className="description-section">
+                <h2>Too Good to Throw</h2>
+                <p>This platform empowers students to buy and sell second-hand items conveniently within the university community, promoting sustainability and affordability.</p>
+            </div>
+        </div>
+    );
+}
+
+export default About;
