@@ -122,7 +122,7 @@ def create_random_combination_of_filters(page):
     target_x = price_slider_position['x'] + price_slider_position['width'] * random_width_percentage
     target_y = price_slider_position['y'] + price_slider_position['height'] / 2 
     page.mouse.click(target_x, target_y)
-    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
 
     # Count number of products returned after single filter
     filtered_product_count = page.locator(PRODUCT_GRID).locator(PRODUCT_ITEM).count() # count filtered products listed in the grid
@@ -304,7 +304,7 @@ def test_price_slider_halfway(page):
     target_x = price_slider_position['x'] + price_slider_position['width'] * 0.5
     target_y = price_slider_position['y'] + price_slider_position['height'] / 2 
     page.mouse.click(target_x, target_y)
-    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
 
     # Locate the products container
     filtered_product_count = page.locator(PRODUCT_GRID).locator(PRODUCT_ITEM).count() # count filtered products listed in the grid
@@ -335,7 +335,7 @@ def test_price_slider_random(page):
     target_x = price_slider_position['x'] + price_slider_position['width'] * random_width_percentage
     target_y = price_slider_position['y'] + price_slider_position['height'] / 2 
     page.mouse.click(target_x, target_y)
-    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
 
     # Locate the products container
     filtered_product_count = page.locator(PRODUCT_GRID).locator(PRODUCT_ITEM).count() # count filtered products listed in the grid
@@ -397,7 +397,7 @@ def test_all_filter_combinations(page):
     target_x = price_slider_position['x'] + price_slider_position['width'] * random_width_percentage
     target_y = price_slider_position['y'] + price_slider_position['height'] / 2 
     page.mouse.click(target_x, target_y)
-    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
 
     # Count number of products returned after four filters
     filtered_product_count_4_filter = page.locator(PRODUCT_GRID).locator(PRODUCT_ITEM).count() # count filtered products listed in the grid
@@ -569,7 +569,7 @@ def test_can_submit_valid_form(page):
 
     # fill in all required fields
     page.get_by_label("Name").fill("Test Product")
-    page.get_by_label("Price").fill("200") 
+    page.get_by_label("Price").fill("500") 
     page.get_by_label("Category").click()
     page.get_by_role(ROLE_OPTION, name=CATEGORY_CHOICES[0]).click()
     page.get_by_label("Condition").click()
@@ -735,17 +735,19 @@ def test_adding_to_wishlist(page):
     """ Test to users are able to add an item to their wishlist"""
     # Navigate to wishlist
     page.goto(WISHLIST_URL)
-    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
-    initial_count = page.locator(PRODUCT_ITEM).count()  # Before adding a new item
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+    product_grid = page.locator(PRODUCT_GRID)
+    initial_count = product_grid.locator(PRODUCT_ITEM).count()  # Before adding a new item
 
     # Search up something to select
     page.goto(PRODUCTS_PAGE_URL)
-    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+    
     chosen_product_locator = page.locator(PRODUCT_ITEM).first
 
     # click to navigate to the product detail page
     chosen_product_locator.click()
-    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
     assert page.url != PRODUCTS_PAGE_URL
 
     # retain the product name to match later
@@ -758,7 +760,7 @@ def test_adding_to_wishlist(page):
 
     # go to the user's wishlist and see if the product is listed there
     page.get_by_role(ROLE_LINK, name=WISHLIST_BUTTON).click()
-    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
     assert page.url == WISHLIST_URL
 
     # Locate the products container
@@ -774,8 +776,9 @@ def test_delete_from_wishlist(page):
     """ Test to users are able to delete an item from their wishlist"""
     # Navigate to wishlist
     page.goto(WISHLIST_URL)
-    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
-    initial_count = page.locator(PRODUCT_ITEM).count()  # Before removing a new item
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+    product_grid = page.locator(PRODUCT_GRID)
+    initial_count = product_grid.locator(PRODUCT_ITEM).count()  # Before removing a new item
     
     # Retain the first product name
     chosen_product_locator = page.locator(PRODUCT_ITEM).first
@@ -787,7 +790,7 @@ def test_delete_from_wishlist(page):
     # remove the product
     clear_button = chosen_product_locator.locator(CLEAR_BUTTON)
     clear_button.click()
-    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
 
     # Locate the products container
     product_grid = page.locator(PRODUCT_GRID)
