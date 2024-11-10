@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useUser } from '../../context/UserContext';
+import { useUser } from '../../../context/UserContext';
 import "./UserProfile.css";
 import './Products.css';
-import Header from "../../components/Header"
+import Header from "../../Header"
 import { Button, Snackbar } from '@mui/material';
 import axios from 'axios';
 import { IoSend } from "react-icons/io5";

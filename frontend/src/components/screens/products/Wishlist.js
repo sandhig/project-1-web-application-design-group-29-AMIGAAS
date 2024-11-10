@@ -1,6 +1,6 @@
-import { useUser } from '../../context/UserContext';
+import { useUser } from '../../../context/UserContext';
 import React, { useState, useEffect } from 'react';
-import Header from "../../components/Header"
+import Header from "../../Header"
 import { useNavigate } from 'react-router-dom';
 import './Wishlist.css';
 import IconButton from "@mui/material/IconButton";

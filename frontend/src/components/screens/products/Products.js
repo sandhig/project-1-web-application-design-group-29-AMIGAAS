@@ -1,13 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
 import './Products.css';
-import { useUser } from '../../context/UserContext';
+import { useUser } from '../../../context/UserContext';
 import { useNavigate } from 'react-router-dom';
 import IconButton from "@mui/material/IconButton";
 import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
-import Header from "../../components/Header"
+import Header from "../../Header"
 
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";

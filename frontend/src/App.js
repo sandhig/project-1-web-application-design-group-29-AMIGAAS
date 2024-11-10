@@ -15,7 +15,7 @@ import Header from "./components/Header";
 import PrivateRoute from './components/PrivateRoute';
 import { UserProvider } from './context/UserContext';
 import WelcomePage from './components/screens/WelcomePage';
-import EditProfile from './components/screens/products/EditProfile';
+import EditProfile from './components/screens/profiles/EditProfile';
 import ProductListing from './components/screens/products/ProductListing';
 import SearchResults from './components/screens/products/SearchResults';
 import Wishlist from './components/screens/products/Wishlist';

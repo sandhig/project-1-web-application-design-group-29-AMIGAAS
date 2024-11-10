@@ -4,9 +4,9 @@ import './Products.css';
 import { Select, MenuItem, FormControl, InputLabel, Slider, Typography, Button } from '@mui/material';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { useUser } from '../../context/UserContext';
+import { useUser } from '../../../context/UserContext';
 import { useNavigate } from 'react-router-dom';
-import Header from "../Header";
+import Header from "../../Header";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
