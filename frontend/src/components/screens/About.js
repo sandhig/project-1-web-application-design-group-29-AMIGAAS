@@ -50,7 +50,7 @@ function About() {
             <Header />
             <div className="about-content">
                 <h1>About Us</h1>
-                <p>We are AMIGAAS, a team of 7 University of Toronto Engineering students who developed "Too Good to Throw" to promote affordable, sustainable shopping for students.</p>
+                
                 <div className="circle-container">
                     <div className="center-circle">AMIGAAS</div>
                     {teamMembers.map((member) => (
@@ -76,7 +76,7 @@ function About() {
             </div>
             <div className="description-section">
                 <h2>Too Good to Throw</h2>
-                <p>This platform empowers students to buy and sell second-hand items conveniently within the university community, promoting sustainability and affordability.</p>
+                <p>We are AMIGAAS, a team of 7 University of Toronto Engineering students who developed "Too Good to Throw" to promote affordable, sustainable shopping for students.</p>
             </div>
         </div>
     );
