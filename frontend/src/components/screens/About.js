@@ -32,6 +32,10 @@ function About() {
         setSelectedMember(teamMembers[nextIndex]);
     };
 
+    const toggleFlip = () => {
+        setIsFlipped(!isFlipped);
+    };
+
     return (
         <div className="about-page">
             <Header />
