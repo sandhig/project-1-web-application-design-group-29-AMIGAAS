@@ -67,7 +67,7 @@ const CategoryPage = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://3.87.240.14:8000/api/products/?category=${category}`, {
+    fetch(`http://54.165.176.36:8000/api/products/?category=${category}`, {
       headers: {
         Authorization: `Token ${token}`,
       },
@@ -78,7 +78,7 @@ const CategoryPage = () => {
         setLoading(false);
       })
       .catch((error) => console.error("Error fetching products:", error));
-    axios.get('http://3.87.240.14:8000/api/product-choices/', {
+    axios.get('http://54.165.176.36:8000/api/product-choices/', {
       headers: {
         'Authorization': `Token ${token}`,
       }

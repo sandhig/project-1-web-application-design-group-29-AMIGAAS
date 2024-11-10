@@ -56,7 +56,7 @@ const ProductEdit = ({
     const isFormInvalid = isSubmitting || Object.values(formErrors).some(error => error) || snackbarOpen;
 
     useEffect(() => {
-        axios.get('http://3.87.240.14:8000/api/product-choices/', {
+        axios.get('http://54.165.176.36:8000/api/product-choices/', {
           headers: {
             'Authorization': `Token ${token}`,
           }
@@ -200,7 +200,7 @@ const ProductEdit = ({
             payload.append('image', formData.image);
         }
 
-        axios.put(`http://3.87.240.14:8000/api/products/${product.id}/`, payload, {
+        axios.put(`http://54.165.176.36:8000/api/products/${product.id}/`, payload, {
             headers: {
                 'Authorization': `Token ${token}`,
                 'Content-Type': 'multipart/form-data'
