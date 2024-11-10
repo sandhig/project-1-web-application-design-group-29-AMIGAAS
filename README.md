@@ -141,31 +141,33 @@ PROJECT1-WEB-APPLICATION-DESIGN-GROUP-29-AMIGAAS:.
 |       |   |   PrivateRoute.js
 |       |   |   UploadAndDisplayImage.js   
 |       |   \---screens
-|       |           CreateListing.css
-|       |           CreateListing.js
-|       |           EditProfile.css
-|       |           EditProfile.js
-|       |           EmailVerification.js
-|       |           HomeScreen.js
-|       |           PrivateMessage.css
-|       |           PrivateMessaging.js
-|       |           ProductEdit.js
-|       |           ProductListing.css
-|       |           ProductListing.js
-|       |           Products.css
-|       |           Products.js
-|       |           ProductView.js
-|       |           SearchResults.js
-|       |           UserProfile.css
-|       |           UserProfile.js
-|       |           UsersLogin.js
-|       |           UsersLogOut.js
-|       |           UsersSignUp.css
-|       |           UsersSignUp.js
-|       |           WelcomePage.css
-|       |           WelcomePage.js
-|       |           Wishlist.css
-|       |           Wishlist.js        
+|       |       |   HomeScreen.js
+|       |       |   PrivateMessage.css
+|       |       |   PrivateMessaging.js
+|       |       |   WelcomePage.css
+|       |       |   WelcomePage.js     
+|       |       +---products
+|       |           |   CreateListing.css
+|       |           |   CreateListing.js
+|       |           |   ProductEdit.js
+|       |           |   ProductListing.css
+|       |           |   ProductListing.js
+|       |           |   Products.css
+|       |           |   Products.js
+|       |           |   ProductView.js
+|       |           |   SearchResults.js
+|       |           |   Wishlist.css
+|       |           |   Wishlist.js   
+|       |       +---profiles
+|       |           |   EditProfile.css
+|       |           |   EditProfile.js
+|       |           |   EmailVerification.js
+|       |           |   UserProfile.css
+|       |           |   UserProfile.js
+|       |           |   UsersLogin.js
+|       |           |   UsersLogOut.js
+|       |           |   UsersSignUp.css
+|       |           |   UsersSignUp.js
 |       +---context
 |       |       UserContext.js
 |       \---tests
