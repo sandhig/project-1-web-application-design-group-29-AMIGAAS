@@ -244,6 +244,20 @@ Animation: The @keyframes shine animation alternates between two states:
     margin-top: -70px; /* Pulled "Too Good to Throw" closer to the circle layout */
 }
 
+/* Style for the "Too Good to Throw" heading */
+.description-section h2 {
+    font-size: 1.8rem;
+    font-weight: bold;
+    color: #003366;
+    margin-bottom: 20px;
+}
+
+/* Additional padding to push the footer further down */
+footer {
+    padding-top: 40px;
+    border-top: 1px solid #003366; /* Optional border for a subtle divider */
+}
+
 .social-links {
     display: flex;
     justify-content: center;
