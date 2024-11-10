@@ -1,5 +1,3 @@
-/* About.css 3 names appear underneath, title about us without overlap */
-
 .about-page {
     text-align: center;
     font-family: 'Roboto', Arial, sans-serif;
@@ -7,6 +5,7 @@
 
 .about-content {
     padding: 20px;
+    margin-top: -10px; /* Adjust space above circle layout */
 }
 
 .circle-container {
@@ -14,31 +13,30 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin-top: 80px; /* Move container down so 'About Us' title is not overlapped */
-    height: 400px; /* Increase height to allow space for names */
-    overflow: visible; /* Ensure circles don’t get clipped */
+    margin-top: 20px; /* Reduce space between title and circle layout */
+    height: 600px; /* Increase height for larger layout */
+    overflow: visible;
 }
 
 .center-circle {
     background-color: #003366;
     color: #ffffff;
-    width: 130px;
-    height: 130px;
+    width: 160px; /* Increased size */
+    height: 160px; /* Increased size */
     border-radius: 50%;
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 1.2rem;
+    font-size: 1.4rem; /* Slightly larger font */
     font-weight: bold;
     position: relative;
     z-index: 1;
 }
 
-/* Team member circle styling */
 .team-member-circle {
     position: absolute;
-    width: 90px;
-    height: 90px;
+    width: 110px; /* Increased size */
+    height: 110px; /* Increased size */
     border-radius: 50%;
     overflow: hidden;
     text-align: center;
@@ -56,54 +54,55 @@
 }
 
 .team-member-circle img {
-    width: 70px; /* Fixed size for consistency */
-    height: 70px;
+    width: 85px; /* Adjusted image size */
+    height: 85px;
     border-radius: 50%;
-    margin-bottom: 5px; /* Spacing between image and name */
+    margin-bottom: 12px; /* More space below image for name */
 }
 
-/* Name below each image */
 .team-member-circle p {
     margin: 0;
     color: #333;
     font-weight: bold;
-    font-size: 0.8rem;
+    font-size: 0.85rem; /* Adjusted font size */
     text-align: center;
 }
 
-/* Position each team member in a circular layout around the center */
-.circle-container .team-member-circle:nth-child(1) { transform: translate(-150px, -180px); }
-.circle-container .team-member-circle:nth-child(2) { transform: translate(0, -220px); }
-.circle-container .team-member-circle:nth-child(3) { transform: translate(150px, -180px); }
-.circle-container .team-member-circle:nth-child(4) { transform: translate(200px, 0); }
-.circle-container .team-member-circle:nth-child(5) { transform: translate(150px, 180px); }
-.circle-container .team-member-circle:nth-child(6) { transform: translate(0, 220px); }
-.circle-container .team-member-circle:nth-child(7) { transform: translate(-150px, 180px); }
-
-/* Popup styling */
 .popup {
     position: fixed;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
     background: white;
-    padding: 20px;
+    padding: 25px;
     border-radius: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
-    width: 300px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+    width: 350px;
     text-align: center;
     z-index: 10;
 }
 
 .popup .popup-img {
-    width: 80px;
-    height: 80px;
+    width: 100px;
+    height: 100px;
     border-radius: 50%;
-    margin-bottom: 10px;
+    margin-bottom: 15px;
 }
 
-.popup h2, .popup h3 {
+.popup h2 {
     margin: 10px 0;
+    font-size: 1.2rem;
+}
+
+.popup h3 {
+    margin: 8px 0;
+    font-size: 1rem;
+    color: #666;
+}
+
+.popup p {
+    font-size: 0.9rem;
+    color: #333;
 }
 
 .popup .close-btn {
@@ -126,14 +125,15 @@
     background-color: #003366;
     color: white;
     border: none;
-    padding: 5px 10px;
+    padding: 8px 15px;
     cursor: pointer;
     border-radius: 5px;
+    font-size: 0.9rem;
 }
 
 .description-section {
     padding: 20px;
     font-size: 1.1rem;
     color: #333;
-    margin-top: 40px; /* Space between circle layout and description */
+    margin-top: 20px; /* Reduce space below circle layout */
 }
