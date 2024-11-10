@@ -15,8 +15,8 @@ function FAQ() {
   return (
     <div className="faq-section">
         <Header/>
-         <div style={{ padding: '20px' }}></div>
-      <h2 className="faq-title">Frequently Asked Questions</h2>
+         <div style={{ padding: '10px' }}></div>
+      <h1 className="faq-title">Frequently Asked Questions</h1>
       {faqData.map((faq, index) => (
         <FAQItem key={index} question={faq.question} answer={faq.answer} />
       ))}
