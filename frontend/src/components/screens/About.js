@@ -81,6 +81,17 @@ function About() {
                         <h2>{selectedMember.fullName}</h2>
                         <h3>{selectedMember.role}</h3>
                         <p>{selectedMember.bio}</p>
+
+                        {/* Social Links */}
+                        <div className="social-links">
+                            <a href={selectedMember.linkedin} target="_blank" rel="noopener noreferrer" className="social-link">
+                                <i className="fab fa-linkedin"></i>
+                            </a>
+                            <a href={selectedMember.github} target="_blank" rel="noopener noreferrer" className="social-link">
+                                <i className="fab fa-github"></i>
+                            </a>
+                        </div>
+
                         <div className="navigation-buttons">
                             <button onClick={() => handleNavigation(-1)}>&larr;</button>
                             <button onClick={() => handleNavigation(1)}>&rarr;</button>
