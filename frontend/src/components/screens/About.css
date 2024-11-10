@@ -119,7 +119,10 @@ Animation: The @keyframes shine animation alternates between two states:
     font-size: 0.8rem; /* Comparitively smaller font for the abbreviations */
     color: #ffffff;
     text-align: center;
-    line-height: 1.2; /* Spacing for abbreviations */
+    line-height: 1.5; /* Increased spacing for readability */
+    display: flex;
+    flex-direction: column;
+    padding: 10px; /* Padding to bring content away from edges */
 }
 
 .team-member-circle {
