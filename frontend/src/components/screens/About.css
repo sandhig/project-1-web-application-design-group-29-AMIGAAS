@@ -78,6 +78,17 @@ Animation: The @keyframes shine animation alternates between two states:
     animation-delay: 1s;
 }
 
+@keyframes sparkle {
+    0%, 100% {
+        opacity: 0;
+        transform: scale(0.5);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
 .team-member-circle {
     position: absolute;
     width: 110px;
