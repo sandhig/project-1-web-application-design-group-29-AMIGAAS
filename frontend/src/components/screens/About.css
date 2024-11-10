@@ -112,6 +112,16 @@ Animation: The @keyframes shine animation alternates between two states:
     backface-visibility: hidden; /* the reverse side hidden during flip */
 }
 
+
+/* Back side of the circle with the abbreviations */
+.center-circle .back {
+    transform: rotateY(180deg); /* Rotated back side for the flip effect */
+    font-size: 0.8rem; /* Comparitively smaller font for the abbreviations */
+    color: #ffffff;
+    text-align: center;
+    line-height: 1.2; /* Spacing for abbreviations */
+}
+
 .team-member-circle {
     position: absolute;
     width: 110px;
