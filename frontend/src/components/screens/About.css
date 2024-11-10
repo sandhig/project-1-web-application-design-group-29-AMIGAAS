@@ -66,6 +66,17 @@ Animation: The @keyframes shine animation alternates between two states:
     box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
 }
 
+.center-circle::before {
+    top: -15px;
+    left: 25px;
+    animation-delay: 0s;
+}
+
+.center-circle::after {
+    bottom: -15px;
+    right: 25px;
+    animation-delay: 1s;
+}
 
 .team-member-circle {
     position: absolute;
