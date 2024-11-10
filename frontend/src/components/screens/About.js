@@ -63,7 +63,20 @@ function About() {
                     </div>
                 </div>
 
-                
+                {/* Popup Modal for Member Details */}
+                {selectedMember && (
+                    <div className="popup-overlay" onClick={closePopup}>
+                        <div className="popup-content" onClick={(e) => e.stopPropagation()}>
+                            <h2>{selectedMember.fullName}</h2>
+                            <img src={selectedMember.image} alt={selectedMember.name} className="popup-image" />
+                            <p><strong>Role:</strong> {selectedMember.role}</p>
+                            <p>{selectedMember.bio}</p>
+                            <div className="popup-buttons">
+                                <button onClick={closePopup}>Close</button>
+                            </div>
+                        </div>
+                    </div>
+                )}
 
                 {/* Too Good to Throw Description */}
                 <div className="about-description">
