@@ -111,3 +111,8 @@
     cursor: pointer;
     border-radius: 5px;
 }
+
+.description-section {
+    padding: 20px;
+    font-size: 1.1rem;
+}
