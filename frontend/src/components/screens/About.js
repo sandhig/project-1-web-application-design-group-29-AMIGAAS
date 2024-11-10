@@ -67,7 +67,10 @@ function About() {
                         <h2>{selectedMember.fullName}</h2>
                         <h3>{selectedMember.role}</h3>
                         <p>{selectedMember.bio}</p>
-
+                        <div className="navigation-buttons">
+                            <button onClick={() => handleNavigation(-1)}>&larr;</button>
+                            <button onClick={() => handleNavigation(1)}>&rarr;</button>
+                        </div>
                     </div>
                 )}
             </div>
