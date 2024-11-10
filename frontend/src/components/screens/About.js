@@ -39,7 +39,11 @@ function About() {
         setSelectedMember(null);
     };
 
-
+    const handleNavigation = (direction) => {
+        const currentIndex = teamMembers.findIndex(member => member === selectedMember);
+        const nextIndex = (currentIndex + direction + teamMembers.length) % teamMembers.length;
+        setSelectedMember(teamMembers[nextIndex]);
+    };
 
     return (
         <div className="about-page">
@@ -63,10 +67,7 @@ function About() {
                         <h2>{selectedMember.fullName}</h2>
                         <h3>{selectedMember.role}</h3>
                         <p>{selectedMember.bio}</p>
-                        <div className="navigation-buttons">
-                            <button onClick={() => handleNavigation(-1)}>&larr;</button>
-                            <button onClick={() => handleNavigation(1)}>&rarr;</button>
-                        </div>
+
                     </div>
                 )}
             </div>
