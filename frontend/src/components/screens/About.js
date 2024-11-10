@@ -118,7 +118,7 @@ function About() {
                 )}
             </div>
             <div className="description-section">
-                <h2>Too Good to Throw</h2>
+                <h2>Too Good To Throw</h2>
                 <p>We are AMIGAAS, a team of 7 University of Toronto Engineering students who developed "Too Good to Throw" to promote affordable, sustainable shopping for students.</p>
             </div>
         </div>
