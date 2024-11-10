@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useUser } from '../../context/UserContext';
+import { useUser } from '../../../context/UserContext';
 import "./UserProfile.css";
-import './Products.css';
-import Header from "../../components/Header"
+import '../products/Products.css';
+import Header from "../../Header"
 import { Button, Snackbar } from '@mui/material';
 import axios from 'axios';
 import { IoSend } from "react-icons/io5";
@@ -118,6 +118,7 @@ function UserProfile() {
     };
 
     const scrollLeft = (ref) => {
+        console.log(ref)
         const itemWidth = ref.current.children[0].offsetWidth;
         ref.current.scrollBy({ left: -itemWidth, behavior: "smooth" });
     };
@@ -189,7 +190,7 @@ function UserProfile() {
                     {parseInt(currentUser.id) == parseInt(userId) ? (
                         <h2 style={{ margin: "0" }}>My Current Listings</h2>
                     ) : (
-                        <h2 style={{ margin: "0" }}>{user.first_name}'s Listings</h2>
+                        <>{user && (<h2 style={{ margin: "0" }}>{user.first_name}'s Listings</h2>)}</>
                     )}
 
                     <div style={{ display: "flex", alignItems: "center" }}>
@@ -235,11 +236,11 @@ function UserProfile() {
 
                             <div style={{ display: "flex", alignItems: "center" }}>
 
-                                <IconButton onClick={() => scrollLeft(currentScrollRef)}>
+                                <IconButton onClick={() => scrollLeft(pastScrollRef)}>
                                     <ArrowLeftIcon style={{ fontSize: "xxx-large" }} />
                                 </IconButton>
 
-                                <div className="scroll-container" ref={currentScrollRef}>
+                                <div className="scroll-container" ref={pastScrollRef}>
                                     {loading ? (
                                         <span className="product-loader"></span>
                                     ) : (
@@ -264,7 +265,7 @@ function UserProfile() {
                                     )}
                                 </div>
 
-                                <IconButton onClick={() => scrollRight(currentScrollRef)}>
+                                <IconButton onClick={() => scrollRight(pastScrollRef)}>
                                     <ArrowRightIcon style={{ fontSize: "xxx-large" }} />
                                 </IconButton>
 

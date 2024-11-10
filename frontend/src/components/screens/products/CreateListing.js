@@ -15,9 +15,9 @@ import axios from 'axios';
 import React, { useState, useEffect } from 'react';
 
 import './CreateListing.css';
-import Header from "../../components/Header";
+import Header from "../../Header";
 import { useNavigate } from 'react-router-dom';
-import { useUser } from '../../context/UserContext';
+import { useUser } from '../../../context/UserContext';
 
 function CreateListing() {
   const navigate = useNavigate();
