@@ -33,7 +33,28 @@
     font-weight: bold;
     position: relative;
     z-index: 1;
+    box-shadow: 0 0 20px rgba(0, 51, 102, 0.7), 0 0 30px rgba(0, 51, 102, 0.5);
+    animation: shine 2s infinite alternate;
 }
+
+/* the animation definition
+Box Shadow: The box-shadow property is used to create a glow around the
+circle. By animating the shadow, it gives the illusion of a pulsing shine.
+
+Animation: The @keyframes shine animation alternates between two states:
+-0%: Starts with a smaller glow.
+-100%: Expands the glow to give a pulsating effect.
+
+*/
+@keyframes shine {
+    0% {
+        box-shadow: 0 0 20px rgba(0, 51, 102, 0.7), 0 0 30px rgba(0, 51, 102, 0.5);
+    }
+    100% {
+        box-shadow: 0 0 30px rgba(0, 51, 102, 1), 0 0 60px rgba(0, 51, 102, 0.8);
+    }
+}
+
 
 .team-member-circle {
     position: absolute;
