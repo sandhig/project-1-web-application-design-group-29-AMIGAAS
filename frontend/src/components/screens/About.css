@@ -100,6 +100,18 @@ Animation: The @keyframes shine animation alternates between two states:
     transform: rotateY(180deg); /* Flip the circle horizontally */
 }
 
+/* Front side of the circle with the "AMIGAAS" text */
+.center-circle .front, .center-circle .back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backface-visibility: hidden; /* the reverse side hidden during flip */
+}
+
 .team-member-circle {
     position: absolute;
     width: 110px;
