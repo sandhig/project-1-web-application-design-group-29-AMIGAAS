@@ -11,6 +11,7 @@ SIGNUP_PAGE_URL = 'http://localhost:3000/profiles/signup'
 LOGIN_PAGE_URL = 'http://localhost:3000/profiles/login'
 VERIFY_PAGE_URL = 'http://localhost:3000/profiles/verify-email'
 FORGOT_PASSWORD_URL = 'http://localhost:3000/password_reset_request'
+HOMEPAGE_URL = 'http://localhost:3000/products'
 
 # LOCATOR SELECTORS
 SIGNUP = "Sign Up"
@@ -24,6 +25,7 @@ LAST_NAME = "Last Name *"
 EMAIL = "UofT Email *"
 PASSWORD = "Password *"
 CODE = "Verification Code *"
+LOGOUT = "logout"
 
 # ROLES
 ROLE_BUTTON = 'button'
@@ -611,6 +613,50 @@ def test_login_wrong_email(page):
     print("Test: Login with wrong password works as expected")
 
 
+def test_login_valid_input(page):
+    '''Test for logging in to an account with valid input'''
+    page.goto(LOGIN_PAGE_URL)
+
+    # Find the locators for input boxes
+    email_box = page.get_by_label(EMAIL)
+    password_box = page.get_by_label(PASSWORD)
+
+    # give input
+    email_box.click()
+    email_box.fill(AUTHORIZED_USER_EMAIL)
+    password_box.click()
+    password_box.fill(AUTHORIZED_USER_PASSWORD)
+
+    submit_login_button = page.get_by_role(ROLE_BUTTON, name=LOGIN)
+    submit_login_button.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    # Should be logged in and redirected to the homepage
+    assert page.url == HOMEPAGE_URL
+    print("Test: Login with wrong password works as expected")
+
+
+def login_user(page):
+    '''Helper function to login a user for tests that need authentication'''
+    page.goto(LOGIN_PAGE_URL)
+
+    # Find the locators for input boxes
+    email_box = page.get_by_label(EMAIL)
+    password_box = page.get_by_label(PASSWORD)
+
+    # give input
+    email_box.click()
+    email_box.fill(AUTHORIZED_USER_EMAIL)
+    password_box.click()
+    password_box.fill(AUTHORIZED_USER_PASSWORD)
+
+    submit_login_button = page.get_by_role(ROLE_BUTTON, name=LOGIN)
+    submit_login_button.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+    return page
+
+
+
 # Test for pasword reset link
 def test_password_reset_no_email(page):
     '''Test for sending a reseting password link for no provided email'''
@@ -675,6 +721,28 @@ def test_password_reset_invalid_email(page):
     submit_rest_button = page.get_by_role(ROLE_BUTTON, name=SEND_LINK)
     assert submit_rest_button.is_disabled(), "Submit button is not disabled after submission"
     print("Test: Send password link with uoft email works as expected")
+
+
+# Test for logging out
+def test_logout_button(page):
+    '''Test the logout functionality'''
+    page = login_user(page)
+
+    # locate logout button and click on it
+    logout_button = page.get_by_label("logout")
+    logout_button.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+
+    # should be redirected to the login page
+    assert page.url == LOGIN_PAGE_URL
+    expect(page.get_by_role(ROLE_HEADING)).to_contain_text("Login")
+
+    # Should not be able to go back to homepage
+    page.goto(HOMEPAGE_URL)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+    assert page.url != HOMEPAGE_URL  # should not be able to access it anymore
+    assert page.url == LOGIN_PAGE_URL  # should be redirected here
+    print("Logout button works as expected")
 
 
 
