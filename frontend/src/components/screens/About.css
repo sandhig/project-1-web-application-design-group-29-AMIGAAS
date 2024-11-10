@@ -247,9 +247,12 @@ Animation: The @keyframes shine animation alternates between two states:
 /* Style for the "Too Good to Throw" heading */
 .description-section h2 {
     font-size: 1.8rem;
-    font-weight: bold;
+    font-family: 'Zombies'; /* Applies the Zombies font */
+    
+    font-weight: normal;
     color: #003366;
     margin-bottom: 20px;
+    text-transform: uppercase; 
 }
 
 /* Additional padding to push the footer further down */
