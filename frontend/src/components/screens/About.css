@@ -1,4 +1,4 @@
-/* About.css good2 */
+/* About.css 3 names appear underneath, title about us without overlap */
 
 .about-page {
     text-align: center;
@@ -14,8 +14,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    margin: 40px 0;
-    height: 300px;
+    margin-top: 80px; /* Move container down so 'About Us' title is not overlapped */
+    height: 400px; /* Increase height to allow space for names */
+    overflow: visible; /* Ensure circles don’t get clipped */
 }
 
 .center-circle {
@@ -33,6 +34,7 @@
     z-index: 1;
 }
 
+/* Team member circle styling */
 .team-member-circle {
     position: absolute;
     width: 90px;
@@ -42,6 +44,10 @@
     text-align: center;
     cursor: pointer;
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
 }
 
 .team-member-circle:hover {
@@ -50,25 +56,31 @@
 }
 
 .team-member-circle img {
-    width: 100%;
-    height: auto;
+    width: 70px; /* Fixed size for consistency */
+    height: 70px;
     border-radius: 50%;
+    margin-bottom: 5px; /* Spacing between image and name */
 }
 
+/* Name below each image */
 .team-member-circle p {
-    margin: 5px 0 0;
+    margin: 0;
     color: #333;
     font-weight: bold;
+    font-size: 0.8rem;
+    text-align: center;
 }
 
-.circle-container .team-member-circle:nth-child(1) { transform: translate(-150px, -150px); }
-.circle-container .team-member-circle:nth-child(2) { transform: translate(0, -200px); }
-.circle-container .team-member-circle:nth-child(3) { transform: translate(150px, -150px); }
+/* Position each team member in a circular layout around the center */
+.circle-container .team-member-circle:nth-child(1) { transform: translate(-150px, -180px); }
+.circle-container .team-member-circle:nth-child(2) { transform: translate(0, -220px); }
+.circle-container .team-member-circle:nth-child(3) { transform: translate(150px, -180px); }
 .circle-container .team-member-circle:nth-child(4) { transform: translate(200px, 0); }
-.circle-container .team-member-circle:nth-child(5) { transform: translate(150px, 150px); }
-.circle-container .team-member-circle:nth-child(6) { transform: translate(0, 200px); }
-.circle-container .team-member-circle:nth-child(7) { transform: translate(-150px, 150px); }
+.circle-container .team-member-circle:nth-child(5) { transform: translate(150px, 180px); }
+.circle-container .team-member-circle:nth-child(6) { transform: translate(0, 220px); }
+.circle-container .team-member-circle:nth-child(7) { transform: translate(-150px, 180px); }
 
+/* Popup styling */
 .popup {
     position: fixed;
     top: 50%;
@@ -123,4 +135,5 @@
     padding: 20px;
     font-size: 1.1rem;
     color: #333;
+    margin-top: 40px; /* Space between circle layout and description */
 }
