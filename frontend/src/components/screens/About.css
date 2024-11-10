@@ -96,3 +96,18 @@
     font-size: 1.2rem;
     cursor: pointer;
 }
+
+.navigation-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+}
+
+.navigation-buttons button {
+    background-color: #003366;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 5px;
+}
