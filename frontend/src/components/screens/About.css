@@ -29,7 +29,6 @@ Animation: The @keyframes shine animation alternates between two states:
 -100%: Expands the glow to give a pulsating effect.
 
 */
-
 .center-circle {
     background-color: #003366;
     color: #ffffff;
@@ -43,29 +42,53 @@ Animation: The @keyframes shine animation alternates between two states:
     font-weight: bold;
     position: relative;
     z-index: 1;
-    box-shadow: 0 0 20px rgba(0, 51, 102, 0.7), 0 0 30px rgba(0, 51, 102, 0.5);
-    animation: shine 2s infinite alternate;
+    box-shadow: 0 0 10px rgba(0, 51, 102, 0.3), 0 0 20px rgba(0, 51, 102, 0.2);
+    animation: shine 3s infinite alternate;
 }
 
-
+/* Softer glow animation */
 @keyframes shine {
     0% {
-        box-shadow: 0 0 20px rgba(0, 51, 102, 0.7), 0 0 30px rgba(0, 51, 102, 0.5);
+        box-shadow: 0 0 10px rgba(0, 51, 102, 0.3), 0 0 20px rgba(0, 51, 102, 0.2);
     }
     100% {
-        box-shadow: 0 0 30px rgba(0, 51, 102, 1), 0 0 60px rgba(0, 51, 102, 0.8);
+        box-shadow: 0 0 15px rgba(0, 51, 102, 0.5), 0 0 30px rgba(0, 51, 102, 0.3);
     }
 }
 
 .center-circle::before, .center-circle::after {
     content: '';
     position: absolute;
-    width: 10px;
-    height: 10px;
+    width: 12px; /* Smaller sparkles */
+    height: 12px;
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: 50%;
-    animation: sparkle 2s infinite ease-in-out;
-    box-shadow: 0 0 8px rgba(255, 255, 255, 0.5);
+    animation: sparkle 1.5s infinite ease-in-out;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
+}
+
+.center-circle::before {
+    top: -10px; /* Adjusted sparkle position */
+    left: 30px;
+    animation-delay: 0s;
+}
+
+.center-circle::after {
+    bottom: -10px; /* Adjusted sparkle position */
+    right: 30px;
+    animation-delay: 0.8s;
+}
+
+/* Subtle sparkle animation */
+@keyframes sparkle {
+    0%, 100% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 .team-member-circle {
