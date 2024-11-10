@@ -1,1 +1,34 @@
 /* About.css */
+
+.about-page {
+    text-align: center;
+    font-family: 'Roboto', Arial, sans-serif;
+}
+
+.about-content {
+    padding: 20px;
+}
+
+.circle-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 40px 0;
+    height: 300px;
+}
+
+.center-circle {
+    background-color: #003366;
+    color: #ffffff;
+    width: 130px;
+    height: 130px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    font-weight: bold;
+    position: relative;
+    z-index: 1;
+}
