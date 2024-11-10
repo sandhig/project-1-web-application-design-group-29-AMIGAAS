@@ -5,7 +5,10 @@ import Header from "../../components/Header";
 import './About.css';
 
 const teamMembers = [
-    { id: 1, name: 'Tasfia', fullName: 'Tasfia Mehbuba Islam', role: 'Computer Engineering', image: 'https://www.shutterstock.com/image-vector/cute-cartoon-girl-bow-lollipop-600nw-2193282125.jpg', bio: 'Frontend developer specializing in database management.' },
+    { id: 1, name: 'Tasfia', fullName: 'Tasfia Mehbuba Islam', role: 'Computer Engineering', image: 'https://www.shutterstock.com/image-vector/cute-cartoon-girl-bow-lollipop-600nw-2193282125.jpg', bio: 'Frontend developer specializing in database management.',
+        linkedin: 'https://www.linkedin.com/in/tasfia-mehbuba-islam/', // Add LinkedIn link
+        github: 'https://github.com/tasfia8' // Add GitHub link
+     },
     { id: 2, name: 'Amy', fullName: 'Amy Saranchuk', role: 'Engineering Science', image: 'https://images.aiscribbles.com/fde2f799da4e4ab585c586f37149a822.png?v=908b7e', bio: 'Software developer focusing on creating intuitive and beautiful user interfaces.' },
     { id: 3, name: 'Lamia', fullName: 'Lamia Alam', role: 'Computer Engineering', image: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHjcqA8gmqYRP2guO27QRSxl6iRoFTgJpeFQ&s', bio: 'Software developer specializing in product quality' },
     { id: 4, name: 'Raisa', fullName: 'Raisa Islam Aishy', role: 'Computer Engineering', image: 'https://static.vecteezy.com/system/resources/previews/008/974/656/non_2x/cute-kid-girl-holding-bubble-milk-tea-hand-drawn-cartoon-character-illustration-vector.jpg', bio: 'Software developer focusing on Unit Testing and UI/UX' },
