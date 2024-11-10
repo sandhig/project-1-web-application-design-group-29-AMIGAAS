@@ -160,14 +160,14 @@ Animation: The @keyframes shine animation alternates between two states:
 }
 
 .team-member-name {
-    position: absolute;
-    top: 105%; /* Positioning the name below the circle */
+    position: relative; /* Temporary basic positioning */
+    top: 5px;           /* Slightly below the image */
     font-size: 0.85rem;
     color: #333;
     font-weight: bold;
     text-align: center;
-    width: 100%; /* Made the name width same as the circle */
 }
+
 
 .popup {
     position: fixed;
