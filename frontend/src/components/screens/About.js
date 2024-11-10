@@ -14,9 +14,10 @@ const teamMembers = [
     { id: 7, name: 'Sandhi', fullName: 'Sandhi Ganjoo', role: 'Engineering Science', image: 'https://img.freepik.com/premium-vector/cute-girl-cartoon-hug-sweet-heart-valentines-day-kawaii-character_70350-730.jpg', bio: 'Software developer focusing on User Interface' },
 ];
 
+
 function About() {
     const [selectedMember, setSelectedMember] = useState(null);
-    const [isFlipped, setIsFlipped] = useState(false);
+    const [isFlipped, setIsFlipped] = useState(false); // Manage flip with this state
 
     const handleMemberClick = (member) => {
         setSelectedMember(member);
@@ -32,6 +33,7 @@ function About() {
         setSelectedMember(teamMembers[nextIndex]);
     };
 
+    //Flip state Toggler
     const toggleFlip = () => {
         setIsFlipped(!isFlipped);
     };
@@ -43,7 +45,18 @@ function About() {
                 <h1>About Us</h1>
                 
                 <div className="circle-container">
-                    <div className="center-circle">AMIGAAS</div>
+                    <div className={`center-circle ${isFlipped ? 'flipped' : ''}`} onClick={toggleFlip}>
+                        <div className="front">AMIGAAS</div>
+                        <div className="back">
+                            <p>A: Aishy</p>
+                            <p>M: Mittal</p>
+                            <p>I: Islam</p>
+                            <p>G: Ganjoo</p>
+                            <p>A: Alam</p>
+                            <p>A: Agib</p>
+                            <p>S: Saranchuk</p>
+                        </div>
+                    </div>
                     {teamMembers.map((member, index) => (
                         <div
                             key={member.id}
@@ -54,7 +67,7 @@ function About() {
                             }}
                         >
                             <img src={member.image} alt={member.name} />
-                            <p>{member.name}</p>
+                            <div className="team-member-name">{member.name}</div>
                         </div>
                     ))}
                 </div>
