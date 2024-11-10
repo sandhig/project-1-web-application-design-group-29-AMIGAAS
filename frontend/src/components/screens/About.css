@@ -32,3 +32,25 @@
     position: relative;
     z-index: 1;
 }
+
+.team-member-circle {
+    position: absolute;
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    overflow: hidden;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.team-member-circle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.team-member-circle img {
+    width: 100%;
+    height: auto;
+    border-radius: 50%;
+}
