@@ -28,15 +28,48 @@ const teamMembers = [
         bio: 'Software developer focusing on User Inferface' },
 ];
 
-
 function About() {
+    const [selectedMember, setSelectedMember] = useState(null);
+
+    const handleMemberClick = (member) => {
+        setSelectedMember(member);
+    };
+
+    const closePopup = () => {
+        setSelectedMember(null);
+    };
+
     return (
         <div>
             <Header/>
-            <div style={{ padding: '20px' }}>
+            <div className="about-container">
                 <h1>About Us</h1>
-                <p>We are AMIGAAS, a team of 7 University of Toronto Engineering students who developed "Too Good to Throw" as a platform to help students buy and sell second-hand items affordably and sustainably.</p>
-                {/* Placeholder for adding team members' photos and names in the future */}
+                <p>We are AMIGAAS, a team of 7 University of Toronto Engineering students who developed "Too Good to Throw" to promote affordable, sustainable shopping for students.</p>
+                
+                {/* Central Globe and Team Members */}
+                <div className="globe-container">
+                    <div className="central-globe">AMIGAAS</div>
+                    <div className="team-member-circles">
+                        {teamMembers.map(member => (
+                            <div 
+                                key={member.id} 
+                                className="team-member-circle" 
+                                onClick={() => handleMemberClick(member)}
+                                style={{ backgroundImage: `url(${member.image})` }}
+                            >
+                                <span className="member-name">{member.name}</span>
+                            </div>
+                        ))}
+                    </div>
+                </div>
+
+                
+
+                {/* Too Good to Throw Description */}
+                <div className="about-description">
+                    <h2>Too Good to Throw</h2>
+                    <p>This platform empowers students to buy and sell second-hand items conveniently within the university community, promoting sustainability and affordability.</p>
+                </div>
             </div>
         </div>
     );
