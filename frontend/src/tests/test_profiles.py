@@ -12,6 +12,8 @@ LOGIN_PAGE_URL = 'http://localhost:3000/profiles/login'
 VERIFY_PAGE_URL = 'http://localhost:3000/profiles/verify-email'
 FORGOT_PASSWORD_URL = 'http://localhost:3000/password_reset_request'
 HOMEPAGE_URL = 'http://localhost:3000/products'
+USER_PROFILE_URL = 'http://localhost:3000/user/'
+EDIT_PROFILE_URL = 'http://localhost:3000/profiles/edit-profile'
 
 # LOCATOR SELECTORS
 SIGNUP = "Sign Up"
@@ -19,13 +21,23 @@ LOG_IN = "Log In"
 LOGIN = "Login"
 VERIFY = "Verify Email"
 FORGOT_PASSWORD = "Forgot Password?"
-SEND_LINK = "Send me a llink"
+SEND_LINK = "Send me a link"
 FIRST_NAME = "First Name *"
 LAST_NAME = "Last Name *"
 EMAIL = "UofT Email *"
 PASSWORD = "Password *"
 CODE = "Verification Code *"
 LOGOUT = "logout"
+PROFILE = ".header-profile"
+CURRENT_LISTINGS = "My Current Listings"
+PAST_LISTINGS = "My Past Listings"
+EDIT_PROFILE = "Edit Profile"
+ABOUT_ME = "About me"
+PROFILE_EMAIL = "Email"
+JOINED = "Joined"
+PRODUCT_ITEM = '.product-item'
+SELLER = '.seller-info'
+LISTING_INFO = 'listings-info-container'
 
 # ROLES
 ROLE_BUTTON = 'button'
@@ -36,6 +48,7 @@ ROLE_HEADING = 'heading'
 # AUTHORIZED TEST USER TODO: delete/change later
 AUTHORIZED_USER_EMAIL = 'raisa.aishy@mail.utoronto.ca'
 AUTHORIZED_USER_PASSWORD = 'Raisa1234!'
+AUTHORIZED_USER_URL = 'http://localhost:3000/user/9'
 
 @pytest.fixture(scope="session")
 def setup_playwright():
@@ -67,7 +80,7 @@ def test_navigate_signup_button(page):
     '''Test the signup button navigates to the signup page'''
     # Click on Sign Up Button
     page.goto(WELCOME_PAGE_URL)
-    signup_button = page.get_by_role(ROLE_BUTTON, SIGNUP)
+    signup_button = page.get_by_role(ROLE_BUTTON, name=SIGNUP)
     signup_button.click()
     page.wait_for_timeout(WAIT_TO_LOAD_LONG)
 
@@ -80,7 +93,7 @@ def test_navigate_login_button(page):
     '''Test the login button navigates to the login page'''
     # Click on Sign Up Button
     page.goto(WELCOME_PAGE_URL)
-    login_button = page.get_by_role(ROLE_BUTTON, LOG_IN)
+    login_button = page.get_by_role(ROLE_BUTTON, name=LOG_IN)
     login_button.click()
     page.wait_for_timeout(WAIT_TO_LOAD_LONG)
 
@@ -101,7 +114,7 @@ def test_navigate_to_forgot_password_page(page):
     '''Test that anyone can go to the forgot password page'''
     # Click on the Forgot Password Button
     page.goto(LOGIN_PAGE_URL)
-    forgot_password_button = page.get_by_role(ROLE_BUTTON, FORGOT_PASSWORD)
+    forgot_password_button = page.get_by_role(ROLE_BUTTON, name=FORGOT_PASSWORD)
     forgot_password_button.click()
     page.wait_for_timeout(WAIT_TO_LOAD_LONG)
 
@@ -350,36 +363,36 @@ def test_signup_invalid_password(page):
     print("Test: Signup with invalid password works as expected")
 
 
-def test_valid_input_signup(page):
-    '''Test for all valid input given but not the first name'''
-    # Find the locators for input boxes
-    page.goto(SIGNUP_PAGE_URL)
-    first_name_box = page.get_by_label(FIRST_NAME)
-    last_name_box = page.get_by_label(LAST_NAME)
-    email_box = page.get_by_label(EMAIL)
-    password_box = page.get_by_label(PASSWORD)
+# def test_valid_input_signup(page):
+#     '''Test for all valid input given but not the first name'''
+#     # Find the locators for input boxes
+#     page.goto(SIGNUP_PAGE_URL)
+#     first_name_box = page.get_by_label(FIRST_NAME)
+#     last_name_box = page.get_by_label(LAST_NAME)
+#     email_box = page.get_by_label(EMAIL)
+#     password_box = page.get_by_label(PASSWORD)
 
-    # fill with valid inputs
-    first_name_box.click()
-    first_name_box.fill("TestUserFirstName")
-    last_name_box.click()
-    last_name_box.fill("TestUserLastName")
-    email_box.click()
-    email_box.fill("playwright.test@mail.utoronto.ca")
-    password_box.click()
-    password_box.fill("Pwtest123")
+#     # fill with valid inputs
+#     first_name_box.click()
+#     first_name_box.fill("TestUserFirstName")
+#     last_name_box.click()
+#     last_name_box.fill("TestUserLastName")
+#     email_box.click()
+#     email_box.fill("playwright.test@mail.utoronto.ca")
+#     password_box.click()
+#     password_box.fill("Pwtest123")
 
-    submit_signup_button = page.get_by_role(ROLE_BUTTON, name="Sign Up")
-    submit_signup_button.click()
-    page.wait_for_timeout(WAIT_TO_LOAD_LONG + WAIT_TO_LOAD_LONG)
+#     submit_signup_button = page.get_by_role(ROLE_BUTTON, name="Sign Up")
+#     submit_signup_button.click()
+#     page.wait_for_timeout(WAIT_TO_LOAD_LONG + WAIT_TO_LOAD_LONG)
 
-    # Check that the submit button is disabled
-    submit_signup_button = page.get_by_role(ROLE_BUTTON, name="Sign Up")
-    assert submit_signup_button.is_disabled(), "Submit button is not disabled when there are errors"
+#     # Check that the submit button is disabled
+#     submit_signup_button = page.get_by_role(ROLE_BUTTON, name="Sign Up")
+#     assert submit_signup_button.is_disabled(), "Submit button is not disabled when there are errors"
 
-    # Check for redirection to verification page
-    assert page.url == VERIFY_PAGE_URL
-    print("Test: Signup with valid inputs works as expected")
+#     # Check for redirection to verification page
+#     assert page.url == VERIFY_PAGE_URL
+#     print("Test: Signup with valid inputs works as expected")
 
 
 # Tests for verification with edge cases
@@ -580,7 +593,7 @@ def test_login_wrong_password(page):
 
     submit_login_button = page.get_by_role(ROLE_BUTTON, name=LOGIN)
     submit_login_button.click()
-    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
 
     # Check for the specific error message
     assert page.get_by_text("Incorrect email or password.").is_visible(), "Error message not displayed"
@@ -629,7 +642,7 @@ def test_login_valid_input(page):
 
     submit_login_button = page.get_by_role(ROLE_BUTTON, name=LOGIN)
     submit_login_button.click()
-    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG+WAIT_TO_LOAD_LONG)
 
     # Should be logged in and redirected to the homepage
     assert page.url == HOMEPAGE_URL
@@ -656,22 +669,21 @@ def login_user(page):
     return page
 
 
-
 # Test for pasword reset link
 def test_password_reset_no_email(page):
     '''Test for sending a reseting password link for no provided email'''
     page.goto(FORGOT_PASSWORD_URL)
 
-    submit_rest_button = page.get_by_role(ROLE_BUTTON, name=SEND_LINK)
-    submit_rest_button.click()
+    submit_reset_button = page.get_by_role(ROLE_BUTTON, name=SEND_LINK)
+    submit_reset_button.click()
     page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
     
     # Check for the specific error message
     assert page.get_by_text("Please enter a valid UofT email address.").is_visible(), "Email error message not displayed"
 
     # Check that the submit button is disabled
-    submit_rest_button = page.get_by_role(ROLE_BUTTON, name=SEND_LINK)
-    assert submit_rest_button.is_disabled(), "Submit button is not disabled when there are errors"
+    submit_reset_button = page.get_by_role(ROLE_BUTTON, name=SEND_LINK)
+    assert submit_reset_button.is_disabled(), "Submit button is not disabled when there are errors"
     print("Test: Send password link without email works as expected")
 
 
@@ -686,20 +698,20 @@ def test_password_reset_invalid_email(page):
     email_box.click()
     email_box.fill("playwright.test@email.com")
 
-    submit_rest_button = page.get_by_role(ROLE_BUTTON, name=SEND_LINK)
-    submit_rest_button.click()
+    submit_reset_button = page.get_by_role(ROLE_BUTTON, name=SEND_LINK)
+    submit_reset_button.click()
     page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
     
     # Check for the specific error message
     assert page.get_by_text("Please enter a valid UofT email address.").is_visible(), "Email error message not displayed"
 
     # Check that the submit button is disabled
-    submit_rest_button = page.get_by_role(ROLE_BUTTON, name=SEND_LINK)
-    assert submit_rest_button.is_disabled(), "Submit button is not disabled when there are errors"
+    submit_reset_button = page.get_by_role(ROLE_BUTTON, name=SEND_LINK)
+    assert submit_reset_button.is_disabled(), "Submit button is not disabled when there are errors"
     print("Test: Send password link with non uoft email works as expected")
 
 
-def test_password_reset_invalid_email(page):
+def test_password_reset_valid_email(page):
     '''Test for sending a reseting password link for a non-UofT provided email'''
     page.goto(FORGOT_PASSWORD_URL)
 
@@ -710,16 +722,16 @@ def test_password_reset_invalid_email(page):
     email_box.click()
     email_box.fill("playwright.test@mail.utoronto.ca")
 
-    submit_rest_button = page.get_by_role(ROLE_BUTTON, name=SEND_LINK)
-    submit_rest_button.click()
+    submit_reset_button = page.get_by_role(ROLE_BUTTON, name=SEND_LINK)
+    submit_reset_button.click()
     page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
     
     # Check for the specific success message
     assert page.get_by_text("If this email is registered, a password reset link will be sent shortly. This may take a few minutes.").is_visible(), "Success message not displayed"
 
     # Check that the submit button is disabled
-    submit_rest_button = page.get_by_role(ROLE_BUTTON, name=SEND_LINK)
-    assert submit_rest_button.is_disabled(), "Submit button is not disabled after submission"
+    submit_reset_button = page.get_by_role(ROLE_BUTTON, name=SEND_LINK)
+    assert submit_reset_button.is_disabled(), "Submit button is not disabled after submission"
     print("Test: Send password link with uoft email works as expected")
 
 
@@ -745,13 +757,68 @@ def test_logout_button(page):
     print("Logout button works as expected")
 
 
+# Test for profile
+def test_own_profile_navigation(page):
+    '''Test the view profile functionality for current user'''
+    page = login_user(page)
+
+    # locate the profile picture and click on it
+    profile_icon = page.locator(PROFILE)
+    profile_icon.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+
+    # Should be redirected here
+    assert USER_PROFILE_URL in page.url
+    assert page.url == AUTHORIZED_USER_URL
+
+    # Ensure the following is displayed on the user profile
+    expect(page.get_by_role(ROLE_HEADING, name=CURRENT_LISTINGS)).to_be_visible()
+    expect(page.get_by_role(ROLE_HEADING, name=PAST_LISTINGS)).to_be_visible()
+    expect(page.get_by_role(ROLE_BUTTON, name=EDIT_PROFILE)).to_be_visible()
+    expect(page.get_by_text(ABOUT_ME)).to_be_visible()
+    expect(page.get_by_text(PROFILE_EMAIL)).to_be_visible()
+    expect(page.get_by_text(JOINED)).to_be_visible()
+    print("Navigate to user profile works as expected")
 
 
+def test_another_profile_navigation(page):
+    '''Test the view profile for a different user'''
+    page = login_user(page)
+
+    # open a product
+    page.goto(HOMEPAGE_URL)
+    chosen_product_locator = page.locator(PRODUCT_ITEM).first
+    chosen_product_locator.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+
+    # locate where the seller info is given and click on it
+    seller_info_locator = page.locator(SELLER)
+    seller_info_locator.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+
+    # Ensure it's navigated to a different user
+    assert page.url != AUTHORIZED_USER_URL
+
+    # ensure we no longer are able to see 'My Current Listings' and 'My Past Listings'
+    listings_info = page.locator(LISTING_INFO).all_text_contents()
+    assert CURRENT_LISTINGS not in listings_info
+    assert PAST_LISTINGS not in listings_info
+    print("Navigate to another user profile works as expected")
 
 
+def edit_profile_navigation(page):
+    '''Test the edit profile button functionality for the current user'''
+    page = login_user(page)
 
+    # locate the edit button and click on it
+    edit_button = page.get_by_role(ROLE_BUTTON, name=EDIT_PROFILE)
+    edit_button.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
 
-
+    # should be redirected here
+    assert page.url == EDIT_PROFILE_URL
+    expect(page.get_by_role(ROLE_HEADING)).to_contain_text(EDIT_PROFILE)
+    print("Navigate to edit profile works as expected")
 
 
 

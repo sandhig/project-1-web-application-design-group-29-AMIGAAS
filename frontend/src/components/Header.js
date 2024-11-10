@@ -51,7 +51,7 @@ function Header() {
 
     const fetchUnreadMessageCount = async () => {
       try {
-        const response = await fetch('http://3.87.240.14:8000/api/unread_messages/', {
+        const response = await fetch('http://127.0.0.1:8000/api/unread_messages/', {
           headers: {
             'Authorization': `Token ${token}`,
             'Content-Type': 'application/json',
@@ -68,7 +68,7 @@ function Header() {
     if (currentUser && token) {
       fetchUnreadMessageCount();
 
-      ws.current = new WebSocket(`ws://3.87.240.14:8000/ws/chat/user/${currentUser.id}/`);
+      ws.current = new WebSocket(`ws://127.0.0.1:8000/ws/chat/user/${currentUser.id}/`);
 
       ws.current.onopen = function () {
         console.log("WebSocket connection opened");
