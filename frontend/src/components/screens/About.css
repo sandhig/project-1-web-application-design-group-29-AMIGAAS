@@ -116,10 +116,10 @@ Animation: The @keyframes shine animation alternates between two states:
 /* Back side of the circle with the abbreviations */
 .center-circle .back {
     transform: rotateY(180deg); /* Rotated back side for the flip effect */
-    font-size: 0.8rem; /* Comparitively smaller font for the abbreviations */
+    font-size: 0.75rem; /* Comparitively smaller font for the abbreviations */
     color: #ffffff;
     text-align: center;
-    line-height: 1.5; /* Increased spacing for readability */
+    line-height: 1.4; /* Increased spacing for readability */
     display: flex;
     flex-direction: column;
     padding: 10px; /* Padding to bring content away from edges */
