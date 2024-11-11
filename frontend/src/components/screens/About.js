@@ -16,7 +16,7 @@ const teamMembers = [
         github: 'https://github.com/amyy2/'
      },
     { id: 3, name: 'Lamia', fullName: 'Lamia Alam', role: 'Computer Engineering', 
-        image: '/images/team/lamia.png', bio: 'Frontend & Backend Developer',
+        image: '/images/team/lamia3.jpg', bio: 'Frontend & Backend Developer',
         linkedin: 'https://www.linkedin.com/in/lamia-alam-29a53a1a0/',
         github: 'https://github.com/lamia-alam/'
      },
@@ -129,8 +129,8 @@ function About() {
                 <p>We are AMIGAAS, a team of 4th year University of Toronto Engineering students 
                     who developed "Too Good to Throw" to promote affordable, sustainable shopping for students. Too Good to Throw is a centralized marketplace to make buying and
                     selling secondhand items simple, safe, and sustainable. This platform, exclusive to the U of T community, 
-                    allows members to exchange textbooks, furniture, household items, and more. Verified by university-approved emails, 
-                    users can enjoy campus-based pickup locations, create new listings, engage in private messaging, and have their personalized wishlists.
+                    allows members to buy/sell textbooks, furniture, household items, and more. Accounts are verified by only allowing university-approved emails and  
+                    users can choose campus-based pickup locations, create new listings, engage in private messaging, and have personalized wishlists.
 </p>
             </div>
         </div>
