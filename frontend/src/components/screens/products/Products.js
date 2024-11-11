@@ -7,7 +7,8 @@ import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
-import Header from "../../Header"
+import Header from "../../Header";
+import Footer from "../../Footer";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { Link } from 'react-router-dom';
@@ -158,6 +159,7 @@ const Products = () => {
           ))}
 
         </div>
+        
     </div>
   );
 };

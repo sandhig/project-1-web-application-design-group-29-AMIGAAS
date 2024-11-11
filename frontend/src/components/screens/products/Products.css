@@ -2,8 +2,6 @@
     display: flex;
     flex-direction: row;
     width: 100%;
-    overflow: hidden;
-    height: -webkit-fill-available;
     background-color: #f2f2f2;
 }
 
@@ -22,8 +20,10 @@
 /* Products */
 
 .product-grid {
-    /*overflow-y: auto;*/
     flex-grow: 1;
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: calc(100vh - 132px);
 }
 
 .title {

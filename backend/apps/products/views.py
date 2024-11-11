@@ -77,7 +77,6 @@ class ProductAPIView(APIView):
             serializer = ProductSerializer(data=request.data)
 
             if serializer.is_valid():
-                serializer.save(user=request.user)
 
                 # If there is an image
                 if 'image' in request.FILES:
@@ -97,10 +96,10 @@ class ProductAPIView(APIView):
                     s3.upload_fileobj(image_file, settings.AWS_STORAGE_BUCKET_NAME, f'images/{filename}')
                     
                     logger.debug('Uploaded')
-                    serializer.save(profilePic=f'images/{filename}')
+                    serializer.save(user=request.user, image=f'images/{filename}')
 
                 else:
-                    serializer.save()
+                    serializer.save(user=request.user)
                 
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
             
@@ -119,7 +118,6 @@ class ProductAPIView(APIView):
             serializer = ProductSerializer(product, data=request.data, partial=True)
             
             if serializer.is_valid():
-                serializer.save(user=request.user)
 
                 # If there is an image
                 if 'image' in request.FILES:
@@ -139,10 +137,10 @@ class ProductAPIView(APIView):
                     s3.upload_fileobj(image_file, settings.AWS_STORAGE_BUCKET_NAME, f'images/{filename}')
                     
                     logger.debug('Uploaded')
-                    serializer.save(profilePic=f'images/{filename}')
+                    serializer.save(user=request.user, image=f'images/{filename}')
 
                 else:
-                    serializer.save()
+                    serializer.save(user=request.user)
                 
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
 

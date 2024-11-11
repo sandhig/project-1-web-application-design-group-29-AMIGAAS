@@ -1,5 +1,5 @@
 .container {
-    height: calc(100% - 132px);
+    height: calc(100vh - 132px);
     display: flex;
     flex-direction: row;
     text-align: left;
