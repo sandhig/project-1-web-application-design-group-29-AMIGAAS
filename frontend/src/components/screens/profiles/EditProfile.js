@@ -30,7 +30,9 @@ function EditProfile() {
     useEffect(() => {
         // Fetch profile data to populate form fields
         if (currentUser) {
+
             setLoading(true);
+
             fetch(`http://54.165.176.36:8000/api/user/${currentUser.id}/`, {
                 method: 'GET',
                 headers: {
@@ -129,7 +131,7 @@ function EditProfile() {
         if (newProfilePic) {
             formData.append('profilePic', profile.profilePic);
         }
-    
+
         fetch(`http://54.165.176.36:8000/api/profiles/edit-profile/`, {
             method: 'POST',
             headers: {

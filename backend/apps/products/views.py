@@ -11,6 +11,8 @@ from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
 import boto3
 from django.conf import settings
+import uuid
+import os
 
 import logging
 
@@ -72,31 +74,36 @@ class ProductAPIView(APIView):
         logger.debug('Received request for image upload')
         
         try:
-            logger.debug(f'Files: {request.FILES}')
             serializer = ProductSerializer(data=request.data)
 
             if serializer.is_valid():
                 serializer.save(user=request.user)
 
-                if 'image' not in request.FILES:
-                    logger.debug('Product upload with no image successful')
-                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+                # If there is an image
+                if 'image' in request.FILES:
+                    image_file = request.FILES['image']
+                    image_file.open()
+                    image_file.read()
+                    filename = f"{uuid.uuid4().hex}_{os.path.splitext(image_file.name.replace(' ', '_'))[0]}.jpeg"
                 
-                image_file = request.FILES['image']
-                filename = image_file.name.replace(" ", "_")
-            
-                s3 = boto3.client(
-                    's3',
-                    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-                    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-                    region_name=settings.AWS_S3_REGION_NAME
-                )
-                
-                image_file.seek(0)
-                s3.upload_fileobj(image_file, settings.AWS_STORAGE_BUCKET_NAME, f'images/{filename}')
+                    s3 = boto3.client(
+                        's3',
+                        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+                        region_name=settings.AWS_S3_REGION_NAME
+                    )
+                    
+                    image_file.seek(0)
+                    s3.upload_fileobj(image_file, settings.AWS_STORAGE_BUCKET_NAME, f'images/{filename}')
+                    
+                    logger.debug('Uploaded')
+                    serializer.save(profilePic=f'images/{filename}')
 
-                logger.debug('Image upload successful')
+                else:
+                    serializer.save()
+                
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
+            
             else:
                 logger.error(f'Serializer errors: {serializer.errors}')
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -114,25 +121,31 @@ class ProductAPIView(APIView):
             if serializer.is_valid():
                 serializer.save(user=request.user)
 
-                if 'image' not in request.FILES:
-                    logger.debug('Product upload with no image successful')
-                    return Response(serializer.data, status=status.HTTP_201_CREATED)
+                # If there is an image
+                if 'image' in request.FILES:
+                    image_file = request.FILES['image']
+                    image_file.open()
+                    image_file.read()
+                    filename = f"{uuid.uuid4().hex}_{os.path.splitext(image_file.name.replace(' ', '_'))[0]}.jpeg"
                 
-                image_file = request.FILES['image']
-                filename = image_file.name.replace(" ", "_")
-            
-                s3 = boto3.client(
-                    's3',
-                    aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
-                    aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
-                    region_name=settings.AWS_S3_REGION_NAME
-                )
-                
-                image_file.seek(0)
-                s3.upload_fileobj(image_file, settings.AWS_STORAGE_BUCKET_NAME, f'images/{filename}')
+                    s3 = boto3.client(
+                        's3',
+                        aws_access_key_id=settings.AWS_ACCESS_KEY_ID,
+                        aws_secret_access_key=settings.AWS_SECRET_ACCESS_KEY,
+                        region_name=settings.AWS_S3_REGION_NAME
+                    )
+                    
+                    image_file.seek(0)
+                    s3.upload_fileobj(image_file, settings.AWS_STORAGE_BUCKET_NAME, f'images/{filename}')
+                    
+                    logger.debug('Uploaded')
+                    serializer.save(profilePic=f'images/{filename}')
 
-                logger.debug('Image upload successful')
+                else:
+                    serializer.save()
+                
                 return Response(serializer.data, status=status.HTTP_201_CREATED)
+
             else:
                 logger.error(f'Serializer errors: {serializer.errors}')
                 return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
