@@ -106,7 +106,7 @@ const SearchResults = () => {
   };
 
   return (
-    <div style={{ height: '100vh' }}>
+    <div>
       <Header />
 
       <div className="products-container">
