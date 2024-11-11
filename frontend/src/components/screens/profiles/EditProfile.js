@@ -25,6 +25,7 @@ function EditProfile() {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const isFormInvalid = isSubmitting || Object.values(formErrors).some(error => error) || loading;
+    const isProfilePicButtonDisabled = isSubmitting || loading;
 
     useEffect(() => {
         // Fetch profile data to populate form fields
@@ -176,7 +177,7 @@ function EditProfile() {
                                 variant="contained"
                                 color="primary"
                                 component="span"
-                                disabled={isSubmitting}
+                                disabled={isProfilePicButtonDisabled}
                                 sx={{
                                     '&:hover': {
                                     backgroundColor: '#007fa3',       // Custom hover color
