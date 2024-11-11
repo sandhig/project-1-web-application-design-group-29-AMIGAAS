@@ -1,13 +1,17 @@
 from django.test import TestCase
 from django.contrib.auth.models import User
+from django.contrib.auth.tokens import default_token_generator
 from django.core.exceptions import ValidationError
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.urls import reverse, resolve
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
 from rest_framework.test import APITestCase, APIClient
 from rest_framework import status
+from unittest.mock import patch
 from .models import Profile
 from .serializers import ProfilesSerializer, EmailVerificationSerializer, LoginSerializer
-from .views import add_user, verify_email, login_user, get_current_user, list_all_profiles, get_profile, edit_profile
+from .views import add_user, verify_email, login_user, get_current_user, list_all_profiles, get_profile, edit_profile, password_reset_request, password_reset_confirm
 # from . import views
 import os
 
@@ -543,6 +547,20 @@ class ProfilesUrlsTests(TestCase):
         url = reverse('edit-profile')
         self.assertEqual(resolve(url).func, edit_profile)
         print('Test: Edit Profile URL Resolves - PASS')
+
+    
+    def test_password_reset_request_url_resolves(self):
+        """ Test that the 'password_reset_request' URL name resolves to the correct path and view """
+        url = reverse('password_reset_request')
+        self.assertEqual(resolve(url).func, password_reset_request)
+        print('Test: Password Reset Request URL Resolves - PASS')
+
+    
+    def test_password_reset_confirm_url_resolves(self):
+        """ Test that the 'password_reset_confirm' URL name resolves to the correct path and view """
+        url = reverse('password_reset_confirm')
+        self.assertEqual(resolve(url).func, password_reset_confirm)
+        print('Test: Password Reset Confirm URL Resolves - PASS')
     
 
     # Authenticated User Response Tests
@@ -627,6 +645,8 @@ class ProfileViewsTests(APITestCase):
         self.list_all_url = reverse('list_all_profiles')
         self.get_profile_url = reverse('get-profile', kwargs={'userId': self.profile.user_id})
         self.edit_profile_url = reverse('edit-profile')
+        self.password_reset_request_url = reverse('password_reset_request')
+        self.password_reset_confirm_url = reverse('password_reset_confirm')
         
         
     # Tests for add_user endpoint (sign-up)
@@ -905,6 +925,7 @@ class ProfileViewsTests(APITestCase):
         print("Test: Get Profile Invalid User Authenticated - PASS")
 
     
+    # Tests for edit-profile endpoint
     def test_edit_profile_valid_data_authenticated(self):
         """ Test editing profile with valid data as an authenticated user """
         self.client.force_authenticate(user=self.user)
@@ -955,3 +976,96 @@ class ProfileViewsTests(APITestCase):
         self.assertNotEqual(self.user.email, 'attempt.update@mail.utoronto.ca')
         print("Test: Edit Profile Invalid Data - PASS")
 
+
+    # Tests for password_reset_request endpoint
+    def test_password_reset_request_valid_email(self):
+        """ Test password reset request with a valid email sends email. """
+        with patch('django.core.mail.send_mail') as mock_send_mail:
+            # send the API request
+            response = self.client.post(self.password_reset_request_url, {'email': self.user.email})
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+            self.assertEqual(response.data['message'], 'Password reset email sent.')
+            mock_send_mail.assert_called_once()  # Confirm email was sent
+        print("Test: Password Reset Request Valid Email - PASS")
+
+
+    def test_password_reset_request_nonexistent_email(self):
+        """ Test password reset request with a non-existent email returns 404 status code. """
+        # send the API request
+        response = self.client.post(self.password_reset_request_url, {'email': 'nonexistent@example.com'})
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.data['error'], 'Email not found.')
+        print("Test: Password Reset Request Non-Existent Email - PASS")
+
+
+    def test_password_reset_request_missing_email(self):
+        """ Test password reset request without providing email returns 400 status code. """
+        # send the API request
+        response = self.client.post(self.password_reset_request_url, {})
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        print("Test: Password Reset Request Missing Email - PASS")
+    
+
+    # Tests for password_reset_confirm endpoint
+    def test_password_reset_confirm_valid_token_and_uid(self):
+        """ Test password reset confirmation with valid token and uid successfully resets password. """
+        uid = urlsafe_base64_encode(force_bytes(self.user.pk))
+        token = default_token_generator.make_token(self.user)
+        new_password = 'newstrongpassword'
+
+        # send the API request
+        response = self.client.post(self.password_reset_confirm_url, {
+            'uid': uid,
+            'token': token,
+            'new_password': new_password
+        })
+
+        # Ensure that the password has been updated
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        self.user.refresh_from_db()
+        self.assertTrue(self.user.check_password(new_password))
+        print("Test: Password Reset Confirm Valid Token and UID - PASS")
+
+
+    def test_password_reset_confirm_invalid_token(self):
+        """ Test password reset confirmation with an invalid token returns 400 status code. """
+        uid = urlsafe_base64_encode(force_bytes(self.user.pk))
+        invalid_token = 'invalidtoken123'
+        new_password = 'newstrongpassword'
+
+        # send the API request
+        response = self.client.post(self.password_reset_confirm_url, {
+            'uid': uid,
+            'token': invalid_token,
+            'new_password': new_password
+        })
+
+        # Ensure the password hasn't been updated
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data['error'], 'Invalid token.')
+        self.user.refresh_from_db()
+        self.assertEqual(self.user_password, self.user.password)
+        self.assertNotEqual(new_password, self.user.password)
+        print("Test: Password Reset Confirm Invalid Token - PASS")
+
+
+    def test_password_reset_confirm_invalid_uid(self):
+        """ Test password reset confirmation with an invalid uid returns 400 status code. """
+        invalid_uid = 'invaliduid123'
+        token = default_token_generator.make_token(self.user)
+        new_password = 'newstrongpassword'
+
+        # send the API request
+        response = self.client.post(self.password_reset_confirm_url, {
+            'uid': invalid_uid,
+            'token': token,
+            'new_password': new_password
+        })
+
+        # Ensure the password hasn't been updated
+        self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+        self.assertEqual(response.data['error'], 'Invalid token or user ID.')
+        self.user.refresh_from_db()
+        self.assertEqual(self.user_password, self.user.password)
+        self.assertNotEqual(new_password, self.user.password)
+        print("Test: Password Reset Confirm Invalid UID - PASS")
