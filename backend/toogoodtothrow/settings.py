@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-m_wv1jcga9smxirv_)h%b7$ts&$#96$a+1omwn_=lq$4l4g5hr
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '3.87.240.14']
+ALLOWED_HOSTS = ['54.165.176.36', '127.0.0.1', 'localhost']
 
 
 # Application definition
@@ -163,7 +163,7 @@ CORS_ALLOWED_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
     "http://127.0.0.1:8000",
-    "http://3.87.240.14",
+    "http://54.165.176.36",
     "http://toogoodtothrow.s3-website.us-east-2.amazonaws.com",
 ]
 
@@ -173,7 +173,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('redis://redis-3.y0uvf8.ng.0001.use1.cache.amazonaws.com:6379')]
+            'hosts': [('redis-cluster-001.euwmp0.0001.use1.cache.amazonaws.com', 6379)],
         },
     },
 }
@@ -254,3 +254,5 @@ LOGGING = {
 # Set up logging for boto3
 logging.getLogger('boto3').setLevel(logging.DEBUG)
 logging.getLogger('botocore').setLevel(logging.DEBUG)
+
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://toogoodtothrow.s3-website.us-east-2.amazonaws.com/')

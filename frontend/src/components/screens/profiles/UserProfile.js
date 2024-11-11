@@ -1,9 +1,9 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { useUser } from '../../context/UserContext';
+import { useUser } from '../../../context/UserContext';
 import "./UserProfile.css";
-import './Products.css';
-import Header from "../../components/Header"
+import '../products/Products.css';
+import Header from "../../Header"
 import { Button, Snackbar } from '@mui/material';
 import axios from 'axios';
 import { IoSend } from "react-icons/io5";
@@ -28,7 +28,8 @@ function UserProfile() {
 
     useEffect(() => {
         if (currentUser) {
-            fetch(`http://3.87.240.14:8000/api/user/${userId}/`, {
+
+            fetch(`http://54.165.176.36:8000/api/user/${userId}/`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Token ${token}`,
@@ -38,8 +39,7 @@ function UserProfile() {
                 .then(response => response.json())
                 .then((data) => {
                     setUser(data);
-
-                    fetch(`http://3.87.240.14:8000/api/user-products/${userId}/`, {
+                    fetch(`http://54.165.176.36:8000/api/user-products/${userId}/`, {
                         method: 'GET',
                         headers: {
                             'Authorization': `Token ${token}`,
@@ -50,7 +50,7 @@ function UserProfile() {
                         .then(data => setProducts(data));
 
                     if (userId == currentUser.id) {
-                        fetch(`http://3.87.240.14:8000/api/sold-products/`, {
+                        fetch(`http://54.165.176.36:8000/api/sold-products/`, {
                             method: 'GET',
                             headers: {
                                 'Authorization': `Token ${token}`,
@@ -76,7 +76,9 @@ function UserProfile() {
         if (userId) {
 
             // Fetch or create conversation with seller
-            fetch(`http://3.87.240.14:8000/api/conversation/start/${userId}/`, {
+
+            fetch(`http://54.165.176.36:8000/api/conversation/start/${userId}/`, {
+
                 method: 'POST',
                 headers: {
                     'Authorization': `Token ${token}`,
@@ -86,7 +88,8 @@ function UserProfile() {
                 .then(response => response.json())
                 .then(data => {
 
-                    axios.post('http://3.87.240.14:8000/api/send_message/', {
+                    axios.post('http://54.165.176.36:8000/api/send_message/', {
+
                         conversation_id: data.conversation_id,
                         content: message,
                     }, {
@@ -118,6 +121,8 @@ function UserProfile() {
     };
 
     const scrollLeft = (ref) => {
+
+        console.log(ref)
         const itemWidth = ref.current.children[0].offsetWidth;
         ref.current.scrollBy({ left: -itemWidth, behavior: "smooth" });
     };
@@ -189,7 +194,7 @@ function UserProfile() {
                     {parseInt(currentUser.id) == parseInt(userId) ? (
                         <h2 style={{ margin: "0" }}>My Current Listings</h2>
                     ) : (
-                        <h2 style={{ margin: "0" }}>{user.first_name}'s Listings</h2>
+                        <>{user && (<h2 style={{ margin: "0" }}>{user.first_name}'s Listings</h2>)}</>
                     )}
 
                     <div style={{ display: "flex", alignItems: "center" }}>
@@ -234,12 +239,11 @@ function UserProfile() {
                             <h2 style={{ marginBottom: "0" }}>My Past Listings</h2>
 
                             <div style={{ display: "flex", alignItems: "center" }}>
-
-                                <IconButton onClick={() => scrollLeft(currentScrollRef)}>
+                                <IconButton onClick={() => scrollLeft(pastScrollRef)}>
                                     <ArrowLeftIcon style={{ fontSize: "xxx-large" }} />
                                 </IconButton>
 
-                                <div className="scroll-container" ref={currentScrollRef}>
+                                <div className="scroll-container" ref={pastScrollRef}>
                                     {loading ? (
                                         <span className="product-loader"></span>
                                     ) : (
@@ -263,8 +267,7 @@ function UserProfile() {
                                         </>
                                     )}
                                 </div>
-
-                                <IconButton onClick={() => scrollRight(currentScrollRef)}>
+                                <IconButton onClick={() => scrollRight(pastScrollRef)}>
                                     <ArrowRightIcon style={{ fontSize: "xxx-large" }} />
                                 </IconButton>
 

@@ -2,23 +2,22 @@ import { Button, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import HeaderPre from "../../components/HeaderPre"
+import HeaderPre from "../../HeaderPre"
 import "./UsersSignUp.css";
+import { useUser } from '../../../context/UserContext';
 
-
-const UsersSignUp = () => {
+const UsersLogin = () => {
   const [formData, setFormData] = useState({
-    first_name: '',
-    last_name: '',
     email: '',
     password: '',
   });
 
-  const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
   const [formErrors, setFormErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate()
+  const { fetchUserData } = useUser();
 
   const isFormInvalid = isSubmitting || Object.values(formErrors).some(error => error) || !!successMessage;
 
@@ -26,19 +25,11 @@ const UsersSignUp = () => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@mail\.utoronto\.ca$/;
     return emailRegex.test(email) ? '' : 'Please enter a valid UofT email address.';
   };
-  
+
+ 
   const validatePassword = (password) => {
     if (!password) return 'Please enter your password.';
-    else if (password.length < 6) return 'Password must be at least 6 characters long.'
     else return '';
-  };
-
-  const validateRequired = (name, value) => {
-    if (name === 'first_name') {
-      return !value ? `Please enter your first name.` : '';
-    } else if (name === 'last_name') {
-      return !value ? `Please enter your last name.` : '';
-    } 
   };
 
   const handleInputChange = (event) => {
@@ -55,9 +46,7 @@ const UsersSignUp = () => {
     const { name, value } = event.target;
     let errorMessage = '';
 
-    if (name === 'first_name' || name === 'last_name') {
-      errorMessage = validateRequired(name, value);
-    } else if (name === 'email') {
+    if (name === 'email') {
       errorMessage = validateEmail(value);
     } else if (name === 'password') {
       errorMessage = validatePassword(value);
@@ -66,16 +55,18 @@ const UsersSignUp = () => {
     setFormErrors({ ...formErrors, [name]: errorMessage });
   };
 
-  const handleLoginButton = () => {
-    navigate('/profiles/login');
+  const handleSignUpButton = () => {
+    navigate('/profiles/signup');
   };
+
+  const handleForgotPassword = () => {
+    navigate('/password_reset_request');
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const errors = {
-      first_name: validateRequired('first_name', formData.first_name),
-      last_name: validateRequired('last_name', formData.last_name),
       email: validateEmail(formData.email),
       password: validatePassword(formData.password),
     };
@@ -89,38 +80,43 @@ const UsersSignUp = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await axios.post('http://3.87.240.14:8000/api/profiles/signup', formData, {
+
+      const response = await axios.post('http://54.165.176.36:8000/api/profiles/login', formData, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
-      if (response.status === 201) {
-        setSuccessMessage('User successfully added!');
-        setErrorMessage('');
+      if (response.status === 200) {
+        const token = response.data.token;
+        localStorage.setItem('authToken', token);
+        fetchUserData(token);
 
+        setSuccessMessage('Login successful!');
+        setErrorMessage('');
         setTimeout(() => {
-          navigate('/profiles/verify-email');  // Redirects to verify-email page
-        }, 2000);  // Adjust the timeout duration as needed
+          navigate('/products');  //was /homepage is not /products
+        }, 2000);
+
+
       }
     } catch (error) {
       if (error.response && error.response.data) {
         const backendErrors = error.response.data;
         const fieldErrors = {};
-  
+
         // generic errors
         if (backendErrors.non_field_errors) {
           setErrorMessage(backendErrors.non_field_errors.join(' '));
         } else {
           setErrorMessage('');
         }
-  
+
         // form field specific errors
         Object.keys(backendErrors).forEach(key => {
           if (key !== 'non_field_errors') {
             console.log(Object.keys(backendErrors[key]));
             const fieldError = backendErrors[key];
-
-              fieldErrors[Object.keys(fieldError)] = Object.values(fieldError).map(errorArray => errorArray.join(' ')).join(' ');
+            fieldErrors[Object.keys(fieldError)] = Object.values(fieldError).map(errorArray => errorArray.join(' ')).join(' ');
           }
         });
 
@@ -136,37 +132,12 @@ const UsersSignUp = () => {
     }
   };
 
-
   return (
-    <div>
+    <div className="signup-page">
       <HeaderPre />
-      <div className="signup-container">
-        <h1>Sign Up</h1>
+      <div className='signup-container'>
+        <h1>Login</h1>
         <form noValidate onSubmit={handleSubmit} className="signup-form">
-          <TextField
-            label="First Name"
-            name="first_name"
-            type="text"
-            value={formData.first_name}
-            onChange={handleInputChange}
-            onBlur={handleBlur}
-            variant="outlined"
-            required
-            error={!!formErrors.first_name}
-            helperText={formErrors.first_name}
-          />
-          <TextField
-            label="Last Name"
-            name="last_name"
-            type="text"
-            value={formData.last_name}
-            onChange={handleInputChange}
-            onBlur={handleBlur}
-            variant="outlined"
-            required
-            error={!!formErrors.last_name}
-            helperText={formErrors.last_name}
-          />
           <TextField
             label="UofT Email"
             name="email"
@@ -192,7 +163,16 @@ const UsersSignUp = () => {
             helperText={formErrors.password}
           />
           <Button
+
             name="signup"
+            variant="text"
+            color="primary"
+            onClick={handleForgotPassword}
+          >
+            <Typography color='primary'>Forgot Password?</Typography>
+          </Button>
+          <Button
+            name="login"
             type="submit"
             variant="contained"
             color="primary"
@@ -203,21 +183,21 @@ const UsersSignUp = () => {
               },
             }}
           >
-            {isSubmitting || successMessage ? 'Signing Up...' : 'Sign Up'}
+            {isSubmitting || successMessage ? 'Logging In...' : 'Login'}
           </Button>
         </form>
         <div className='side-by-side'>
           <div className='typography'>
-            <Typography>Already a User?</Typography>
+            <Typography>Not a User?</Typography>
           </div>
           <div className='top-padding'>
             <Button
               name="signup"
               variant="text"
               color="primary"
-              onClick={handleLoginButton}
+              onClick={handleSignUpButton}
             >
-              <Typography color='primary'>Login</Typography>
+              <Typography color='primary'>Sign Up</Typography>
             </Button>
           </div>
         </div>
@@ -238,4 +218,4 @@ const UsersSignUp = () => {
   );
 };
 
-export default UsersSignUp;
+export default UsersLogin;

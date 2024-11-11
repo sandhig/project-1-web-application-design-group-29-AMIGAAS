@@ -11,4 +11,6 @@ urlpatterns = [
     path('profiles/edit-profile/', views.edit_profile, name='edit-profile'),
     path('wishlist/', views.WishlistAPIView.as_view(), name='wishlist'),
     path('wishlist/<int:pk>/', views.WishlistAPIView.as_view(), name='check_wishlist'),
+    path('password_reset_request/', views.password_reset_request, name='password_reset_request'),
+    path('password_reset_confirm/', views.password_reset_confirm, name='password_reset_confirm'),
 ]

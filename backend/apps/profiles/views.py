@@ -15,9 +15,14 @@ from django.shortcuts import get_object_or_404
 from rest_framework.views import APIView
 from ..products.models import Product
 from ..products.serializers import ProductSerializer
-import tempfile
 import uuid
 import os
+
+from django.contrib.auth.tokens import default_token_generator
+from django.contrib.auth.models import User
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.urls import reverse
 
 import boto3
 from django.conf import settings
@@ -184,4 +189,47 @@ class WishlistAPIView(APIView):
             return Response({"message": "Product removed from wishlist."}, status=status.HTTP_204_NO_CONTENT)
         except Wishlist.DoesNotExist:
             return Response({"error": "Product not found in wishlist."}, status=status.HTTP_404_NOT_FOUND)
-        
+
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def password_reset_request(request):
+    email = request.data.get('email')
+    try:
+        user = User.objects.get(email=email)
+    except User.DoesNotExist:
+        return Response({'error': 'Email not found.'}, status=status.HTTP_404_NOT_FOUND)
+
+    token = default_token_generator.make_token(user)
+    uid = urlsafe_base64_encode(force_bytes(user.pk))
+    reset_url = f"{settings.FRONTEND_URL}/password_reset_confirm?uid={uid}&token={token}"
+
+    send_mail(
+        'Password Reset Request', 
+        f'Click the link to reset your password: {reset_url}', 
+        'toogoodtothrow59@gmail.com',
+        [email], 
+        fail_silently = False,
+    )
+
+    return Response({'message': 'Password reset email sent.'}, status=status.HTTP_200_OK)
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def password_reset_confirm(request):
+    uid = request.data.get('uid')
+    token = request.data.get('token')
+    new_password = request.data.get('new_password')
+
+    try:
+        user_id = force_str(urlsafe_base64_decode(uid))
+        user = User.objects.get(pk=user_id)
+    except (TypeError, ValueError, OverflowError, User.DoesNotExist):
+        return Response({'error': 'Invalid token or user ID.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    if not default_token_generator.check_token(user, token):
+        return Response({'error': 'Invalid token.'}, status=status.HTTP_400_BAD_REQUEST)
+
+    user.set_password(new_password)
+    user.save()
+    return Response({'message': 'Password reset successful.'}, status=status.HTTP_200_OK)

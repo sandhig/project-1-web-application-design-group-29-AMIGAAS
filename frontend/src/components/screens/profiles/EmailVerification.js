@@ -2,33 +2,29 @@ import { Button, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import HeaderPre from "../../components/HeaderPre"
-import "./UsersSignUp.css"; 
-import { useUser } from '../../context/UserContext';
+import HeaderPre from "../../HeaderPre"
 
-const UsersLogin = () => {
+const EmailVerification = () => {
   const [formData, setFormData] = useState({
     email: '',
-    password: '',
+    verification_code: '',
   });
-  
+
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [formErrors, setFormErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const navigate = useNavigate()
-  const { fetchUserData } = useUser();
 
-  const isFormInvalid = isSubmitting || Object.values(formErrors).some(error => error) || !!successMessage;
+  const isFormInvalid = loading || Object.values(formErrors).some(error => error) || !!successMessage;
 
   const validateEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@mail\.utoronto\.ca$/;
     return emailRegex.test(email) ? '' : 'Please enter a valid UofT email address.';
   };
-  
-  const validatePassword = (password) => {
-    if (!password) return 'Please enter your password.';
-    else return '';
+
+  const validateRequired = (value) => {
+    return !value ? `Please enter your verification code.` : '';
   };
 
   const handleInputChange = (event) => {
@@ -47,15 +43,11 @@ const UsersLogin = () => {
 
     if (name === 'email') {
       errorMessage = validateEmail(value);
-    } else if (name === 'password') {
-      errorMessage = validatePassword(value);
+    } else if (name === 'verification_code') {
+      errorMessage = validateRequired(value);
     }
 
     setFormErrors({ ...formErrors, [name]: errorMessage });
-  };
-
-  const handleSignUpButton = () => {
-    navigate('/profiles/signup');
   };
 
   const handleSubmit = async (e) => {
@@ -63,7 +55,7 @@ const UsersLogin = () => {
 
     const errors = {
       email: validateEmail(formData.email),
-      password: validatePassword(formData.password),
+      verification_code: validateRequired(formData.verification_code),
     };
 
     const hasErrors = Object.values(errors).some(error => error !== '');
@@ -72,66 +64,62 @@ const UsersLogin = () => {
       return;
     }
 
-    setIsSubmitting(true);
+    setLoading(true); 
+
+    const trimmedFormData ={
+      email: formData.email.trim(),
+      verification_code:formData.verification_code.trim(),
+    };
 
     try {
-      const response = await axios.post('http://3.87.240.14:8000/api/profiles/login', formData, {
+      const response = await axios.post('http://54.165.176.36:8000/api/profiles/verify-email', trimmedFormData, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
       if (response.status === 200) {
-        const token = response.data.token;
-        localStorage.setItem('authToken', token);
-        fetchUserData(token);
-        
-        setSuccessMessage('Login successful!');
+        setSuccessMessage('Email verified successfully!');
         setErrorMessage('');
+        
         setTimeout(() => {
-          navigate('/products');  //was /homepage is not /products
-        }, 2000);  
-
+          navigate('/profiles/login');  // Redirects to verify-email page
+        }, 2000);  // Adjust the timeout duration as needed
       }
     } catch (error) {
       if (error.response && error.response.data) {
         const backendErrors = error.response.data;
         const fieldErrors = {};
-  
+
         // generic errors
-        if (backendErrors.non_field_errors) {
-          setErrorMessage(backendErrors.non_field_errors.join(' '));
-        } else {
-          setErrorMessage('');
-        }
-  
+        if (backendErrors.non_field_errors && backendErrors.non_field_errors[0]) {
+            setErrorMessage(backendErrors.non_field_errors[0]);
+        } 
+
         // form field specific errors
         Object.keys(backendErrors).forEach(key => {
           if (key !== 'non_field_errors') {
-            console.log(Object.keys(backendErrors[key]));
+            console.log(backendErrors);
             const fieldError = backendErrors[key];
 
               fieldErrors[Object.keys(fieldError)] = Object.values(fieldError).map(errorArray => errorArray.join(' ')).join(' ');
           }
         });
-        
-        setFormErrors(fieldErrors);
+      
       } else {
-        // in case of unexpected errors
-        setErrorMessage('An unexpected error occurred. Please try again.');
+          setErrorMessage('An error occurred. Please try again.');
       }
-
       setSuccessMessage('');
     } finally {
-      setIsSubmitting(false);
+      setLoading(false);  // Reset loading state when request finishes
     }
   };
 
   return (
     <div className="signup-page">
       <HeaderPre />
-      <div className='signup-container'>
-        <h1>Login</h1>
-        <form noValidate onSubmit={handleSubmit} className="signup-form">
+      <div className="signup-container">
+        <h1>Email Verification</h1>
+        <form noValidate onSubmit={handleSubmit} className='signup-form'>
           <TextField
             label="UofT Email"
             name="email"
@@ -145,47 +133,34 @@ const UsersLogin = () => {
             helperText={formErrors.email}
           />
           <TextField
-            label="Password"
-            name="password"
-            type="password"
-            value={formData.password}
+            label="Verification Code"
+            name="verification_code"
+            type="text"
+            value={formData.verification_code}
             onChange={handleInputChange}
             onBlur={handleBlur}
             variant="outlined"
             required
-            error={!!formErrors.password}
-            helperText={formErrors.password}
+            error={!!formErrors.verification_code}
+            helperText={formErrors.verification_code}
           />
-          <Button
-            name="login"
-            type="submit"
-            variant="contained"
-            color="primary"
-            disabled={isFormInvalid}
-            sx={{
-              '&:hover': {
-              backgroundColor: '#007fa3',       // Custom hover color
-              },
-            }}
-          >
-            {isSubmitting || successMessage ? 'Logging In...' : 'Login'}
-          </Button>
-        </form>
-        <div className='side-by-side'>
-          <div className='typography'>
-            <Typography>Not a User?</Typography>
-          </div>
-          <div className='top-padding'>
+            <div className='bottom-padding'>
             <Button
-              name="signup"
-              variant="text"
+              name="verify"
+              type="submit"
+              variant="contained"
               color="primary"
-              onClick={handleSignUpButton}
+              disabled={isFormInvalid}
+              sx={{
+                '&:hover': {
+                backgroundColor: '#007fa3',       // Custom hover color
+                },
+              }}
             >
-              <Typography color='primary'>Sign Up</Typography>
+              {loading || successMessage ? 'Verifying Email...' : 'Verify Email'}
             </Button>
           </div>
-        </div>
+        </form>
         <div className='top-padding'>
           {errorMessage && (
             <Typography variant="body1" className="error-message">
@@ -203,4 +178,4 @@ const UsersLogin = () => {
   );
 };
 
-export default UsersLogin;
+export default EmailVerification;
