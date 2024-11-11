@@ -197,6 +197,7 @@ function UserProfile() {
                         <>{user && (<h2 style={{ margin: "0" }}>{user.first_name}'s Listings</h2>)}</>
                     )}
 
+                    {products.length > 0 ? (
                     <div style={{ display: "flex", alignItems: "center" }}>
 
                         <IconButton onClick={() => scrollLeft(currentScrollRef)}>
@@ -233,10 +234,13 @@ function UserProfile() {
                         </IconButton>
 
                     </div>
-
+                    ) : (<h3 style={{color:"grey"}}>No active listings</h3>)}
+                    
                     {parseInt(currentUser.id) == parseInt(userId) && (
                         <>
                             <h2 style={{ marginBottom: "0" }}>My Past Listings</h2>
+                            {soldProducts.length > 0 ? (
+                            <>
 
                             <div style={{ display: "flex", alignItems: "center" }}>
                                 <IconButton onClick={() => scrollLeft(pastScrollRef)}>
@@ -272,6 +276,8 @@ function UserProfile() {
                                 </IconButton>
 
                             </div>
+                            </>
+                        ) : (<h3 style={{color:"grey"}}>Your sold listings will appear here</h3>) }
                         </>
                     )}
 
