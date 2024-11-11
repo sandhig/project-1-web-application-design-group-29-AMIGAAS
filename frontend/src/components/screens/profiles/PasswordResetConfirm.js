@@ -61,6 +61,10 @@ const PasswordResetConfirm = () => {
                 new_password: newPassword,
             });
             setSuccessMessage('Your password has been reset successfully. You can now log in with your new password.');
+            setErrorMessage('');
+            setTimeout(() => {
+                navigate('/profiles/login');
+            }, 2000);
         } catch (err) {
             setErrorMessage('Failed to reset password. Please request a new link.');
         } finally {

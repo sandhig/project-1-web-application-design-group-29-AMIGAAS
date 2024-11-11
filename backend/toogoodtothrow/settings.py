@@ -255,4 +255,4 @@ LOGGING = {
 logging.getLogger('boto3').setLevel(logging.DEBUG)
 logging.getLogger('botocore').setLevel(logging.DEBUG)
 
-FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://toogoodtothrow.s3-website.us-east-2.amazonaws.com/')
+FRONTEND_URL = os.getenv('FRONTEND_URL', 'http://toogoodtothrow.s3-website.us-east-2.amazonaws.com')
