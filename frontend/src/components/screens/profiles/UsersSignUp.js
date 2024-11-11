@@ -1,4 +1,4 @@
-import { Button, Link, TextField, Typography } from '@mui/material';
+import { Button, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
@@ -197,6 +197,11 @@ const UsersSignUp = () => {
             variant="contained"
             color="primary"
             disabled={isFormInvalid}
+            sx={{
+              '&:hover': {
+              backgroundColor: '#007fa3',       // Custom hover color
+              },
+            }}
           >
             {isSubmitting || successMessage ? 'Signing Up...' : 'Sign Up'}
           </Button>

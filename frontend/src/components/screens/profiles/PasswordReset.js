@@ -84,6 +84,11 @@ const PasswordReset = () => {
                             variant="contained"
                             color="primary"
                             disabled={isFormInvalid}
+                            sx={{
+                                '&:hover': {
+                                backgroundColor: '#007fa3',       // Custom hover color
+                                },
+                            }}
                         >
                             {loading || successMessage ? 'Sending link...' : 'Send me a link'}
                         </Button>
