@@ -70,16 +70,8 @@ function Header() {
 
       ws.current = new WebSocket(`ws://54.165.176.36:8000/ws/chat/user/${currentUser.id}/`);
 
-      ws.current.onopen = function () {
-        console.log("WebSocket connection opened");
-      };
-
       ws.current.onmessage = function () {
         fetchUnreadMessageCount();
-      };
-
-      ws.current.onclose = function () {
-        console.log("WebSocket connection closed");
       };
 
       ws.current.onerror = (error) => {
@@ -124,7 +116,7 @@ function Header() {
         <div className="profile-container">
 
           <Link to="/products/create" className="icon-button">
-            <IconButton aria-label="message">
+            <IconButton aria-label="new-listing">
               <AddCircleOutlineIcon className="icon" />
             </IconButton>
             <p>New Listing</p>
@@ -143,14 +135,14 @@ function Header() {
           </Link>
 
           <Link to="/wishlist" className="icon-button">
-            <IconButton aria-label="message">
+            <IconButton aria-label="wishlist">
               <FavoriteIcon className="icon" />
             </IconButton>
             <p>My Wishlist</p>
           </Link>
 
           <div className="icon-button">
-            <IconButton aria-label="message" onClick={handleLogout}>
+            <IconButton aria-label="logout" onClick={handleLogout}>
               <LogoutIcon className="icon" />
             </IconButton>
             <p>Logout</p>

@@ -92,6 +92,11 @@ const PasswordResetConfirm = () => {
                         variant="contained"
                         color="primary"
                         disabled={isFormInvalid}
+                        sx={{
+                            '&:hover': {
+                            backgroundColor: '#007fa3',       // Custom hover color
+                            },
+                        }}
                     >
                         {loading || successMessage ? 'Resetting password...' : 'Reset password'}
                     </Button>

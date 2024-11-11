@@ -35,12 +35,9 @@ logger = logging.getLogger('django')
 @permission_classes([AllowAny])
 def add_user(request):
     serializer = ProfilesSerializer(data=request.data)
-    logger.debug(f'SERIALIZER: {serializer}')
-    logger.debug('REQUEST DATA: %s', request.data)
     if serializer.is_valid():
         serializer.save()
         return Response({'message': 'User created successfully'}, status=status.HTTP_201_CREATED)
-    logger.debug('SERIALIZER ERRORS: %s', serializer.errors)
     return Response({'error': serializer.errors}, status=status.HTTP_400_BAD_REQUEST)
 
 @api_view(['POST'])
@@ -97,6 +94,7 @@ def get_current_user(request):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def get_profile (request, userId):
+    logger.debug(f"GETTING PROFILE {userId}")
     profile = get_object_or_404(Profile, user__id=userId)
     serializer = ProfilesSerializer(profile)
     return Response(serializer.data)
@@ -106,6 +104,7 @@ def get_profile (request, userId):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def edit_profile(request):
+
     profile = request.user.profile
 
     # Unauthorized user
@@ -115,10 +114,9 @@ def edit_profile(request):
     try:
         # Serialize profile data
         serializer = ProfilesSerializer(instance=profile, data=request.data, partial=True)
-
         if serializer.is_valid():
 
-            # If there is no profile image
+            # If there is a profile image
             if 'profilePic' in request.FILES:
                 image_file = request.FILES['profilePic']
                 image_file.open()
@@ -136,8 +134,11 @@ def edit_profile(request):
                 s3.upload_fileobj(image_file, settings.AWS_STORAGE_BUCKET_NAME, f'images/{filename}')
                 
                 logger.debug('Uploaded')
+                serializer.save(profilePic=f'images/{filename}')
 
-            serializer.save(profilePic=f'images/{filename}')
+            else:
+                serializer.save()
+            
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

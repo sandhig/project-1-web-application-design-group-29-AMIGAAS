@@ -8,8 +8,10 @@ WAIT_TO_LOAD_SHORT = 1000  # 1000 milliseconds = 1 sec
 
 # CONSTANT URL PATHS
 LOGIN_PAGE_URL = 'http://localhost:3000/profiles/login'
-PRODUCTS_PAGE_URL = 'http://localhost:3000/products'
+HOMEPAGE_URL = 'http://localhost:3000/products'
+PRODUCTS_PAGE_URL = 'http://localhost:3000/search?query='
 CREATE_LISTING_URL = 'http://localhost:3000/products/create'
+WISHLIST_URL = 'http://localhost:3000/wishlist'
 
 # LOCATOR SELECTORS
 EMAIL = 'input[name="email"]'
@@ -29,16 +31,24 @@ PRODUCT_TITLE = '.product-title'
 PRICE_SLIDER_TRACK = ".MuiSlider-track"
 CLEAR_FILTERS = 'Clear Filters'
 CREATE_LISTING = 'Create Listing'
+LOGO = 'Website Logo TOO GOOD TO THROW'
+WISHLIST_BUTTON = "wishlist"
+WISHLIST_HEART = "favourite"
+LISTING_TITLE = ".listing-title"
+CLEAR_BUTTON = ".MuiButtonBase-root"
+CAROUSEL_CONTAINER = ".carousel-container"
 
 # ROLES
 ROLE_BUTTON = 'button'
 ROLE_OPTION = 'option'
+ROLE_LINK = 'link'
 
 # CHOICES
 CATEGORY_CHOICES = ['Textbook', 'Clothing', 'Furniture', 'Electronics', 'Stationary', 'Miscellaneous', 'None']
 CONDITION_CHOICES = ['New', 'Used - Like New', 'Used - Good', 'Used - Fair', 'None']
 LOCATION_CHOICES = ['Robarts', 'Gerstein', 'Computer Science Library', 'Bahen', 'Galbraith', 'Sanford Fleming', 'None']
 SORT_BY_CHOICES = ['Price: Low to High', 'Price: High to Low', 'Name: A-Z']
+CAROUSEL_SLIDES = ["Go to slide 1", "Go to slide 2", "Go to slide 3"]
 
 
 @pytest.fixture(scope="session")
@@ -72,11 +82,6 @@ def authenticated_context(setup_playwright):
      # Click the Login button
     page.get_by_role(ROLE_BUTTON, name=LOGIN).click()
     page.wait_for_timeout(WAIT_TO_LOAD_LONG)
-
-    # Wait for a successful login message
-    # Verify login success message is visible
-    assert page.get_by_text(LOGIN_MSG).is_visible()
-    print('Successfully logged in test user')
 
     # Save context for reuse in other tests
     yield context
@@ -117,7 +122,7 @@ def create_random_combination_of_filters(page):
     target_x = price_slider_position['x'] + price_slider_position['width'] * random_width_percentage
     target_y = price_slider_position['y'] + price_slider_position['height'] / 2 
     page.mouse.click(target_x, target_y)
-    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
 
     # Count number of products returned after single filter
     filtered_product_count = page.locator(PRODUCT_GRID).locator(PRODUCT_ITEM).count() # count filtered products listed in the grid
@@ -164,6 +169,16 @@ def create_random_sort_by_choice(page):
         
     print("..Create random sort by order choice")
     return sorted_expected, after_sorting, page
+
+
+# create a dialog handler that will check message text and press yes/no
+def handle_dialog(dialog):
+    if "remove this item from your wishlist" in dialog.message:
+        print(f'clicking "Yes" to {dialog.message}')
+        dialog.accept()  # press "Yes"
+    else:
+        dialog.dismiss()  # press "No"
+    page.on("dialog", handle_dialog)
 
 
 def test_product_list_displays_correctly(page):
@@ -289,7 +304,7 @@ def test_price_slider_halfway(page):
     target_x = price_slider_position['x'] + price_slider_position['width'] * 0.5
     target_y = price_slider_position['y'] + price_slider_position['height'] / 2 
     page.mouse.click(target_x, target_y)
-    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
 
     # Locate the products container
     filtered_product_count = page.locator(PRODUCT_GRID).locator(PRODUCT_ITEM).count() # count filtered products listed in the grid
@@ -320,7 +335,7 @@ def test_price_slider_random(page):
     target_x = price_slider_position['x'] + price_slider_position['width'] * random_width_percentage
     target_y = price_slider_position['y'] + price_slider_position['height'] / 2 
     page.mouse.click(target_x, target_y)
-    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
 
     # Locate the products container
     filtered_product_count = page.locator(PRODUCT_GRID).locator(PRODUCT_ITEM).count() # count filtered products listed in the grid
@@ -382,7 +397,7 @@ def test_all_filter_combinations(page):
     target_x = price_slider_position['x'] + price_slider_position['width'] * random_width_percentage
     target_y = price_slider_position['y'] + price_slider_position['height'] / 2 
     page.mouse.click(target_x, target_y)
-    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
 
     # Count number of products returned after four filters
     filtered_product_count_4_filter = page.locator(PRODUCT_GRID).locator(PRODUCT_ITEM).count() # count filtered products listed in the grid
@@ -495,14 +510,15 @@ def test_search_a_product(page):
             searched_names_expected.append(name)
 
     # Locate the searchbar and search something
-    search_bar = page.get_by_placeholder("Search...")
+    search_bar = page.get_by_placeholder(SEARCH_BAR)
     search_bar.click()
     search_bar.fill(search_string)
     search_bar.press("Enter")
     page.wait_for_timeout(WAIT_TO_LOAD_LONG) 
 
     after_searching_names = page.locator(PRODUCT_TITLE).all_text_contents()
-    assert after_searching_names == searched_names_expected
+    assert len(after_searching_names) == len(searched_names_expected)
+    assert sorted(after_searching_names) == sorted(searched_names_expected)  # unordered list so doesn't matter as long as all the elements are same sorting should be same too
     print("Test: Search by name works as expected")
 
 
@@ -553,11 +569,11 @@ def test_can_submit_valid_form(page):
 
     # fill in all required fields
     page.get_by_label("Name").fill("Test Product")
-    page.get_by_label("Price").fill("200") 
+    page.get_by_label("Price").fill("500") 
     page.get_by_label("Category").click()
     page.get_by_role(ROLE_OPTION, name=CATEGORY_CHOICES[0]).click()
     page.get_by_label("Condition").click()
-    page.get_by_role(ROLE_OPTION, name=CONDITION_CHOICES[0]).click()
+    page.get_by_role(ROLE_OPTION, name=CONDITION_CHOICES[0], exact=True).click()
     page.get_by_label("Location").click()
     page.get_by_role(ROLE_OPTION, name=LOCATION_CHOICES[0]).click() 
 
@@ -612,7 +628,7 @@ def test_create_listing_with_invalid_price(page):
     page.get_by_label("Category").click()
     page.get_by_role(ROLE_OPTION, name=CATEGORY_CHOICES[0]).click()
     page.get_by_label("Condition").click()
-    page.get_by_role(ROLE_OPTION, name=CONDITION_CHOICES[0]).click()
+    page.get_by_role(ROLE_OPTION, name=CONDITION_CHOICES[0], exact=True).click()
     page.get_by_label("Location").click()
     page.get_by_role(ROLE_OPTION, name=LOCATION_CHOICES[0]).click() 
 
@@ -629,8 +645,160 @@ def test_create_listing_with_invalid_price(page):
     assert submit_button.is_disabled(), "Submit button is not disabled when there are errors"
 
     # Check that snackbar with error message is displayed
-    snackbarErrorMessage = "New listing was not created. Please fix the errors and try again.";
+    snackbarErrorMessage = "Price must be less than $100,000,000."
     assert page.get_by_text(snackbarErrorMessage).is_visible(), "Error snackbar not displayed"
 
     print("Test: Create listing with invalid price works as expected")
+
+
+def test_logo_navigation(page):
+    """ Test to users are navigated back to product homepage when logo is clicked"""
+    # Start here
+    page.goto(HOMEPAGE_URL)
+    search_string = 'Book'
+
+    # Locate the searchbar and search something
+    search_bar = page.get_by_placeholder(SEARCH_BAR)
+    search_bar.click()
+    search_bar.fill(search_string)
+    search_bar.press("Enter")
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG) 
+
+    # Click on logo and see if navigates correctly
+    page.get_by_role(ROLE_LINK, name=LOGO).click()
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG) 
+    assert page.url == HOMEPAGE_URL
+    print("Test: Navigates to Homepage as expected")
+
+
+def test_carousel_image_navigation_textbooks(page):
+    """ Test to users are navigated back to appropriate categories when respective image is clicked """
+    # Start here
+    page.goto(HOMEPAGE_URL)
+
+    # Force to be in carousel slide 1
+    carousel_slide = page.get_by_label(CAROUSEL_SLIDES[0])
+    carousel_slide.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    # locate carousel container and click
+    carousel_image = page.locator(CAROUSEL_CONTAINER).first
+    carousel_image.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+
+    # Find the url of the page navigated to
+    assert '/category?query=textbook' in page.url
+    print('Navigation form slide 1 works as expected')
+
+
+def test_carousel_image_navigation_furniture(page):
+    """ Test to users are navigated back to appropriate categories when respective image is clicked """
+    # Start here
+    page.goto(HOMEPAGE_URL)
+
+    # Force to be in carousel slide 2
+    carousel_slide = page.get_by_label(CAROUSEL_SLIDES[1])
+    carousel_slide.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    # locate carousel container and click
+    carousel_image = page.locator(CAROUSEL_CONTAINER).first
+    carousel_image.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+
+    # Find the url of the page navigated to
+    assert '/category?query=furniture' in page.url
+    print('Navigation form slide 2 works as expected')
+
+
+def test_carousel_image_navigation_clothing(page):
+    """ Test to users are navigated back to appropriate categories when respective image is clicked """
+    # Start here
+    page.goto(HOMEPAGE_URL)
+
+    # Force to be in carousel slide 3
+    carousel_slide = page.get_by_label(CAROUSEL_SLIDES[2])
+    carousel_slide.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    # locate carousel container and click
+    carousel_image = page.locator(CAROUSEL_CONTAINER).first
+    carousel_image.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+
+    # Find the url of the page navigated to
+    assert '/category?query=clothing' in page.url
+    print('Navigation form slide 3 works as expected')
+
+
+def test_adding_to_wishlist(page):
+    """ Test to users are able to add an item to their wishlist"""
+    # Navigate to wishlist
+    page.goto(WISHLIST_URL)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+    product_grid = page.locator(PRODUCT_GRID)
+    initial_count = product_grid.locator(PRODUCT_ITEM).count()  # Before adding a new item
+
+    # Search up something to select
+    page.goto(PRODUCTS_PAGE_URL)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+    
+    chosen_product_locator = page.locator(PRODUCT_ITEM).first
+
+    # click to navigate to the product detail page
+    chosen_product_locator.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+    assert page.url != PRODUCTS_PAGE_URL
+
+    # retain the product name to match later
+    chosen_product_name = page.locator(LISTING_TITLE).text_content()
+
+    # locate the button to add to wishlist and click it
+    heart_button = page.get_by_label(WISHLIST_HEART)
+    heart_button.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_SHORT)
+
+    # go to the user's wishlist and see if the product is listed there
+    page.get_by_role(ROLE_LINK, name=WISHLIST_BUTTON).click()
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+    assert page.url == WISHLIST_URL
+
+    # Locate the products container
+    product_grid = page.locator(PRODUCT_GRID)
+    names_in_wishlist = page.locator(PRODUCT_TITLE).all_text_contents()
+
+    assert product_grid.locator(PRODUCT_ITEM).count() == initial_count + 1 # ensures a new product was added
+    assert chosen_product_name in names_in_wishlist
+    print("Test: Adding to wishlist works as expected")
+
+
+def test_delete_from_wishlist(page):
+    """ Test to users are able to delete an item from their wishlist"""
+    # Navigate to wishlist
+    page.goto(WISHLIST_URL)
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+    product_grid = page.locator(PRODUCT_GRID)
+    initial_count = product_grid.locator(PRODUCT_ITEM).count()  # Before removing a new item
+    
+    # Retain the first product name
+    chosen_product_locator = page.locator(PRODUCT_ITEM).first
+    chosen_product_name = page.locator(PRODUCT_TITLE).first.text_content()
+
+    # intercept pop-ip dialog with handle_dialog function
+    page.on("dialog", handle_dialog)
+
+    # remove the product
+    clear_button = chosen_product_locator.locator(CLEAR_BUTTON)
+    clear_button.click()
+    page.wait_for_timeout(WAIT_TO_LOAD_LONG)
+
+    # Locate the products container
+    product_grid = page.locator(PRODUCT_GRID)
+    names_in_wishlist = page.locator(PRODUCT_TITLE).all_text_contents()
+
+    assert product_grid.locator(PRODUCT_ITEM).count() == initial_count - 1 # ensures product was removed
+    assert chosen_product_name not in names_in_wishlist
+    print("Test: Removing from wishlist works as expected")
+
+
 

@@ -157,7 +157,15 @@ const CategoryPage = () => {
             />
           </FormControl>
 
-          <Button onClick={() => { clearFilters() }} variant="outlined">
+          <Button
+            onClick={() => { clearFilters() }}
+            variant="outlined"
+            sx={{
+              '&:hover': {
+              backgroundColor: '#007fa3',       // Custom hover color
+              },
+            }}
+          >
             Clear Filters
           </Button>
 

@@ -29,7 +29,7 @@ import PasswordResetConfirm from './components/screens/profiles/PasswordResetCon
 const theme = createTheme({
   palette: {
     primary: {
-      main: '#001f3f', // header navy blue
+      main: '#003366', // title navy blue
     },
   },
 });
