@@ -22,7 +22,7 @@
 /* Products */
 
 .product-grid {
-    overflow-y: auto;
+    /*overflow-y: auto;*/
     flex-grow: 1;
 }
 
@@ -54,6 +54,18 @@
     grid-template-columns: repeat(4, 1fr); /* 4 columns */
     gap: 20px;
     padding: 0px 30px 30px 30px;
+}
+
+@media (max-width: 1160px) {
+    .products {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 940px) {
+    .products {
+        grid-template-columns: repeat(2, 1fr);
+    }
 }
 
 .product-item {
