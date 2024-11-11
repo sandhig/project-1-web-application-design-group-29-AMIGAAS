@@ -168,11 +168,6 @@ const UsersLogin = () => {
             variant="text"
             color="primary"
             onClick={handleForgotPassword}
-            sx={{
-              '&:hover': {
-              backgroundColor: '#007fa3',       // Custom hover color
-              },
-            }}
           >
             <Typography color='primary'>Forgot Password?</Typography>
           </Button>
