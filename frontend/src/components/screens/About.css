@@ -1,4 +1,4 @@
-/* About.css */
+/* About.css file*/
 
 .about-page {
     text-align: center;
@@ -20,7 +20,7 @@
     overflow: visible;
 }
 
-/* the animation definition
+/* The animation definition
 Box Shadow: The box-shadow property is used to create a glow around the
 circle. By animating the shadow, it gives the illusion of a pulsing shine.
 
