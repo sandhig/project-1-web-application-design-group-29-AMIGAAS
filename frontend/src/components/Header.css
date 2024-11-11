@@ -7,7 +7,7 @@
 
 @font-face {
     font-family: 'Zombies';
-    src: url('./fonts/Zombies.ttf') format('truetype');
+    src: url('../../public/fonts/Zombies.ttf') format('truetype');
     font-style: normal;
 }
 
