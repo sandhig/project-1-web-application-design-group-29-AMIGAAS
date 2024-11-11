@@ -330,15 +330,18 @@ function CreateListing() {
             onChange={handleInputChange}
           />
 
-        <Button
-          name="submit"
-          type="submit"
-          variant="contained"
-          color="primary"
-          disabled={isFormInvalid}
-        >
-          {isSubmitting ? 'Submitting...' : 'Submit'}
-        </Button>
+        <div className='submit-button'>
+          <Button
+            name="submit"
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={isFormInvalid}
+          >
+            {isSubmitting ? 'Submitting...' : 'Submit'}
+          </Button>
+        </div>
+        
 
         {submitError && <Alert severity="error">{submitError}</Alert>}
         {error && <Alert severity="error">{error}</Alert>}

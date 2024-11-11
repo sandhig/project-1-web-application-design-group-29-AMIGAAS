@@ -15,7 +15,7 @@ function FAQ() {
     { question: 'What items are allowed for sale on this platform?', answer: 'Only second-hand items related to university life, such as textbooks, electronics, furniture, and clothing, are allowed.' },
     { question: 'What if I am not satisfied with the item I bought?', answer: 'Too Good to Throw does not handle returns or refunds. We recommend meeting the seller, examining the item carefully, and confirming all details before completing the purchase.' },
     { question: 'How are items organized on the platform?', answer: 'Items are organized by category, such as textbooks, furniture, electronics, and clothing, making it easier for you to find what you’re looking for.' },
-    { question: 'What happens to my account after I graduate?', answer: 'A UofT email is required to login, so when you graduate you can still use your account so long as your email is still active. Once your email is deactivated you will not be able to use Too Good to Throw' },
+    { question: 'What happens to my account after I graduate?', answer: 'A UofT email is required to login, so when you graduate you can still use your account so long as your email is still active. Once your email is deactivated you will not be able to use Too Good to Throw.' },
     { question: 'Are prices listed final?', answer: 'You can negotiate with the seller.' },
     // Add more FAQs as needed
   ];
@@ -38,11 +38,10 @@ function FAQItem({ question, answer }) {
   const toggleOpen = () => setIsOpen(!isOpen);
 
   return (
-    <div className="faq-item" style={{ textAlign: 'center' }}>
+    <div className="faq-item">
       <div 
         className="faq-question" 
         onClick={toggleOpen} 
-        style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
       >
         <h3 style={{ marginRight: '10px' }}>{question}</h3>
         <span>{isOpen ? '-' : '+'}</span>

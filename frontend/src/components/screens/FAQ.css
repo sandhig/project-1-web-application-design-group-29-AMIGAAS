@@ -1,7 +1,25 @@
 /* FAQ.css */
 
 .faq-title {
-    color: #003366;
-  }
-  
-  
+  color: #003366;
+}
+
+
+.faq-item {
+  text-align: center;
+}
+
+.faq-question {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.faq-answer {
+  padding-bottom: 20px;
+}
+
+.faq-question:hover {
+  color: #007fa3;
+}
