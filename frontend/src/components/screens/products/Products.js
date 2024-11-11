@@ -84,7 +84,7 @@ const Products = () => {
   return (
     <div>
       <Header />
-      <div className="product-grid">
+      <div className="homepage-product-grid">
           {currentUser ? (<h1 style={{textAlign: "left", padding: "0 45px", margin: "35px 0 0 0"}}>{greeting}, {currentUser.first_name}</h1>) : null} 
           
           <div className="carousel-container">
@@ -159,7 +159,7 @@ const Products = () => {
           ))}
 
         </div>
-        
+        <Footer />
     </div>
   );
 };
