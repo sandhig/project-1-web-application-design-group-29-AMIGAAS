@@ -217,7 +217,11 @@ const ProductEdit = ({
                 const fieldErrors = {};
 
                 Object.keys(backendErrors).forEach(key => {
-                    fieldErrors[key] = backendErrors[key].join(' '); // Handle multiple error messages for the same field
+                    if (!fieldErrors[key]) {
+                        setSubmitError(backendErrors[key]);
+                    } else {
+                        fieldErrors[key] = backendErrors[key].join(' '); // Handle multiple error messages for the same field
+                    }
                 });
 
                 setFormErrors(fieldErrors); 
