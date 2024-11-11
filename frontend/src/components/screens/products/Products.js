@@ -131,7 +131,7 @@ const Products = () => {
                     {products
                       .filter(product => product.category === category.name)
                       .map(product => (
-                      <div key={product.id} className="product-item">
+                      <div key={product.id} className="homepage-product-item">
                         <div onClick={() => handleOpenProduct(product.id)}>
                       
                           {product.image_url ? 
