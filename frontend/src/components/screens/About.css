@@ -1,1 +1,279 @@
-/* About.css */
+/* About.css file*/
+
+.about-page {
+    text-align: center;
+    font-family: 'Roboto', Arial, sans-serif;
+}
+
+.about-content {
+    padding: 20px;
+    margin-top: -10px;
+}
+
+.circle-container {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px; /* Space between "About Us" and circle layout */
+    height: 600px;
+    overflow: visible;
+}
+
+/* The animation definition
+Box Shadow: The box-shadow property is used to create a glow around the
+circle. By animating the shadow, it gives the illusion of a pulsing shine.
+
+Animation: The @keyframes shine animation alternates between two states:
+-0%: Starts with a smaller glow.
+-100%: Expands the glow to give a pulsating effect.
+
+*/
+.center-circle {
+    background-color: #003366;
+    color: #ffffff;
+    width: 160px;
+    height: 160px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.4rem;
+    font-weight: bold;
+    position: relative;
+    z-index: 1;
+    box-shadow: 0 0 10px rgba(0, 51, 102, 0.3), 0 0 20px rgba(0, 51, 102, 0.2);
+    animation: shine 3s infinite alternate;
+    cursor: pointer; /* Now clickable */
+    perspective: 1000px; /* 3D perspective for the flip effect */
+    transform-style: preserve-3d; /* Ensured the 3D flip effect */
+    transition: transform 0.8s; /* Smooth flip transition */
+}
+
+/* Softer glow animation */
+@keyframes shine {
+    0% {
+        box-shadow: 0 0 10px rgba(0, 51, 102, 0.3), 0 0 20px rgba(0, 51, 102, 0.2);
+    }
+    100% {
+        box-shadow: 0 0 15px rgba(0, 51, 102, 0.5), 0 0 30px rgba(0, 51, 102, 0.3);
+    }
+}
+
+.center-circle::before, .center-circle::after {
+    content: '';
+    position: absolute;
+    width: 12px; /* Smaller sparkles */
+    height: 12px;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 50%;
+    animation: sparkle 1.5s infinite ease-in-out;
+    box-shadow: 0 0 6px rgba(255, 255, 255, 0.5);
+}
+
+.center-circle::before {
+    top: -10px; /* Adjusted sparkle position */
+    left: 30px;
+    animation-delay: 0s;
+}
+
+.center-circle::after {
+    bottom: -10px; /* Adjusted sparkle position */
+    right: 30px;
+    animation-delay: 0.8s;
+}
+
+/* Subtle sparkle animation */
+@keyframes sparkle {
+    0%, 100% {
+        opacity: 0;
+        transform: scale(0.3);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+/* Applied the flip rotation when the circle has the 'flipped' class */
+.center-circle.flipped {
+    transform: rotateY(180deg); /* Flip the circle horizontally */
+}
+
+/* Front side of the circle with the "AMIGAAS" text */
+.center-circle .front, .center-circle .back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backface-visibility: hidden; /* the reverse side hidden during flip */
+}
+
+
+/* Back side of the circle with the abbreviations */
+.center-circle .back {
+    transform: rotateY(180deg); /* Rotated back side for the flip effect */
+    font-size: 0.75rem; /* Comparitively smaller font for the abbreviations */
+    color: #ffffff;
+    text-align: left;
+    line-height: 1.1; /* Increased spacing for readability */
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start; /* Ensures all items start from the left */
+    padding-left: 90px; /* Controls how far left the text starts */
+    padding-top: 00px;  /* Adjusts top spacing for a balanced look */
+}
+
+/* Each abbreviation entry on the back side */
+.center-circle .back p {
+    margin: 3px 0; /* Vertical spacing between initials and names */
+    color: #ffffff; /* Ensured text is white */
+}
+
+.team-member-circle {
+    position: absolute;
+    width: 110px;
+    height: 110px;
+    border-radius: 50%;
+    overflow: hidden;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.team-member-circle:hover {
+    transform: scale(1.1);
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+}
+
+.team-member-circle img {
+    width: 85px;
+    height: 85px;
+    border-radius: 50%;
+}
+
+.team-member-name {
+    position: relative; /* Temporary basic positioning */
+    top: 5px;           /* Slightly below the image */
+    font-size: 0.85rem;
+    color: #333;
+    font-weight: bold;
+    text-align: center;
+}
+
+.popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: white;
+    padding: 25px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 15px rgba(0, 0, 0, 0.5);
+    width: 350px;
+    text-align: center;
+    z-index: 10;
+}
+
+.popup .popup-img {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    margin-bottom: 15px;
+}
+
+.popup h2 {
+    margin: 10px 0;
+    font-size: 1.2rem;
+}
+
+.popup h3 {
+    margin: 8px 0;
+    font-size: 1rem;
+    color: #666;
+}
+
+.popup p {
+    font-size: 0.9rem;
+    color: #333;
+}
+
+.popup .close-btn {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background: transparent;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+}
+
+.navigation-buttons {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+}
+
+.navigation-buttons button {
+    background-color: #003366;
+    color: white;
+    border: none;
+    padding: 8px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 0.9rem;
+}
+
+.description-section {
+    padding: 40px; /* Adds padding around the section for breathing room */
+    font-size: 1rem; /* Font size for readability */
+    color: #333;
+    margin-top: 40px; /* Space between the circle layout and the description */
+    line-height: 1.6; /* Improves readability */
+    text-align: center; /* Centers the text for elegance */
+    max-width: 800px; /* Restricts width for easier readability */
+    margin-left: auto; /* Centers the description */
+    margin-right: auto; /* Centers the description */
+    margin-top: -70px; /* Pulled "Too Good to Throw" closer to the circle layout */
+}
+
+/* Style for the "Too Good to Throw" heading */
+.description-section h2 {
+    font-size: 1.8rem;
+    font-family: 'Zombies'; /* Applies the Zombies font */
+    
+    font-weight: normal;
+    color: #003366;
+    margin-bottom: 20px;
+    text-transform: uppercase; 
+}
+
+/* Additional padding to push the footer further down */
+footer {
+    padding-top: 40px;
+    border-top: 1px solid #003366; /* Optional border for a subtle divider */
+}
+
+.social-links {
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+.social-link {
+    color: #333; /* Neutral color for elegance */
+    font-size: 1.5rem;
+    margin: 0 10px;
+    transition: color 0.3s ease;
+}
+
+.social-link:hover {
+    color: #003366; /* Matches the center circle color */
+}

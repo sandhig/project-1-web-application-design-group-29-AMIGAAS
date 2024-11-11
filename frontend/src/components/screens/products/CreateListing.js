@@ -47,9 +47,11 @@ function CreateListing() {
   const [snackbarOpen, setSnackbarOpen] = useState(false);
   const [snackbarMessage, setSnackbarMessage] = useState('');
   const [navigateAfterSnackbar, setNavigateAfterSnackbar] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   const snackbarErrorMessage = "New listing was not created. Please fix the errors and try again.";
   const isFormInvalid = isSubmitting || Object.values(formErrors).some(error => error) || snackbarOpen;
+  const isImageButtonDisabled = isSubmitting;
 
   useEffect(() => {
     axios.get('http://54.165.176.36:8000/api/product-choices/', {
@@ -93,6 +95,7 @@ function CreateListing() {
         ...formData,
         image: files[0]
       });
+      setSelectedImage(URL.createObjectURL(files[0]));
     }
   };
 
@@ -185,7 +188,7 @@ function CreateListing() {
           Object.keys(backendErrors).forEach(key => {
             fieldErrors[key] = backendErrors[key].join(' '); // if multiple messages for the same field
           });
-          setFormErrors(fieldErrors); 
+          setFormErrors(fieldErrors);
         } else {
           setSubmitError('Failed to add product. Please check your input and try again.');
         }
@@ -199,151 +202,186 @@ function CreateListing() {
   };
 
   return (
-    <div> 
+    <div>
       <Header />
-      <div className='padding-top'> 
+      <div className='padding-top'>
         <h1>Create Listing</h1>
       </div>
       <Box
-          component="form"
-          noValidate
-          onSubmit={handleSubmit}
-          encType="multipart/form-data"
-          sx={{
-            display: 'flex',
-            flexDirection: 'column',
-            gap: 2,
-            maxWidth: 300,
-            margin: 'auto'
-          }}
-        >
+        component="form"
+        noValidate
+        onSubmit={handleSubmit}
+        encType="multipart/form-data"
+        sx={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: 2,
+          margin: 'auto'
+        }}
+      >
+        <div className="form-container">
 
-        <TextField
-          label="Name"
-          name="name"
-          value={formData.name}
-          onChange={handleInputChange}
-          onBlur={handleBlur}
-          variant="outlined"
-          required
-          error={!!formErrors.name}
-          helperText={formErrors.name}
-        />
-
-        <TextField
-          label="Price"
-          name="price"
-          type="number"
-          value={formData.price}
-          onChange={handleInputChange}
-          onBlur={handleBlur}
-          variant="outlined"
-          required
-          error={!!formErrors.price}
-          helperText={formErrors.price}
-          InputProps={{
-            startAdornment: <InputAdornment position="start">$</InputAdornment>,
-            inputProps: { min: 0, step: 0.5 }
-          }}
-        />
-
-        <div className='align-left'> 
-          <FormControl variant="outlined" required error={!!formErrors.category}>
-            <InputLabel id="category-label">Category</InputLabel>
-            <Select
-              labelId="category-label"
-              name="category"
-              value={formData.category}
+          <div className="create-listing-image-container">
+            <img className="create-listing-image" src={selectedImage}></img>
+            <input
+              id="imageInput"
+              type="file"
+              accept="image/jpg, image/jpeg"
               onChange={handleInputChange}
-              onBlur={handleBlur}
-              label="Category"
-            >
-              <MenuItem value="" disabled>Select a Category</MenuItem>
-              {categories.map((category, index) => (
-                <MenuItem key={index} value={category}>
-                  {category.label}
-                </MenuItem>
-              ))}
-            </Select>
-            <Typography variant="caption" color="error">{formErrors.category}</Typography>
-          </FormControl>
+              style={{ display: 'none' }}
+            />
+            <label htmlFor="imageInput">
+              <Button
+                variant="contained"
+                color="primary"
+                component="span"
+                disabled={isImageButtonDisabled}
+                sx={{
+                  '&:hover': {
+                    backgroundColor: '#007fa3',       // Custom hover color
+                  },
+                }}
+              >
+                Choose Image
+              </Button>
+            </label>
+            <Typography variant="caption" color="error">{formErrors.image}</Typography>
+          </div>
+
+
+
+          <div style={{ display: "flex", flexDirection: "column", minWidth: "300px", gap: "20px", flexGrow: "1" }}>
+            <div className="dropdowns">
+              <TextField
+                label="Name"
+                name="name"
+                value={formData.name}
+                onChange={handleInputChange}
+                onBlur={handleBlur}
+                variant="outlined"
+                required
+                error={!!formErrors.name}
+                helperText={formErrors.name}
+                sx={{
+                  flexGrow: 1
+                }}
+              />
+
+              <TextField
+                label="Price"
+                name="price"
+                type="number"
+                value={formData.price}
+                onChange={handleInputChange}
+                onBlur={handleBlur}
+                variant="outlined"
+                required
+                error={!!formErrors.price}
+                helperText={formErrors.price}
+                InputProps={{
+                  startAdornment: <InputAdornment position="start">$</InputAdornment>,
+                  inputProps: { min: 0, step: 0.5 }
+                }}
+              />
+            </div>
+
+            <div className="dropdowns">
+
+              <div className='align-left'>
+                <FormControl variant="outlined" required error={!!formErrors.category}>
+                  <InputLabel id="category-label">Category</InputLabel>
+                  <Select
+                    labelId="category-label"
+                    name="category"
+                    value={formData.category}
+                    onChange={handleInputChange}
+                    onBlur={handleBlur}
+                    label="Category"
+                  >
+                    <MenuItem value="" disabled>Select a Category</MenuItem>
+                    {categories.map((category, index) => (
+                      <MenuItem key={index} value={category}>
+                        {category.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  <Typography variant="caption" color="error">{formErrors.category}</Typography>
+                </FormControl>
+              </div>
+
+              <div className='align-left'>
+                <FormControl variant="outlined" required error={!!formErrors.condition}>
+                  <InputLabel id="condition-label">Condition</InputLabel>
+                  <Select
+                    labelId="condition-label"
+                    name="condition"
+                    value={formData.condition}
+                    onChange={handleInputChange}
+                    onBlur={handleBlur}
+                    label="Condition"
+                  >
+                    <MenuItem value="" disabled>Select a Condition</MenuItem>
+                    {conditions.map((condition, index) => (
+                      <MenuItem key={index} value={condition}>
+                        {condition.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  <Typography variant="caption" color="error">{formErrors.condition}</Typography>
+                </FormControl>
+              </div>
+
+              <div className='align-left'>
+                <FormControl variant="outlined" required error={!!formErrors.location}>
+                  <InputLabel id="location-label">Location</InputLabel>
+                  <Select
+                    labelId="location-label"
+                    name="location"
+                    value={formData.location}
+                    onChange={handleInputChange}
+                    onBlur={handleBlur}
+                    label="Location"
+                  >
+                    <MenuItem value="" disabled>Select a Location</MenuItem>
+                    {locations.map((location, index) => (
+                      <MenuItem key={index} value={location}>
+                        {location.label}
+                      </MenuItem>
+                    ))}
+                  </Select>
+                  <Typography variant="caption" color="error">{formErrors.location}</Typography>
+                </FormControl>
+              </div>
+
+            </div>
+
+            <TextField
+              label="Description"
+              name="description"
+              value={formData.description}
+              onChange={handleInputChange}
+              multiline
+              rows={4}
+              variant="outlined"
+            />
+
+
+
+
+            <div className='submit-button'>
+              <Button
+                name="submit"
+                type="submit"
+                variant="contained"
+                color="primary"
+                disabled={isFormInvalid}
+              >
+                {isSubmitting ? 'Submitting...' : 'Submit'}
+              </Button>
+            </div>
+          </div>
         </div>
 
-        <div className='align-left'>
-          <FormControl variant="outlined" required error={!!formErrors.condition}>
-            <InputLabel id="condition-label">Condition</InputLabel>
-            <Select
-              labelId="condition-label"
-              name="condition"
-              value={formData.condition}
-              onChange={handleInputChange}
-              onBlur={handleBlur}
-              label="Condition"
-            >
-              <MenuItem value="" disabled>Select a Condition</MenuItem>
-              {conditions.map((condition, index) => (
-                <MenuItem key={index} value={condition}>
-                  {condition.label}
-                </MenuItem>
-              ))}
-            </Select>
-            <Typography variant="caption" color="error">{formErrors.condition}</Typography>
-          </FormControl>
-        </div>
-
-        <div className='align-left'>
-          <FormControl variant="outlined" required error={!!formErrors.location}>
-            <InputLabel id="location-label">Location</InputLabel>
-            <Select
-              labelId="location-label"
-              name="location"
-              value={formData.location}
-              onChange={handleInputChange}
-              onBlur={handleBlur}
-              label="Location"
-            >
-              <MenuItem value="" disabled>Select a Location</MenuItem>
-              {locations.map((location, index) => (
-                <MenuItem key={index} value={location}>
-                  {location.label}
-                </MenuItem>
-              ))}
-            </Select>
-            <Typography variant="caption" color="error">{formErrors.location}</Typography>
-          </FormControl>
-        </div>
-
-        <TextField
-          label="Description"
-          name="description"
-          value={formData.description}
-          onChange={handleInputChange}
-          multiline
-          rows={4}
-          variant="outlined"
-        />
-
-          <input
-            type="file"
-            name="image"
-            accept="image/*"
-            onChange={handleInputChange}
-          />
-
-        <Button
-          name="submit"
-          type="submit"
-          variant="contained"
-          color="primary"
-          disabled={isFormInvalid}
-          sx={{
-            '&:hover': {
-            backgroundColor: '#007fa3',       // Custom hover color
-            },
-          }}
-        >
-          {isSubmitting ? 'Submitting...' : 'Submit'}
-        </Button>
 
         {submitError && <Alert severity="error">{submitError}</Alert>}
         {error && <Alert severity="error">{error}</Alert>}

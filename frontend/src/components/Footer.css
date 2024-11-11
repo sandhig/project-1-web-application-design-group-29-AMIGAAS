@@ -2,11 +2,19 @@
 
 .footer-container {
     background-color: #001f3f;
-    padding: 5px;
+    
     text-align: center;
     p, a {
         color: rgb(235, 235, 235);
     }
+    padding: 5px 20px;
+    width: 100%;
+    min-width: 320px; /* Ensures minimum width to align with header */
+    box-sizing: border-box; /* Includes padding in total width */
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 
 .company-info,
@@ -14,7 +22,15 @@
 .mission-statement,
 .social-icons,
 .policies,
+.footer-links,
 .university-notice {
+    
+    max-width: 1200px; /* Max width to align centrally with the header */
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    gap: 15px; /* Space between sections */
+    flex-wrap: wrap;
     margin: 10px 0;
 }
 
@@ -50,10 +66,29 @@ a:hover {
 .footer-links {
     margin-top: 5px;
     margin-bottom: 8px; /* Minimal extra space below the links */
+    display: flex;
+    align-items: center;
 }
 
 .footer-links .separator {
     color: #fff; /* Make the separator white */
     margin: 0 12px; /* Equal spacing between the separator and links */
     font-weight: bold;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .footer-container {
+        padding: 10px;
+    }
+
+    .company-info,
+    .contact-info,
+    .mission-statement,
+    .social-icons,
+    .policies,
+    .university-notice {
+        flex-direction: column; /* Stack sections on smaller screens */
+        align-items: center;
+    }
 }

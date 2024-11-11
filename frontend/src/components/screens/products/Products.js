@@ -7,7 +7,8 @@ import PauseIcon from '@mui/icons-material/Pause';
 import PlayArrowIcon from '@mui/icons-material/PlayArrow';
 import ArrowRightIcon from '@mui/icons-material/ArrowRight';
 import ArrowLeftIcon from '@mui/icons-material/ArrowLeft';
-import Header from "../../Header"
+import Header from "../../Header";
+import Footer from "../../Footer";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { Link } from 'react-router-dom';
@@ -83,7 +84,7 @@ const Products = () => {
   return (
     <div>
       <Header />
-      <div className="product-grid">
+      <div className="homepage-product-grid">
           {currentUser ? (<h1 style={{textAlign: "left", padding: "0 45px", margin: "35px 0 0 0"}}>{greeting}, {currentUser.first_name}</h1>) : null} 
           
           <div className="carousel-container">
@@ -130,7 +131,7 @@ const Products = () => {
                     {products
                       .filter(product => product.category === category.name)
                       .map(product => (
-                      <div key={product.id} className="product-item">
+                      <div key={product.id} className="homepage-product-item">
                         <div onClick={() => handleOpenProduct(product.id)}>
                       
                           {product.image_url ? 
@@ -158,6 +159,7 @@ const Products = () => {
           ))}
 
         </div>
+        <Footer />
     </div>
   );
 };

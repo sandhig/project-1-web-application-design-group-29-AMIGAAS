@@ -19,7 +19,6 @@ import EditProfile from './components/screens/profiles/EditProfile';
 import ProductListing from './components/screens/products/ProductListing';
 import SearchResults from './components/screens/products/SearchResults';
 import Wishlist from './components/screens/products/Wishlist';
-import Footer from './components/Footer';
 import About from './components/screens/About';
 import FAQ from './components/screens/FAQ';
 import CategoryPage from './components/screens/products/CategoryPage';
@@ -69,7 +68,6 @@ function App() {
               </Routes>
               
             </div>
-            <Footer /> {/* Footer appears on every page */}
             
           </Router>
         </UserProvider>

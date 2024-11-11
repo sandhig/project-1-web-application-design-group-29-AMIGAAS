@@ -19,7 +19,8 @@ function UserProfile() {
     const navigate = useNavigate();
     const [message, setMessage] = useState('');
     const [confirmation, setConfirmation] = useState(false);
-    const [loading, setLoading] = useState(true);
+    const [activeLoading, setActiveLoading] = useState(true);
+    const [soldLoading, setSoldLoading] = useState(true);
 
     const { currentUser } = useUser();
     const token = localStorage.getItem('authToken');
@@ -47,7 +48,10 @@ function UserProfile() {
                         },
                     })
                         .then(response => response.json())
-                        .then(data => setProducts(data));
+                        .then((data) => {
+                            setProducts(data);
+                            setActiveLoading(false);
+                        });
 
                     if (userId == currentUser.id) {
                         fetch(`http://54.165.176.36:8000/api/sold-products/`, {
@@ -58,9 +62,11 @@ function UserProfile() {
                             },
                         })
                             .then(response => response.json())
-                            .then(data => setSoldProducts(data));
+                            .then((data) => {
+                                setSoldProducts(data);
+                                setSoldLoading(false);
+                            });
                     }
-                    setLoading(false);
                 });
         }
 
@@ -197,90 +203,104 @@ function UserProfile() {
                         <>{user && (<h2 style={{ margin: "0" }}>{user.first_name}'s Listings</h2>)}</>
                     )}
 
-                    {products.length > 0 ? (
-                    <div style={{ display: "flex", alignItems: "center" }}>
+                    {activeLoading ? (
 
-                        <IconButton onClick={() => scrollLeft(currentScrollRef)}>
-                            <ArrowLeftIcon style={{ fontSize: "xxx-large" }} />
-                        </IconButton>
-
-                        <div className="scroll-container" ref={currentScrollRef}>
-                            {loading ? (
-                                <span className="product-loader"></span>
-                            ) : (
-                                <>
-                                    {products.map(product => (
-                                        <div key={product.id} className="product-item">
-                                            <div onClick={() => handleOpenProduct(product.id)}>
-
-                                                {product.image_url ?
-                                                    (<img className="product-image" src={product.image_url}></img>)
-                                                    : <img className="product-image" src="/images/no-image-icon.png"></img>}
-
-                                                <div className="product-text">
-                                                    <div className="product-price">${product.price}</div>
-                                                    <div className="product-title">{product.name}</div>
-                                                    <div className="product-location">{product.pickup_location}</div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    ))}
-                                </>
-                            )}
+                        <div className="scroll-container">
+                            <span className="product-loader"></span>
                         </div>
 
-                        <IconButton onClick={() => scrollRight(currentScrollRef)}>
-                            <ArrowRightIcon style={{ fontSize: "xxx-large" }} />
-                        </IconButton>
+                    ) : (
 
-                    </div>
-                    ) : (<h3 style={{color:"grey"}}>No active listings</h3>)}
-                    
+                        <>
+                            {products.length > 0 ? (
+                                <div style={{ display: "flex", alignItems: "center" }}>
+
+                                    <IconButton onClick={() => scrollLeft(currentScrollRef)}>
+                                        <ArrowLeftIcon style={{ fontSize: "xxx-large" }} />
+                                    </IconButton>
+
+                                    <div className="scroll-container" ref={currentScrollRef}>
+
+
+                                        {products.map(product => (
+                                            <div key={product.id} className="profile-product-item">
+                                                <div onClick={() => handleOpenProduct(product.id)}>
+
+                                                    {product.image_url ?
+                                                        (<img className="product-image" src={product.image_url}></img>)
+                                                        : <img className="product-image" src="/images/no-image-icon.png"></img>}
+
+                                                    <div className="product-text">
+                                                        <div className="product-price">${product.price}</div>
+                                                        <div className="product-title">{product.name}</div>
+                                                        <div className="product-location">{product.pickup_location}</div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        ))}
+
+
+                                    </div>
+
+                                    <IconButton onClick={() => scrollRight(currentScrollRef)}>
+                                        <ArrowRightIcon style={{ fontSize: "xxx-large" }} />
+                                    </IconButton>
+
+                                </div>
+                            ) : (<h3 style={{ color: "grey" }}>No active listings</h3>)}
+                        </>
+
+                    )}
+
                     {parseInt(currentUser.id) == parseInt(userId) && (
                         <>
                             <h2 style={{ marginBottom: "0" }}>My Past Listings</h2>
-                            {soldProducts.length > 0 ? (
-                            <>
+                            {soldLoading ? (
 
-                            <div style={{ display: "flex", alignItems: "center" }}>
-                                <IconButton onClick={() => scrollLeft(pastScrollRef)}>
-                                    <ArrowLeftIcon style={{ fontSize: "xxx-large" }} />
-                                </IconButton>
-
-                                <div className="scroll-container" ref={pastScrollRef}>
-                                    {loading ? (
-                                        <span className="product-loader"></span>
-                                    ) : (
-                                        <>
-                                            {soldProducts.map(product => (
-                                                <div key={product.id} className="product-item">
-                                                    <div onClick={() => handleOpenProduct(product.id)}>
-
-                                                        {product.image_url ?
-                                                            (<img className="product-image" src={product.image_url}></img>)
-                                                            : <img className="product-image" src="/images/no-image-icon.png"></img>}
-
-                                                        <div className="product-text">
-                                                            <div className="product-price">${product.price}</div>
-                                                            <div className="product-title">{product.name}</div>
-                                                            <div className="product-location">{product.pickup_location}</div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            ))}
-                                        </>
-                                    )}
+                                <div className="scroll-container">
+                                    <span className="product-loader"></span>
                                 </div>
-                                <IconButton onClick={() => scrollRight(pastScrollRef)}>
-                                    <ArrowRightIcon style={{ fontSize: "xxx-large" }} />
-                                </IconButton>
 
-                            </div>
-                            </>
-                        ) : (<h3 style={{color:"grey"}}>Your sold listings will appear here</h3>) }
+                            ) : (
+                                <>
+                                    {soldProducts.length > 0 ? (
+                                        <>
+
+                                            <div style={{ display: "flex", alignItems: "center" }}>
+                                                <IconButton onClick={() => scrollLeft(pastScrollRef)}>
+                                                    <ArrowLeftIcon style={{ fontSize: "xxx-large" }} />
+                                                </IconButton>
+
+                                                <div className="scroll-container" ref={pastScrollRef}>
+
+                                                    {soldProducts.map(product => (
+                                                        <div key={product.id} className="profile-product-item">
+                                                            <div onClick={() => handleOpenProduct(product.id)}>
+
+                                                                {product.image_url ?
+                                                                    (<img className="product-image" src={product.image_url}></img>)
+                                                                    : <img className="product-image" src="/images/no-image-icon.png"></img>}
+
+                                                                <div className="product-text">
+                                                                    <div className="product-price">${product.price}</div>
+                                                                    <div className="product-title">{product.name}</div>
+                                                                    <div className="product-location">{product.pickup_location}</div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                                <IconButton onClick={() => scrollRight(pastScrollRef)}>
+                                                    <ArrowRightIcon style={{ fontSize: "xxx-large" }} />
+                                                </IconButton>
+
+                                            </div>
+                                        </>
+                                    ) : (<h3 style={{ color: "grey" }}>Your sold listings will appear here</h3>)}
+                                </>
+                            )}
                         </>
                     )}
-
                 </div>
 
             </div>
