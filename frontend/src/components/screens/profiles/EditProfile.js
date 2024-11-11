@@ -24,7 +24,7 @@ function EditProfile() {
     const [selectedImage, setSelectedImage] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const isFormInvalid = isSubmitting || Object.values(formErrors).some(error => error);
+    const isFormInvalid = isSubmitting || Object.values(formErrors).some(error => error) || loading;
 
     useEffect(() => {
         // Fetch profile data to populate form fields
