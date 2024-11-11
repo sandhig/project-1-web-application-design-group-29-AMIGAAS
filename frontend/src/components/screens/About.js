@@ -6,36 +6,37 @@ import './About.css';
 
 const teamMembers = [
     { id: 1, name: 'Tasfia', fullName: 'Tasfia Mehbuba Islam', role: 'Computer Engineering', 
-        image: '/images/team/tasfia.png', bio: 'Frontend developer specializing in database management.',
+        image: '/images/team/tasfia.png', bio: 'Frontend & Backend Developer',
         linkedin: 'https://www.linkedin.com/in/tasfia-mehbuba-islam/',
         github: 'https://github.com/tasfia8' 
      },
-    { id: 2, name: 'Amy', fullName: 'Amy Saranchuk', role: 'Engineering Science', image: '/images/team/amy.jpg', bio: 'Software developer focusing on creating intuitive and beautiful user interfaces.',
+    { id: 2, name: 'Amy', fullName: 'Amy Saranchuk', role: 'Engineering Science', image: '/images/team/amy.jpg', 
+        bio: 'Frontend & Backend Developer',
         linkedin: 'https://www.linkedin.com/in/amysaranchuk/',
         github: 'https://github.com/amyy2/'
      },
     { id: 3, name: 'Lamia', fullName: 'Lamia Alam', role: 'Computer Engineering', 
-        image: '/images/team/lamia.png', bio: 'Software developer specializing in product quality',
+        image: '/images/team/lamia.png', bio: 'Frontend & Backend Developer',
         linkedin: 'https://www.linkedin.com/in/lamia-alam-29a53a1a0/',
         github: 'https://github.com/lamia-alam/'
      },
     { id: 4, name: 'Raisa', fullName: 'Raisa Islam Aishy', role: 'Computer Engineering', 
-        image: '/images/team/raisa.jpeg', bio: 'Software developer focusing on Unit Testing and UI/UX',
+        image: '/images/team/raisa.jpeg', bio: 'Frontend & Backend Developer',
         linkedin: 'https://www.linkedin.com/in/raisa-islam-aishy/',
         github: 'https://github.com/ria147/'
      },
     { id: 5, name: 'Sarah', fullName: 'Sarah Agib', role: 'Engineering Science', 
-        image: '/images/team/sarah.jpeg', bio: 'Software developer focusing on product quality and bug testing.',
+        image: '/images/team/sarah.jpeg', bio: 'Frontend & Backend Developer',
         linkedin: 'https://www.linkedin.com/in/sarah-agib/',
         github: 'https://github.com/sarahagib/'
      },
     { id: 6, name: 'Bavya', fullName: 'Bavya Mittal', role: 'Computer Engineering', 
-        image: '/images/team/bavya.png', bio: 'Software developer focusing on User Interface',
+        image: '/images/team/bavya.png', bio: 'Frontend & Backend Developer',
         linkedin: 'https://www.linkedin.com/in/bavya-mittal/',
         github: 'https://github.com/BavyaMittal'
      },
     { id: 7, name: 'Sandhi', fullName: 'Sandhi Ganjoo', role: 'Engineering Science', 
-        image: '/images/team/sandhi.png', bio: 'Software developer focusing on User Interface',
+        image: '/images/team/sandhi.png', bio: 'Frontend & Backend Developer',
         linkedin: 'https://www.linkedin.com/in/sandhiganjoo/',
         github: 'https://github.com/sandhig'
      },
@@ -129,7 +130,7 @@ function About() {
                     who developed "Too Good to Throw" to promote affordable, sustainable shopping for students. Too Good to Throw is a centralized marketplace to make buying and
                     selling secondhand items simple, safe, and sustainable. This platform, exclusive to the U of T community, 
                     allows members to exchange textbooks, furniture, household items, and more. Verified by university-approved emails, 
-                    users can enjoy secure transactions with features like campus-based pickup locations, private messaging, and buyer/seller ratings.
+                    users can enjoy campus-based pickup locations, create new listings, engage in private messaging, and have their personalized wishlists.
 </p>
             </div>
         </div>
