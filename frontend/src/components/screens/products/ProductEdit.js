@@ -229,7 +229,7 @@ const ProductEdit = ({
         setSnackbarOpen(true);
         })
         .finally(() => {
-        setIsSubmitting(false);
+            setIsSubmitting(false);
         });
     };
     
