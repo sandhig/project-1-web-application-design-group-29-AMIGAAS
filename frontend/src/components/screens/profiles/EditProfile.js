@@ -60,10 +60,10 @@ function EditProfile() {
     const handleInputChange = (event) => {
         const { name, value, type, files } = event.target;
         setFormErrors({ ...formErrors, [name]: '' });
-
+    
         if (type === 'file') {
             const file = files[0];
-
+    
             if (!file) {
                 return;
             }
@@ -73,37 +73,37 @@ function EditProfile() {
             if (wrongFileType) {
                 setFormErrors({
                     ...formErrors,
-                    image: wrongFileType
+                    profilePic: wrongFileType
                 });
     
-                // Reset the profile pic to null if there's an error
+                // Reset the profile pic if there's an error
                 setProfile({
                     ...profile,
                     profilePic: null
                 });
                 return;
             }
-
-            setFormErrors({...formErrors, image: ''});
-            setProfile({ ...profile, image: file });
+    
+            setFormErrors({ ...formErrors, profilePic: '' });
+            setProfile({ ...profile, profilePic: file });
             setSelectedImage(URL.createObjectURL(file));
-
+    
         } else {
             setProfile({
                 ...profile,
                 [name]: value
-                });
+            });
         }
     };
 
     const handleSave = (e) => {
         e.preventDefault();
-
+    
         const newProfilePic = profile.profilePic && typeof profile.profilePic !== 'string';
-
+    
         if (newProfilePic) {
             const errors = {
-                image: validateImageType(profile.profilePic),
+                profilePic: validateImageType(profile.profilePic),
             };
         
             const hasErrors = Object.values(errors).some(error => error !== '');
@@ -112,7 +112,7 @@ function EditProfile() {
                 return;
             }
         }
-      
+    
         setIsSubmitting(true);
 
         // Structure data to match what the serializer expects
@@ -125,13 +125,13 @@ function EditProfile() {
         if (newProfilePic) {
             formData.append('profilePic', profile.profilePic);
         }
-
+    
         fetch(`http://54.165.176.36:8000/api/profiles/edit-profile/`, {
             method: 'POST',
             headers: {
                 'Authorization': `Token ${token}`,
             },
-            body: formData //JSON.stringify(updatedProfile),
+            body: formData
         })
         .then(response => {
             if (response.ok) {
@@ -139,6 +139,9 @@ function EditProfile() {
                 setTimeout(() => setSuccessMessage(''), 3000); // Clear message after 3 seconds
                 navigate(`/user/${currentUser.id}`);
             } else {
+                response.json().then(errorData => {
+                    console.log('Server error:', errorData);
+                });
                 console.error('Error saving profile:', response);
             }
         })
@@ -180,7 +183,7 @@ function EditProfile() {
                                 Choose Image
                             </Button>
                         </label>
-                        <Typography variant="caption" color="error">{formErrors.image}</Typography>
+                        <Typography variant="caption" color="error">{formErrors.profilePic}</Typography>
                     </div>
                     <TextField
                         label="First Name"
