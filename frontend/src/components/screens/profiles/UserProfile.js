@@ -223,7 +223,7 @@ function UserProfile() {
 
 
                                         {products.map(product => (
-                                            <div key={product.id} className="product-item">
+                                            <div key={product.id} className="profile-product-item">
                                                 <div onClick={() => handleOpenProduct(product.id)}>
 
                                                     {product.image_url ?
@@ -274,7 +274,7 @@ function UserProfile() {
                                                 <div className="scroll-container" ref={pastScrollRef}>
 
                                                     {soldProducts.map(product => (
-                                                        <div key={product.id} className="product-item">
+                                                        <div key={product.id} className="profile-product-item">
                                                             <div onClick={() => handleOpenProduct(product.id)}>
 
                                                                 {product.image_url ?

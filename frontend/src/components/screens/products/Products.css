@@ -73,6 +73,17 @@
     }
 }
 
+.profile-product-item {
+    padding: 15px;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    width: 10vw;
+    justify-self: center;
+    box-sizing: border-box;
+    flex-shrink: 0;
+}
+
 .homepage-product-item {
     padding: 15px;
     text-align: left;
