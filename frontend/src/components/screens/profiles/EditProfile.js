@@ -19,6 +19,7 @@ function EditProfile() {
     const { currentUser } = useUser();
     const token = localStorage.getItem('authToken');
     const [formErrors, setFormErrors] = useState({});
+    const [loading, setLoading] = useState(false);
     const [successMessage, setSuccessMessage] = useState('');
     const [selectedImage, setSelectedImage] = useState(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -28,6 +29,7 @@ function EditProfile() {
     useEffect(() => {
         // Fetch profile data to populate form fields
         if (currentUser) {
+            setLoading(true);
             fetch(`http://54.165.176.36:8000/api/user/${currentUser.id}/`, {
                 method: 'GET',
                 headers: {
@@ -45,7 +47,8 @@ function EditProfile() {
                 });
                 setSelectedImage(data.profilePic);
             })
-            .catch(error => console.error('Error fetching profile:', error));
+            .catch(error => console.error('Error fetching profile:', error))
+            .finally(() => setLoading(false));
         }
     }, [currentUser, token]);
 
@@ -222,7 +225,7 @@ function EditProfile() {
                             '&:hover': {
                             backgroundColor: '#007fa3',       // Custom hover color
                             },
-                          }}
+                        }}
                     >
                         {isSubmitting ? 'Saving Changes...' : 'Save Changes'}
                     </Button>
