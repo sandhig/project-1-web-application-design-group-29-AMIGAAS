@@ -4,25 +4,23 @@ import './Products.css';
 import { Select, MenuItem, FormControl, InputLabel, Slider, Typography, Button } from '@mui/material';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
-import { useUser } from '../../context/UserContext';
+import { useUser } from '../../../context/UserContext';
 import { useNavigate } from 'react-router-dom';
-import Header from "../Header";
+import Header from "../../Header";
 
 function useQuery() {
   return new URLSearchParams(useLocation().search);
 }
 
-const SearchResults = () => {
+const CategoryPage = () => {
   const query = useQuery();
-  const searchTerm = query.get("query");
+  const category = query.get("query");
   const [products, setProducts] = useState([]);
-  const [categories, setCategories] = useState([]);
   const [conditions, setConditions] = useState([]);
   const [locations, setLocations] = useState([]);
   const [loading, setLoading] = useState(true);
 
   const [sortOption, setSortOption] = useState('');
-  const [selectedCategory, setSelectedCategory] = useState('');
   const [selectedCondition, setSelectedCondition] = useState('');
   const [selectedLocation, setSelectedLocation] = useState('');
   const [maxPrice, setMaxPrice] = useState(500);
@@ -32,12 +30,6 @@ const SearchResults = () => {
   const navigate = useNavigate();
 
   const filteredProducts = products
-    .filter(product => {
-      if (selectedCategory) {
-        return product.category === selectedCategory.value;
-      }
-      return true;
-    })
     .filter(product => {
       if (selectedCondition) {
         return product.condition === selectedCondition.value;
@@ -68,7 +60,6 @@ const SearchResults = () => {
     });
 
   const clearFilters = () => {
-    setSelectedCategory('');
     setSelectedCondition('');
     setSelectedLocation('');
     setMaxPrice(500);
@@ -76,7 +67,7 @@ const SearchResults = () => {
 
   useEffect(() => {
     setLoading(true);
-    fetch(`http://3.87.240.14:8000/api/products/?search=${searchTerm}`, {
+    fetch(`http://54.165.176.36:8000/api/products/?category=${category}`, {
       headers: {
         Authorization: `Token ${token}`,
       },
@@ -87,19 +78,18 @@ const SearchResults = () => {
         setLoading(false);
       })
       .catch((error) => console.error("Error fetching products:", error));
-    axios.get('http://3.87.240.14:8000/api/product-choices/', {
+    axios.get('http://54.165.176.36:8000/api/product-choices/', {
       headers: {
         'Authorization': `Token ${token}`,
       }
     })
       .then(response => {
         const { categories, conditions, locations } = response.data;
-        setCategories(categories);
         setConditions(conditions);
         setLocations(locations);
       })
       .catch(error => console.error('Error fetching preset values:', error));
-  }, [searchTerm]);
+  }, [category]);
 
   const handleOpenProduct = (id) => {
     navigate(`/products/${id}`);
@@ -111,23 +101,6 @@ const SearchResults = () => {
 
       <div className="products-container">
         <div className="filters">
-
-          <FormControl className="category-filter" variant="outlined">
-            <InputLabel id="category-label">Category</InputLabel>
-            <Select
-              labelId="category-label"
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              label="Category"
-            >
-              <MenuItem value=""><em>None</em></MenuItem>
-              {categories.map((category, index) => (
-                <MenuItem key={index} value={category}>
-                  {category.label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
 
           <FormControl className="condition-filter" variant="outlined">
             <InputLabel id="condition-label">Condition</InputLabel>
@@ -197,7 +170,8 @@ const SearchResults = () => {
             <>
 
               <div className="title">
-                <h2>{filteredProducts.length} results for "{searchTerm}"</h2>
+                {category === 'textbook' ? (<h2>Textbooks</h2>) : (
+                <h2>{category.charAt(0).toUpperCase() + category.slice(1)}</h2>)}
                 <FormControl className="sort-by" variant="outlined">
                   <InputLabel id="sort-label">Sort By</InputLabel>
                   <Select
@@ -239,4 +213,4 @@ const SearchResults = () => {
   );
 };
 
-export default SearchResults;
+export default CategoryPage;

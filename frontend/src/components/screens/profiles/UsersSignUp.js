@@ -2,22 +2,23 @@ import { Button, Link, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import HeaderPre from "../../components/HeaderPre"
-import "./UsersSignUp.css"; 
-import { useUser } from '../../context/UserContext';
+import HeaderPre from "../../HeaderPre"
+import "./UsersSignUp.css";
 
-const UsersLogin = () => {
+
+const UsersSignUp = () => {
   const [formData, setFormData] = useState({
+    first_name: '',
+    last_name: '',
     email: '',
     password: '',
   });
-  
+
+  const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState('');
   const [formErrors, setFormErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const navigate = useNavigate()
-  const { fetchUserData } = useUser();
 
   const isFormInvalid = isSubmitting || Object.values(formErrors).some(error => error) || !!successMessage;
 
@@ -28,7 +29,16 @@ const UsersLogin = () => {
   
   const validatePassword = (password) => {
     if (!password) return 'Please enter your password.';
+    else if (password.length < 6) return 'Password must be at least 6 characters long.'
     else return '';
+  };
+
+  const validateRequired = (name, value) => {
+    if (name === 'first_name') {
+      return !value ? `Please enter your first name.` : '';
+    } else if (name === 'last_name') {
+      return !value ? `Please enter your last name.` : '';
+    } 
   };
 
   const handleInputChange = (event) => {
@@ -45,7 +55,9 @@ const UsersLogin = () => {
     const { name, value } = event.target;
     let errorMessage = '';
 
-    if (name === 'email') {
+    if (name === 'first_name' || name === 'last_name') {
+      errorMessage = validateRequired(name, value);
+    } else if (name === 'email') {
       errorMessage = validateEmail(value);
     } else if (name === 'password') {
       errorMessage = validatePassword(value);
@@ -54,14 +66,16 @@ const UsersLogin = () => {
     setFormErrors({ ...formErrors, [name]: errorMessage });
   };
 
-  const handleSignUpButton = () => {
-    navigate('/profiles/signup');
+  const handleLoginButton = () => {
+    navigate('/profiles/login');
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const errors = {
+      first_name: validateRequired('first_name', formData.first_name),
+      last_name: validateRequired('last_name', formData.last_name),
       email: validateEmail(formData.email),
       password: validatePassword(formData.password),
     };
@@ -75,22 +89,18 @@ const UsersLogin = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await axios.post('http://3.87.240.14:8000/api/profiles/login', formData, {
+      const response = await axios.post('http://54.165.176.36:8000/api/profiles/signup', formData, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
-      if (response.status === 200) {
-        const token = response.data.token;
-        localStorage.setItem('authToken', token);
-        fetchUserData(token);
-        
-        setSuccessMessage('Login successful!');
+      if (response.status === 201) {
+        setSuccessMessage('User successfully added!');
         setErrorMessage('');
-        setTimeout(() => {
-          navigate('/products');  //was /homepage is not /products
-        }, 2000);  
 
+        setTimeout(() => {
+          navigate('/profiles/verify-email');  // Redirects to verify-email page
+        }, 2000);  // Adjust the timeout duration as needed
       }
     } catch (error) {
       if (error.response && error.response.data) {
@@ -113,7 +123,7 @@ const UsersLogin = () => {
               fieldErrors[Object.keys(fieldError)] = Object.values(fieldError).map(errorArray => errorArray.join(' ')).join(' ');
           }
         });
-        
+
         setFormErrors(fieldErrors);
       } else {
         // in case of unexpected errors
@@ -126,12 +136,37 @@ const UsersLogin = () => {
     }
   };
 
+
   return (
-    <div className="signup-page">
+    <div>
       <HeaderPre />
-      <div className='signup-container'>
-        <h1>Login</h1>
+      <div className="signup-container">
+        <h1>Sign Up</h1>
         <form noValidate onSubmit={handleSubmit} className="signup-form">
+          <TextField
+            label="First Name"
+            name="first_name"
+            type="text"
+            value={formData.first_name}
+            onChange={handleInputChange}
+            onBlur={handleBlur}
+            variant="outlined"
+            required
+            error={!!formErrors.first_name}
+            helperText={formErrors.first_name}
+          />
+          <TextField
+            label="Last Name"
+            name="last_name"
+            type="text"
+            value={formData.last_name}
+            onChange={handleInputChange}
+            onBlur={handleBlur}
+            variant="outlined"
+            required
+            error={!!formErrors.last_name}
+            helperText={formErrors.last_name}
+          />
           <TextField
             label="UofT Email"
             name="email"
@@ -157,27 +192,27 @@ const UsersLogin = () => {
             helperText={formErrors.password}
           />
           <Button
-            name="login"
+            name="signup"
             type="submit"
             variant="contained"
             color="primary"
             disabled={isFormInvalid}
           >
-            {isSubmitting || successMessage ? 'Logging In...' : 'Login'}
+            {isSubmitting || successMessage ? 'Signing Up...' : 'Sign Up'}
           </Button>
         </form>
         <div className='side-by-side'>
           <div className='typography'>
-            <Typography>Not a User?</Typography>
+            <Typography>Already a User?</Typography>
           </div>
           <div className='top-padding'>
             <Button
               name="signup"
               variant="text"
               color="primary"
-              onClick={handleSignUpButton}
+              onClick={handleLoginButton}
             >
-              <Typography color='primary'>Sign Up</Typography>
+              <Typography color='primary'>Login</Typography>
             </Button>
           </div>
         </div>
@@ -198,4 +233,4 @@ const UsersLogin = () => {
   );
 };
 
-export default UsersLogin;
+export default UsersSignUp;

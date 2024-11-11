@@ -23,7 +23,7 @@ const ProductView = ({
     const days = Math.floor((currentDate - timestamp) / (1000 * 60 * 60 * 24));
 
     useEffect(() => {
-        fetch(`http://3.87.240.14:8000/api/wishlist/${product.id}`, {
+        fetch(`http://54.165.176.36:8000/api/wishlist/${product.id}`, {
                 method: 'GET',
                 headers: {
                     'Authorization': `Token ${token}`,
@@ -35,7 +35,7 @@ const ProductView = ({
     }, [product, currentUser, token]);
     
     const handleToggleFavorite = () => {
-        fetch(`http://3.87.240.14:8000/api/wishlist/`, {
+        fetch(`http://54.165.176.36:8000/api/wishlist/`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Token ${token}`,
@@ -51,7 +51,7 @@ const ProductView = ({
         if (product.user) {
 
             // Fetch or create conversation with seller
-            fetch(`http://3.87.240.14:8000/api/conversation/start/${product.user.id}/`, {
+            fetch(`http://54.165.176.36:8000/api/conversation/start/${product.user.id}/`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Token ${token}`,
@@ -60,8 +60,7 @@ const ProductView = ({
             })
             .then(response => response.json())
             .then(data => {
-                
-                axios.post('http://3.87.240.14:8000/api/send_message/', {
+                axios.post('http://54.165.176.36:8000/api/send_message/', {
                     conversation_id: data.conversation_id,
                     content: message,
                 }, {
@@ -95,7 +94,9 @@ const ProductView = ({
         {product ? (
             <div className="listing-container">
                 <div className="listing-image-container">
-                    <img className="listing-image" src={product.image_url}></img>
+                    {product.image_url ? 
+                          (<img className="listing-image" src={product.image_url}></img>) 
+                          : <img className="listing-image" src="/images/no-image-icon.png"></img>}
                 </div>
                 <span className="listing-details">
                     <div className="listing-header">

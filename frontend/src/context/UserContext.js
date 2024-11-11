@@ -9,7 +9,7 @@ export const UserProvider = ({ children }) => {
   const [loading, setLoading] = useState(true);
 
   const fetchUserData = (token) => {
-    fetch('http://3.87.240.14:8000/api/profiles/get_user', {
+    fetch('http://54.165.176.36:8000/api/profiles/get_user', {
       method: 'GET',
       headers: {
         'Authorization': `Token ${token}`,

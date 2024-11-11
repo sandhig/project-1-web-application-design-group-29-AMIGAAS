@@ -2,29 +2,34 @@ import { Button, Link, TextField, Typography } from '@mui/material';
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import HeaderPre from "../../components/HeaderPre"
+import HeaderPre from "../../HeaderPre"
+import "./UsersSignUp.css";
+import { useUser } from '../../../context/UserContext';
 
-const EmailVerification = () => {
+const UsersLogin = () => {
   const [formData, setFormData] = useState({
     email: '',
-    verification_code: '',
+    password: '',
   });
 
-  const navigate = useNavigate();
-  const [loading, setLoading] = useState(false);
   const [errorMessage, setErrorMessage] = useState('');
   const [formErrors, setFormErrors] = useState({});
   const [successMessage, setSuccessMessage] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const navigate = useNavigate()
+  const { fetchUserData } = useUser();
 
-  const isFormInvalid = loading || Object.values(formErrors).some(error => error) || !!successMessage;
+  const isFormInvalid = isSubmitting || Object.values(formErrors).some(error => error) || !!successMessage;
 
   const validateEmail = (email) => {
     const emailRegex = /^[a-zA-Z0-9._%+-]+@mail\.utoronto\.ca$/;
     return emailRegex.test(email) ? '' : 'Please enter a valid UofT email address.';
   };
 
-  const validateRequired = (value) => {
-    return !value ? `Please enter your verification code.` : '';
+ 
+  const validatePassword = (password) => {
+    if (!password) return 'Please enter your password.';
+    else return '';
   };
 
   const handleInputChange = (event) => {
@@ -43,19 +48,27 @@ const EmailVerification = () => {
 
     if (name === 'email') {
       errorMessage = validateEmail(value);
-    } else if (name === 'verification_code') {
-      errorMessage = validateRequired(value);
+    } else if (name === 'password') {
+      errorMessage = validatePassword(value);
     }
 
     setFormErrors({ ...formErrors, [name]: errorMessage });
   };
+
+  const handleSignUpButton = () => {
+    navigate('/profiles/signup');
+  };
+
+  const handleForgotPassword = () => {
+    navigate('/password_reset_request');
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     const errors = {
       email: validateEmail(formData.email),
-      verification_code: validateRequired(formData.verification_code),
+      password: validatePassword(formData.password),
     };
 
     const hasErrors = Object.values(errors).some(error => error !== '');
@@ -64,26 +77,27 @@ const EmailVerification = () => {
       return;
     }
 
-    setLoading(true); 
-
-    const trimmedFormData ={
-      email: formData.email.trim(),
-      verification_code:formData.verification_code.trim(),
-    };
+    setIsSubmitting(true);
 
     try {
-      const response = await axios.post('http://3.87.240.14:8000/api/profiles/verify-email', trimmedFormData, {
+
+      const response = await axios.post('http://54.165.176.36:8000/api/profiles/login', formData, {
         headers: {
           'Content-Type': 'application/json',
         },
       });
       if (response.status === 200) {
-        setSuccessMessage('Email verified successfully!');
+        const token = response.data.token;
+        localStorage.setItem('authToken', token);
+        fetchUserData(token);
+
+        setSuccessMessage('Login successful!');
         setErrorMessage('');
-        
         setTimeout(() => {
-          navigate('/profiles/login');  // Redirects to verify-email page
-        }, 2000);  // Adjust the timeout duration as needed
+          navigate('/products');  //was /homepage is not /products
+        }, 2000);
+
+
       }
     } catch (error) {
       if (error.response && error.response.data) {
@@ -91,35 +105,39 @@ const EmailVerification = () => {
         const fieldErrors = {};
 
         // generic errors
-        if (backendErrors.non_field_errors && backendErrors.non_field_errors[0]) {
-            setErrorMessage(backendErrors.non_field_errors[0]);
-        } 
+        if (backendErrors.non_field_errors) {
+          setErrorMessage(backendErrors.non_field_errors.join(' '));
+        } else {
+          setErrorMessage('');
+        }
 
         // form field specific errors
         Object.keys(backendErrors).forEach(key => {
           if (key !== 'non_field_errors') {
-            console.log(backendErrors);
+            console.log(Object.keys(backendErrors[key]));
             const fieldError = backendErrors[key];
-
-              fieldErrors[Object.keys(fieldError)] = Object.values(fieldError).map(errorArray => errorArray.join(' ')).join(' ');
+            fieldErrors[Object.keys(fieldError)] = Object.values(fieldError).map(errorArray => errorArray.join(' ')).join(' ');
           }
         });
-      
+
+        setFormErrors(fieldErrors);
       } else {
-          setErrorMessage('An error occurred. Please try again.');
+        // in case of unexpected errors
+        setErrorMessage('An unexpected error occurred. Please try again.');
       }
+
       setSuccessMessage('');
     } finally {
-      setLoading(false);  // Reset loading state when request finishes
+      setIsSubmitting(false);
     }
   };
 
   return (
     <div className="signup-page">
       <HeaderPre />
-      <div className="signup-container">
-        <h1>Email Verification</h1>
-        <form noValidate onSubmit={handleSubmit} className='signup-form'>
+      <div className='signup-container'>
+        <h1>Login</h1>
+        <form noValidate onSubmit={handleSubmit} className="signup-form">
           <TextField
             label="UofT Email"
             name="email"
@@ -133,29 +151,51 @@ const EmailVerification = () => {
             helperText={formErrors.email}
           />
           <TextField
-            label="Verification Code"
-            name="verification_code"
-            type="text"
-            value={formData.verification_code}
+            label="Password"
+            name="password"
+            type="password"
+            value={formData.password}
             onChange={handleInputChange}
             onBlur={handleBlur}
             variant="outlined"
             required
-            error={!!formErrors.verification_code}
-            helperText={formErrors.verification_code}
+            error={!!formErrors.password}
+            helperText={formErrors.password}
           />
-            <div className='bottom-padding'>
+          <Button
+
+            name="signup"
+            variant="text"
+            color="primary"
+            onClick={handleForgotPassword}
+          >
+            <Typography color='primary'>Forgot Password?</Typography>
+          </Button>
+          <Button
+            name="login"
+            type="submit"
+            variant="contained"
+            color="primary"
+            disabled={isFormInvalid}
+          >
+            {isSubmitting || successMessage ? 'Logging In...' : 'Login'}
+          </Button>
+        </form>
+        <div className='side-by-side'>
+          <div className='typography'>
+            <Typography>Not a User?</Typography>
+          </div>
+          <div className='top-padding'>
             <Button
-              name="verify"
-              type="submit"
-              variant="contained"
+              name="signup"
+              variant="text"
               color="primary"
-              disabled={isFormInvalid}
+              onClick={handleSignUpButton}
             >
-              {loading || successMessage ? 'Verifying Email...' : 'Verify Email'}
+              <Typography color='primary'>Sign Up</Typography>
             </Button>
           </div>
-        </form>
+        </div>
         <div className='top-padding'>
           {errorMessage && (
             <Typography variant="body1" className="error-message">
@@ -173,4 +213,4 @@ const EmailVerification = () => {
   );
 };
 
-export default EmailVerification;
+export default UsersLogin;

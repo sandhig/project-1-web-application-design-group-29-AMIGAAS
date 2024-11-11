@@ -1,6 +1,6 @@
-import { useUser } from '../../context/UserContext';
+import { useUser } from '../../../context/UserContext';
 import React, { useState, useEffect } from 'react';
-import Header from "../../components/Header"
+import Header from "../../Header"
 import { useNavigate } from 'react-router-dom';
 import './Wishlist.css';
 import IconButton from "@mui/material/IconButton";
@@ -15,7 +15,7 @@ function Wishlist() {
     const [loading, setLoading] = useState(true);
 
     const fetchWishlistItems = () => {
-        fetch('http://3.87.240.14:8000/api/wishlist/', {
+        fetch('http://54.165.176.36:8000/api/wishlist/', {
             headers: {
                 'Authorization': `Token ${token}`,
             }
@@ -40,7 +40,7 @@ function Wishlist() {
         const confirmed = window.confirm("Are you sure you want to remove this item from your wishlist?");
 
         if (confirmed) {
-            fetch(`http://3.87.240.14:8000/api/wishlist/`, {
+            fetch(`http://54.165.176.36:8000/api/wishlist/`, {
                 method: 'DELETE',
                 headers: {
                     'Authorization': `Token ${token}`,
@@ -69,6 +69,8 @@ function Wishlist() {
             <div className="product-grid-wrapper">
                 <div className="product-grid transparent-bg">
                 {loading ? (<span className="loader"></span>) : (
+                    <>
+                    {wishlistItems.length > 0 ? (
                     <div className="products">
                         {wishlistItems.map(item => (
                             <div key={item.id} className="product-item">
@@ -99,6 +101,9 @@ function Wishlist() {
                             </div>
                         ))}
                     </div>
+                    ) : (
+                    <h3>Products you like will appear here</h3>
+                    )}</>
                     )}
                 </div>
             </div>
