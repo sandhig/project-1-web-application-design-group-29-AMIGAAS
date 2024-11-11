@@ -19,41 +19,6 @@ h1 {
     gap: 15px;
 }
 
-.profile-label {
-    font-size: 16px;
-    color: #555;
-}
-
-.profile-input,
-.profile-textarea {
-    width: 100%;
-    padding: 8px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-}
-
-.profile-textarea {
-    resize: vertical;
-    min-height: 80px;
-}
-
-.profile-save-button {
-    padding: 10px;
-    font-size: 16px;
-    font-weight: bold;
-    color: #fff;
-    background-color: #003366; /* Navy blue color */
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-}
-
-.profile-save-button:hover {
-    background-color: #0055a5;
-}
-
 .success-message {
     color: green;
     font-size: 14px;
@@ -61,6 +26,20 @@ h1 {
     margin-top: 10px;
 }
 
-.profile-photo-input {
-    margin-top: 10px;
+.disabled-text-field {
+    cursor: not-allowed;
+}
+
+.profile-photo-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+}
+
+.profile-photo {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
 }
