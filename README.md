@@ -59,36 +59,40 @@ PROJECT1-WEB-APPLICATION-DESIGN-GROUP-29-AMIGAAS:.
 |   dump.rdb
 |   package-lock.json
 |   package.json
-|   README.md   
+|   README.md
+|   
 +---backend
 |   |   .DS_Store
 |   |   .gitignore
 |   |   django_debug.log
 |   |   manage.py
-|   |   requirements.txt  
-|   +---apps 
+|   |   requirements.txt
+|   |   
+|   +---apps
 |   |   +---private_messaging
-|   |       |   admin.py
-|   |       |   apps.py
-|   |       |   consumers.py
-|   |       |   models.py
-|   |       |   routing.py
-|   |       |   serializers.py
-|   |       |   tests.py
-|   |       |   urls.py
-|   |       |   views.py
-|   |       |   __init__.py          
+|   |   |   |   admin.py
+|   |   |   |   apps.py
+|   |   |   |   consumers.py
+|   |   |   |   models.py
+|   |   |   |   routing.py
+|   |   |   |   serializers.py
+|   |   |   |   tests.py
+|   |   |   |   urls.py
+|   |   |   |   views.py
+|   |   |   |   __init__.py
+|   |   |   |
 |   |   +---products
-|   |       |   admin.py
-|   |       |   apps.py
-|   |       |   models.py
-|   |       |   serializers.py
-|   |       |   tests.py
-|   |       |   test_image_textbook.jpg
-|   |       |   urls.py
-|   |       |   views.py
-|   |       |   __init__.py
-|   |   +---profiles
+|   |   |   |   admin.py
+|   |   |   |   apps.py
+|   |   |   |   models.py
+|   |   |   |   serializers.py
+|   |   |   |   tests.py
+|   |   |   |   test_image_textbook.jpg
+|   |   |   |   urls.py
+|   |   |   |   views.py
+|   |   |   |   __init__.py
+|   |   |   |
+|   |   \---profiles
 |   |       |   admin.py
 |   |       |   apps.py
 |   |       |   models.py
@@ -97,81 +101,126 @@ PROJECT1-WEB-APPLICATION-DESIGN-GROUP-29-AMIGAAS:.
 |   |       |   test_profile_pic.jpg
 |   |       |   urls.py
 |   |       |   views.py
-|   |       |   __init__.py              
+|   |       |   __init__.py  
+|   |          
 |   \---toogoodtothrow
 |       |   asgi.py
 |       |   settings.py
 |       |   urls.py
 |       |   wsgi.py
 |       |   __init__.py
-+---frontend       
+|       |           
++---frontend
+|   |   .gitignore
+|   |   package-lock.json
+|   |   package.json
+|   |   README.md    
+|   |       
 |   +---public
 |   |   |   favicon.ico
 |   |   |   index.html
+|   |   |   logo.svg
 |   |   |   logo192.png
 |   |   |   logo512.png
 |   |   |   manifest.json
 |   |   |   profile-icon.jpg
 |   |   |   robots.txt
+|   |   |   tgtt-icon-192.png
+|   |   |   tgtt-icon-512.png
+|   |   |   tgtt-icon.ico
 |   |   |   uoft-logo4.png
+|   |   |   
+|   |   +---fonts
+|   |   |       Zombies.ttf
+|   |   |       
 |   |   \---images
+|   |       |   header-logo-navy-cyan-white.png
 |   |       |   logo-icon.png
 |   |       |   logo-white.png
 |   |       |   logo.png
 |   |       |   no-image-icon.png
 |   |       |   profile.png
+|   |       |   welcome-page-logo-navy-2.gif
+|   |       |   welcome-page-logo-navy.gif
 |   |       |   
-|   |       \---carousel
-|   |               1.png
-|   |               2.png
-|   |               3.png         
+|   |       +---carousel
+|   |       |       1.png
+|   |       |       2.png
+|   |       |       3.png
+|   |       |       
+|   |       \---team
+|   |               Amy.jpg
+|   |               bavya.png
+|   |               lamia.png
+|   |               lamia3.jpg
+|   |               raisa.jpeg
+|   |               sandhi.png
+|   |               sarah.jpeg
+|   |               tasfia.png
+|   |               
 |   \---src
 |       |   App.css
 |       |   App.js
 |       |   App.test.js
 |       |   index.css
 |       |   index.js
-|       |   logo.svg
 |       |   reportWebVitals.js
 |       |   setupTests.js
+|       |   
 |       +---components
+|       |   |   Footer.css
+|       |   |   Footer.js
 |       |   |   Header.css
 |       |   |   Header.js
 |       |   |   HeaderPre.js
 |       |   |   PrivateRoute.js
-|       |   |   UploadAndDisplayImage.js   
+|       |   |   UploadAndDisplayImage.js
+|       |   |   
 |       |   \---screens
-|       |       |   HomeScreen.js
+|       |       |   About.css
+|       |       |   About.js
+|       |       |   FAQ.css
+|       |       |   FAQ.js
 |       |       |   PrivateMessage.css
 |       |       |   PrivateMessaging.js
 |       |       |   WelcomePage.css
-|       |       |   WelcomePage.js     
+|       |       |   WelcomePage.js
+|       |       |   
 |       |       +---products
-|       |           |   CreateListing.css
-|       |           |   CreateListing.js
-|       |           |   ProductEdit.js
-|       |           |   ProductListing.css
-|       |           |   ProductListing.js
-|       |           |   Products.css
-|       |           |   Products.js
-|       |           |   ProductView.js
-|       |           |   SearchResults.js
-|       |           |   Wishlist.css
-|       |           |   Wishlist.js   
-|       |       +---profiles
-|       |           |   EditProfile.css
-|       |           |   EditProfile.js
-|       |           |   EmailVerification.js
-|       |           |   UserProfile.css
-|       |           |   UserProfile.js
-|       |           |   UsersLogin.js
-|       |           |   UsersLogOut.js
-|       |           |   UsersSignUp.css
-|       |           |   UsersSignUp.js
+|       |       |       CategoryPage.js
+|       |       |       CreateListing.css
+|       |       |       CreateListing.js
+|       |       |       ProductEdit.js
+|       |       |       ProductListing.css
+|       |       |       ProductListing.js
+|       |       |       Products.css
+|       |       |       Products.js
+|       |       |       ProductView.js
+|       |       |       SearchResults.js
+|       |       |       Wishlist.css
+|       |       |       Wishlist.js
+|       |       |       
+|       |       \---profiles
+|       |               EditProfile.css
+|       |               EditProfile.js
+|       |               EmailVerification.js
+|       |               PasswordReset.js
+|       |               PasswordResetConfirm.js
+|       |               UserProfile.css
+|       |               UserProfile.js
+|       |               UsersLogin.js
+|       |               UsersLogOut.js
+|       |               UsersSignUp.css
+|       |               UsersSignUp.js
+|       |               
 |       +---context
 |       |       UserContext.js
+|       |       
 |       \---tests
+|               locustfile.py
 |               test_products.py
+|               test_profiles.py
+|               
 ```
 
 ## Contributing
