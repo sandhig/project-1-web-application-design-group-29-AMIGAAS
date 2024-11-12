@@ -17,6 +17,7 @@ const ProductView = ({
     const [confirmation, setConfirmation] = useState(false);
     const [isFavorited, setIsFavorited] = useState(false);
     const [message, setMessage] = useState('');
+    const [isMessageButtonDisabled, setIsMessageButtonDisabled] = useState(false);
 
     const timestamp = new Date(product.created_at);
     const currentDate = new Date();
@@ -48,6 +49,7 @@ const ProductView = ({
     };
 
     const sendMessageToSeller = () => {
+        setIsMessageButtonDisabled(true);
         if (product.user) {
 
             // Fetch or create conversation with seller
@@ -143,7 +145,7 @@ const ProductView = ({
                                             }
                                         }}
                                     />
-                        <button onClick={() => sendMessageToSeller()}><IoSend /></button>
+                        <button onClick={() => sendMessageToSeller()} disabled={isMessageButtonDisabled}><IoSend /></button>
                     </div>
                 </span>
                 <Snackbar
