@@ -175,7 +175,14 @@ function UserProfile() {
                                     )}
 
                                     {parseInt(currentUser.id) == parseInt(userId) && (
-                                        <Button onClick={handleEditProfile} variant="outlined">
+                                        <Button onClick={handleEditProfile} variant="outlined"
+                                            sx={{
+                                                '&:hover': {
+                                                backgroundColor: '#007fa3',       // Custom hover color
+                                                WebkitTextFillColor: 'white'      // Change to white text
+                                                },
+                                            }}
+                                        >
                                             Edit Profile
                                         </Button>
                                     )}
