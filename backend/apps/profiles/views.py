@@ -161,7 +161,7 @@ class WishlistAPIView(APIView):
             return Response(Wishlist.objects.select_related('user').filter(product=product, user=current_user).exists())
         else:
             # Return entire wishlist
-            wishlist_items = Wishlist.objects.filter(user=current_user).select_related('product')
+            wishlist_items = Wishlist.objects.filter(user=current_user).select_related('product').exclude(product__sold=True)
             products = [item.product for item in wishlist_items]
             serializer = ProductSerializer(products, many=True)
             return Response(serializer.data)

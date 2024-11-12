@@ -56,8 +56,8 @@ function EditProfile() {
     }, [currentUser, token]);
 
     const validateImageType = (file) => {
-        if (file && !file.type.includes('jpeg') && !file.name.endsWith('.jpg')) {
-            return 'Please upload a .jpg or .jpeg file';
+        if (file && !file.type.includes('jpeg') && !file.name.endsWith('.jpg') && !file.name.endsWith('.webp')) {
+            return 'Please upload a .jpg, .jpeg, or .webp file';
         } else {
             return '';
         }

@@ -107,9 +107,9 @@ const ProductEdit = ({
             if (file && !file.type.includes('jpeg') && !file.name.endsWith('.jpg')) {
                 setFormErrors({
                     ...formErrors,
-                    image: 'Please upload a .jpg or .jpeg file'
+                    image: 'Please upload a .jpg, .jpeg, or .webp file'
                 });
-                setSnackbarMessage("Invalid image format. Please upload a .jpg or .jpeg file.");
+                setSnackbarMessage("Invalid image format. Please upload a .jpg, .jpeg, or .webp file.");
                 setSnackbarOpen(true);
                 setFormData({
                     ...formData,
