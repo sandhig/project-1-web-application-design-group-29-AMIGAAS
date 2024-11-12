@@ -184,7 +184,16 @@ const SearchResults = () => {
             />
           </FormControl>
 
-          <Button onClick={() => { clearFilters() }} variant="outlined">
+          <Button
+            onClick={() => { clearFilters() }}
+            variant="outlined" 
+            sx={{
+              '&:hover': {
+              backgroundColor: '#007fa3',       // Custom hover color
+              WebkitTextFillColor: 'white'      // Change to white text
+              },
+            }}
+          >
             Clear Filters
           </Button>
 
