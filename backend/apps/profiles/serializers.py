@@ -116,7 +116,7 @@ class LoginSerializer(serializers.Serializer):
 
         try:
             # Fetch the user by email
-            profile = Profile.objects.get(user__email=data['email'])
+            profile = Profile.objects.get(user__email__iexact=data['email'])
         except Profile.DoesNotExist:
             raise serializers.ValidationError("User not found.")
 

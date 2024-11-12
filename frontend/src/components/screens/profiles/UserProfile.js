@@ -64,6 +64,7 @@ function UserProfile() {
                             .then(response => response.json())
                             .then((data) => {
                                 setSoldProducts(data);
+                                console.log(soldProducts);
                                 setSoldLoading(false);
                             });
                     }
@@ -234,8 +235,8 @@ function UserProfile() {
                                                 <div onClick={() => handleOpenProduct(product.id)}>
 
                                                     {product.image_url ?
-                                                        (<img className="product-image" src={product.image_url}></img>)
-                                                        : <img className="product-image" src="/images/no-image-icon.png"></img>}
+                                                        (<img className="profile-product-image" src={product.image_url}></img>)
+                                                        : <img className="profile-product-image" src="/images/no-image-icon.png"></img>}
 
                                                     <div className="product-text">
                                                         <div className="product-price">${product.price}</div>
@@ -285,8 +286,8 @@ function UserProfile() {
                                                             <div onClick={() => handleOpenProduct(product.id)}>
 
                                                                 {product.image_url ?
-                                                                    (<img className="product-image" src={product.image_url}></img>)
-                                                                    : <img className="product-image" src="/images/no-image-icon.png"></img>}
+                                                                    (<img className="profile-product-image" src={product.image_url}></img>)
+                                                                    : <img className="profile-product-image" src="/images/no-image-icon.png"></img>}
 
                                                                 <div className="product-text">
                                                                     <div className="product-price">${product.price}</div>

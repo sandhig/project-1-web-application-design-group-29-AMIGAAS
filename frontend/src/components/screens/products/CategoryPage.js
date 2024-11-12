@@ -66,18 +66,30 @@ const CategoryPage = () => {
   }
 
   useEffect(() => {
+    const controller = new AbortController();
+    const { signal } = controller;
     setLoading(true);
+
     fetch(`http://54.165.176.36:8000/api/products/?category=${category}`, {
       headers: {
         Authorization: `Token ${token}`,
       },
+      signal,
     })
       .then((response) => response.json())
       .then((data) => {
         setProducts(data);
         setLoading(false);
       })
-      .catch((error) => console.error("Error fetching products:", error));
+      .catch((error) => {
+        if (error.name === 'AbortError') {
+          console.log("Fetch request was aborted.");
+        } else {
+          console.error("Error fetching products:", error);
+          setLoading(false);
+        }
+      });
+
     axios.get('http://54.165.176.36:8000/api/product-choices/', {
       headers: {
         'Authorization': `Token ${token}`,
@@ -89,6 +101,9 @@ const CategoryPage = () => {
         setLocations(locations);
       })
       .catch(error => console.error('Error fetching preset values:', error));
+
+    return () => controller.abort();
+
   }, [category]);
 
   const handleOpenProduct = (id) => {
@@ -162,8 +177,8 @@ const CategoryPage = () => {
             variant="outlined"
             sx={{
               '&:hover': {
-              backgroundColor: '#007fa3',       // Custom hover color
-              WebkitTextFillColor: 'white'      // Change to white text
+                backgroundColor: '#007fa3',       // Custom hover color
+                WebkitTextFillColor: 'white'      // Change to white text
               },
             }}
           >
@@ -180,7 +195,7 @@ const CategoryPage = () => {
 
               <div className="title">
                 {category === 'textbook' ? (<h2>Textbooks</h2>) : (
-                <h2>{category.charAt(0).toUpperCase() + category.slice(1)}</h2>)}
+                  <h2>{category.charAt(0).toUpperCase() + category.slice(1)}</h2>)}
                 <FormControl className="sort-by" variant="outlined">
                   <InputLabel id="sort-label">Sort By</InputLabel>
                   <Select

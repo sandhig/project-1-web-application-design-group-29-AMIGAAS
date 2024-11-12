@@ -48,7 +48,7 @@ const Products = () => {
   };
 
   useEffect(() => {
-    fetch('http://54.165.176.36:8000/api/products/', {
+    fetch('http://54.165.176.36:8000/api/products/recent/', {
       headers: {
         'Authorization': `Token ${token}`,
       }

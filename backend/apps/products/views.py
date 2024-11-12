@@ -9,6 +9,7 @@ from rest_framework.authentication import TokenAuthentication
 from rest_framework.decorators import api_view, authentication_classes, permission_classes
 from django.core.files.storage import default_storage
 from django.core.files.base import ContentFile
+from itertools import chain
 import boto3
 from django.conf import settings
 import uuid
@@ -43,9 +44,25 @@ def get_user_products(request, user_id):
 @authentication_classes([TokenAuthentication])
 @permission_classes([IsAuthenticated])
 def get_sold_products(request):
-    current_user = request.user.profile
+    current_user = request.user
     products = Product.objects.select_related('user').filter(user__id=current_user.id).filter(sold=True)
     serializer = ProductSerializer(products, many=True)
+    return Response(serializer.data)
+
+@api_view(['GET'])
+@authentication_classes([TokenAuthentication])
+@permission_classes([IsAuthenticated])
+def get_recent_products(request):
+    current_user = request.user.profile
+    products = Product.objects.select_related('user').exclude(user=current_user.user).exclude(sold=True)
+
+    textbooks = products.filter(category__iexact='textbook').order_by('-created_at')[:30]
+    clothing = products.filter(category__iexact='clothing').order_by('-created_at')[:30]
+    furniture = products.filter(category__iexact='furniture').order_by('-created_at')[:30]
+
+    filtered_products = list(chain(textbooks, clothing, furniture))
+    
+    serializer = ProductSerializer(filtered_products, many=True)
     return Response(serializer.data)
 
 @authentication_classes([TokenAuthentication])

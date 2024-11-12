@@ -82,6 +82,16 @@
     justify-self: center;
     box-sizing: border-box;
     flex-shrink: 0;
+    gap: 10px;
+}
+
+.profile-product-image {
+    display: block;
+    background-color: grey;
+    border-radius: 10px;
+    width: 10vw;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
 }
 
 .homepage-product-item {
@@ -230,6 +240,7 @@ a:active {
     scroll-behavior: smooth;
     width: 100%;
     padding: 10px;
+    gap: 10px;
 }
 
 .product-loader {
