@@ -48,6 +48,10 @@
     color: white;
 }
 
+.site-title:hover {
+    color: #007fa3;
+}
+
 .search-container {
     display: flex;
     flex-grow: 1;
