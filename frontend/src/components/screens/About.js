@@ -70,7 +70,7 @@ function About() {
         <div className="about-page">
             <Header />
             <div className="about-content">
-                <h1>The Too Good To Throw Developers</h1>
+                <h1>Our Team</h1>
                 
                 <div className="circle-container">
                     <div className={`center-circle ${isFlipped ? 'flipped' : ''}`} onClick={toggleFlip}>
@@ -130,8 +130,7 @@ function About() {
                     who developed "Too Good to Throw" to promote affordable, sustainable shopping for students. Too Good to Throw is a centralized marketplace to make buying and
                     selling secondhand items simple, safe, and sustainable. This platform, exclusive to the U of T community, 
                     allows members to buy/sell textbooks, furniture, household items, and more. Accounts are verified by only allowing university-approved emails and  
-                    users can choose campus-based pickup locations, create new listings, engage in private messaging, and have personalized wishlists.
-</p>
+                    users can choose campus-based pickup locations, create new listings, engage in private messaging, and have personalized wishlists.</p>
             </div>
         </div>
     );
