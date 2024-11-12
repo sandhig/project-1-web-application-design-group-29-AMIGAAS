@@ -125,7 +125,7 @@ function About() {
                 )}
             </div>
             <div className="description-section">
-                <h2>Too Good To Throw</h2>
+                <h2>Too Good To Throw - About Our Website</h2>
                 <p>We are AMIGAAS, a team of 4th year University of Toronto Engineering students 
                     who developed "Too Good to Throw" to promote affordable, sustainable shopping for students. Too Good to Throw is a centralized marketplace to make buying and
                     selling secondhand items simple, safe, and sustainable. This platform, exclusive to the U of T community, 

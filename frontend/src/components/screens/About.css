@@ -10,13 +10,22 @@
     margin-top: -10px;
 }
 
+.about-content h1 {
+    font-size: 3rem;
+    font-family: 'Zombies'; /* Applies the Zombies font */
+    font-weight: normal;
+    color: #003366;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+}
+
 .circle-container {
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
     margin-top: 20px; /* Space between "About Us" and circle layout */
-    height: 600px;
+    height: 500px;
     overflow: visible;
 }
 
@@ -237,7 +246,7 @@ Animation: The @keyframes shine animation alternates between two states:
     color: #333;
     margin-top: 40px; /* Space between the circle layout and the description */
     line-height: 1.6; /* Improves readability */
-    text-align: center; /* Centers the text for elegance */
+    text-align: justify; /* Centers the text for elegance */
     max-width: 800px; /* Restricts width for easier readability */
     margin-left: auto; /* Centers the description */
     margin-right: auto; /* Centers the description */
@@ -248,10 +257,10 @@ Animation: The @keyframes shine animation alternates between two states:
 .description-section h2 {
     font-size: 1.8rem;
     font-family: 'Zombies'; /* Applies the Zombies font */
-    
+    text-align: center;
     font-weight: normal;
     color: #003366;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
     text-transform: uppercase; 
 }
 
