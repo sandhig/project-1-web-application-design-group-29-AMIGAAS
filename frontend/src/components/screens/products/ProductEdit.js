@@ -54,6 +54,7 @@ const ProductEdit = ({
 
     const snackbarErrorMessage = "New listing was not created. Please fix the errors and try again.";
     const isFormInvalid = isSubmitting || Object.values(formErrors).some(error => error) || snackbarOpen;
+    const isImageButtonDisabled = isSubmitting || snackbarOpen;
 
     useEffect(() => {
         axios.get('http://54.165.176.36:8000/api/product-choices/', {
@@ -252,15 +253,17 @@ const ProductEdit = ({
                     <input 
                         id="imageInput"
                         type="file" 
-                        accept="image/jpg, image/jpeg" 
+                        accept="image/jpg, image/jpeg, image/webp" 
                         onChange={handleInputChange} 
                         style={{ display: 'none' }}
                     />
+                    <p style={{ marginBottom: "10px", fontSize: "small" }}>Please upload your image in JPG, JPEG, or WEBP format.</p>
                     <label htmlFor="imageInput">
                         <Button
                             variant="contained"
                             color="primary"
                             component="span"
+                            disabled={isImageButtonDisabled}
                             sx={{
                                 '&:hover': {
                                 backgroundColor: '#007fa3',       // Custom hover color
