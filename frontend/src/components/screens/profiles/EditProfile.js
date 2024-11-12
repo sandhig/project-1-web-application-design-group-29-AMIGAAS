@@ -40,18 +40,18 @@ function EditProfile() {
                     'Content-Type': 'application/json',
                 },
             })
-            .then(response => response.json())
-            .then(data => {
-                setProfile({
-                    first_name: data.first_name || '',
-                    last_name: data.last_name || '',
-                    bio: data.bio || '',
-                    profilePic: data.profilePic || ''
-                });
-                setSelectedImage(data.profilePic);
-            })
-            .catch(error => console.error('Error fetching profile:', error))
-            .finally(() => setLoading(false));
+                .then(response => response.json())
+                .then(data => {
+                    setProfile({
+                        first_name: data.first_name || '',
+                        last_name: data.last_name || '',
+                        bio: data.bio || '',
+                        profilePic: data.profilePic || ''
+                    });
+                    setSelectedImage(data.profilePic);
+                })
+                .catch(error => console.error('Error fetching profile:', error))
+                .finally(() => setLoading(false));
         }
     }, [currentUser, token]);
 
@@ -66,10 +66,10 @@ function EditProfile() {
     const handleInputChange = (event) => {
         const { name, value, type, files } = event.target;
         setFormErrors({ ...formErrors, [name]: '' });
-    
+
         if (type === 'file') {
             const file = files[0];
-    
+
             if (!file) {
                 return;
             }
@@ -81,7 +81,7 @@ function EditProfile() {
                     ...formErrors,
                     profilePic: wrongFileType
                 });
-    
+
                 // Reset the profile pic if there's an error
                 setProfile({
                     ...profile,
@@ -89,11 +89,11 @@ function EditProfile() {
                 });
                 return;
             }
-    
+
             setFormErrors({ ...formErrors, profilePic: '' });
             setProfile({ ...profile, profilePic: file });
             setSelectedImage(URL.createObjectURL(file));
-    
+
         } else {
             setProfile({
                 ...profile,
@@ -104,29 +104,29 @@ function EditProfile() {
 
     const handleSave = (e) => {
         e.preventDefault();
-    
+
         const newProfilePic = profile.profilePic && typeof profile.profilePic !== 'string';
-    
+
         if (newProfilePic) {
             const errors = {
                 profilePic: validateImageType(profile.profilePic),
             };
-        
+
             const hasErrors = Object.values(errors).some(error => error !== '');
             if (hasErrors) {
                 setFormErrors(errors);
                 return;
             }
         }
-    
+
         setIsSubmitting(true);
 
         // Structure data to match what the serializer expects
         const formData = new FormData();
         formData.append('first_name', profile.first_name);
-        formData.append('last_name', profile.last_name); 
-        formData.append('bio', profile.bio); 
-        
+        formData.append('last_name', profile.last_name);
+        formData.append('bio', profile.bio);
+
         // Only add profile pic to form if it's a new file
         if (newProfilePic) {
             formData.append('profilePic', profile.profilePic);
@@ -139,20 +139,20 @@ function EditProfile() {
             },
             body: formData
         })
-        .then(response => {
-            if (response.ok) {
-                setSuccessMessage('Profile saved successfully!'); // Set success message
-                setTimeout(() => setSuccessMessage(''), 3000); // Clear message after 3 seconds
-                navigate(`/user/${currentUser.id}`);
-            } else {
-                response.json().then(errorData => {
-                    console.log('Server error:', errorData);
-                });
-                console.error('Error saving profile:', response);
-            }
-        })
-        .catch(error => console.error('Error:', error))
-        .finally(() => setIsSubmitting(false));
+            .then(response => {
+                if (response.ok) {
+                    setSuccessMessage('Profile saved successfully!'); // Set success message
+                    setTimeout(() => setSuccessMessage(''), 3000); // Clear message after 3 seconds
+                    navigate(`/user/${currentUser.id}`);
+                } else {
+                    response.json().then(errorData => {
+                        console.log('Server error:', errorData);
+                    });
+                    console.error('Error saving profile:', response);
+                }
+            })
+            .catch(error => console.error('Error:', error))
+            .finally(() => setIsSubmitting(false));
     };
 
     return (
@@ -167,13 +167,16 @@ function EditProfile() {
                         ) : (
                             <img src="/profile-icon.jpg" alt="Default Profile" className="profile-photo" />
                         )}
-                        <input 
+                        <input
                             id="imageInput"
-                            type="file" 
-                            accept="image/jpg, image/jpeg"  
-                            onChange={handleInputChange} 
+                            type="file"
+                            accept="image/jpg, image/jpeg, image/webp"
+                            onChange={handleInputChange}
                             style={{ display: 'none' }}
                         />
+
+                        <p style={{ marginBottom: "5px", fontSize: "small" }}>Please upload your image in JPG, JPEG, or WEBP format.</p>
+
                         <label htmlFor="imageInput">
                             <Button
                                 variant="contained"
@@ -182,7 +185,7 @@ function EditProfile() {
                                 disabled={isProfilePicButtonDisabled}
                                 sx={{
                                     '&:hover': {
-                                    backgroundColor: '#007fa3',       // Custom hover color
+                                        backgroundColor: '#007fa3',       // Custom hover color
                                     },
                                 }}
                             >
@@ -226,7 +229,7 @@ function EditProfile() {
                         disabled={isFormInvalid}
                         sx={{
                             '&:hover': {
-                            backgroundColor: '#007fa3',       // Custom hover color
+                                backgroundColor: '#007fa3',       // Custom hover color
                             },
                         }}
                     >

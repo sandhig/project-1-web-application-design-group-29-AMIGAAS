@@ -7,14 +7,17 @@
     p, a {
         color: rgb(235, 235, 235);
     }
-    padding: 5px 20px;
-    width: 100%;
-    min-width: 320px; /* Ensures minimum width to align with header */
-    box-sizing: border-box; /* Includes padding in total width */
-    overflow-y: auto;
+    padding: 15px;
     display: flex;
     flex-direction: column;
+    gap: 10px; /* Space between sections */
     align-items: center;
+    margin-top: 20px;
+    /*
+    min-width: 320px; 
+    box-sizing: border-box;
+    overflow-y: auto;
+    */
 }
 
 .company-info,
@@ -29,26 +32,7 @@
     width: 100%;
     display: flex;
     justify-content: center;
-    gap: 15px; /* Space between sections */
     flex-wrap: wrap;
-    margin: 10px 0;
-}
-
-.contact-info p,
-.mission-statement p,
-.policies p,
-.university-notice p {
-    margin: 5px 0;
-}
-
-.icon {
-    font-size: 20px;
-    margin: 0 5px;
-}
-
-.policies p {
-    font-size: 0.9em;
-    color: #bbb;
 }
 
 a {
@@ -64,7 +48,6 @@ a:hover {
 }
 
 .footer-links {
-    margin-top: 5px;
     margin-bottom: 8px; /* Minimal extra space below the links */
     display: flex;
     align-items: center;

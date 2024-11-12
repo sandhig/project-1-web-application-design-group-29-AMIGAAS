@@ -66,7 +66,7 @@ function Wishlist() {
         <div>
             <Header />
             <div style={{ padding: '10px' }}></div>
-            <h1>My Wishlist</h1>
+            <h1 className="wishlist-title">My Wishlist</h1>
             <div className="product-grid-wrapper">
                 <div className="product-grid transparent-bg">
                 {loading ? (<span className="loader"></span>) : (

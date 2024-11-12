@@ -48,8 +48,11 @@
     color: white;
 }
 
-.site-title:hover {
-    color: #007fa3;
+.logo-container:hover {
+    .site-title {
+        text-decoration: none !important;
+        color: #007fa3;
+    }
 }
 
 .search-container {
@@ -110,6 +113,8 @@
     }
 
     &:hover {
+        cursor: pointer;
+
         p {
             color: #007FA3;
         }
@@ -163,5 +168,30 @@
         position: absolute;
         top: 0;
         right: 0;
+    }
+}
+
+.profile-button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    p {
+        color: white;
+    }
+
+    img {
+        border: transparent 2px solid;
+    }
+
+    &:hover {
+        cursor: pointer;
+        p {
+            color: #007FA3;
+        }
+
+        img {
+            border: #007FA3 2px solid;
+        }
     }
 }

@@ -3,19 +3,9 @@
 import React from 'react';
 import './Footer.css';
 import { Link } from 'react-router-dom';
-import { useLocation } from 'react-router-dom';
 
 
 function Footer() {
-
-    const location = useLocation();
-    // List of routes where the footer should NOT be displayed
-    const hiddenFooterPaths = ['/profiles/login', '/profiles/verify-email', '/password_reset_request', '/password_reset_confirm', '/profiles/signup', '/', '/messages'];
-
-    // Footer on certain pages don't render
-    if (hiddenFooterPaths.includes(location.pathname)) {
-        return null;
-    }
     
     return (
         <div className="footer-container">
@@ -27,9 +17,9 @@ function Footer() {
             </div>
             <div className="footer-links">
                 {/* About and FAQ buttons */}
-                <Link to='/about' style={{ marginRight: '3px' }}>About Us</Link>
+                <Link to='/about'>About Us</Link>
                 <span className='separator'>|</span>
-                <Link to='/faq' style={{ marginLeft: '3px' }}>FAQ</Link>
+                <Link to='/faq'>FAQ</Link>
             </div>
         </div>
     );

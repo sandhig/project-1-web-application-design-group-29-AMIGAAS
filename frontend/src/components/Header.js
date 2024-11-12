@@ -92,7 +92,7 @@ function Header() {
       <div className="header">
 
         <div className="logo-container">
-          <Link to="/products" style={{display:'flex', alignItems:'center', gap:'20px'}}>
+          <Link to="/products" style={{display:'flex', alignItems:'center', gap:'20px', textDecoration: 'none'}}>
             <img className="header-logo" src="/images/header-logo-navy-cyan-white.png" alt="Website Logo"></img>
             <div className="site-title">TOO GOOD TO THROW</div>
           </Link>
@@ -115,14 +115,14 @@ function Header() {
 
         <div className="profile-container">
 
-          <Link to="/products/create" className="icon-button">
+          <Link to="/products/create" className="icon-button" style={{ textDecoration: 'none' }}>
             <IconButton aria-label="new-listing">
               <AddCircleOutlineIcon className="icon" />
             </IconButton>
             <p>New Listing</p>
           </Link>
 
-          <Link to="/messages" className="icon-button">
+          <Link to="/messages" className="icon-button" style={{ textDecoration: 'none' }}>
             <div className="message-button-container">
               <IconButton aria-label="message">
                 <MessageIcon className="icon" />
@@ -134,7 +134,7 @@ function Header() {
             <p>Messages</p>
           </Link>
 
-          <Link to="/wishlist" className="icon-button">
+          <Link to="/wishlist" className="icon-button" style={{ textDecoration: 'none' }}>
             <IconButton aria-label="wishlist">
               <FavoriteIcon className="icon" />
             </IconButton>
@@ -149,8 +149,8 @@ function Header() {
           </div>
 
           {currentUser ? (
-            <Link to={`/user/${currentUser.id}`} style={{ display: 'flex', alignItems: 'center', gap: '10px', cursor: 'pointer' }}>
-              <p style={{ color: "white" }}>Hi, {currentUser.first_name}</p>
+            <Link to={`/user/${currentUser.id}`} className="profile-button" style={{ textDecoration: 'none' }}>
+              <p>Hi, {currentUser.first_name}</p>
               {currentUser.profilePic ? (
                 <img src={currentUser.profilePic} alt="Profile" className="header-profile" />
               ) : (

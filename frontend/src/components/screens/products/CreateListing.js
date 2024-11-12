@@ -51,7 +51,7 @@ function CreateListing() {
 
   const snackbarErrorMessage = "New listing was not created. Please fix the errors and try again.";
   const isFormInvalid = isSubmitting || Object.values(formErrors).some(error => error) || snackbarOpen;
-  const isImageButtonDisabled = isSubmitting;
+  const isImageButtonDisabled = isSubmitting || snackbarOpen;
 
   useEffect(() => {
     axios.get('http://54.165.176.36:8000/api/product-choices/', {
@@ -205,7 +205,7 @@ function CreateListing() {
     <div>
       <Header />
       <div className='padding-top'>
-        <h1>Create Listing</h1>
+        <h1 className="create-listing-title">Create Listing</h1>
       </div>
       <Box
         component="form"
@@ -226,10 +226,13 @@ function CreateListing() {
             <input
               id="imageInput"
               type="file"
-              accept="image/jpg, image/jpeg"
+              accept="image/jpg, image/jpeg, image/webp"
               onChange={handleInputChange}
               style={{ display: 'none' }}
             />
+
+            <p style={{ marginBottom: "10px", fontSize: "small" }}>Please upload your image in JPG, JPEG, or WEBP format.</p>
+
             <label htmlFor="imageInput">
               <Button
                 variant="contained"
@@ -245,6 +248,7 @@ function CreateListing() {
                 Choose Image
               </Button>
             </label>
+
             <Typography variant="caption" color="error">{formErrors.image}</Typography>
           </div>
 
@@ -377,7 +381,7 @@ function CreateListing() {
                 disabled={isFormInvalid}
                 sx={{
                   '&:hover': {
-                  backgroundColor: '#007fa3',       // Custom hover color
+                    backgroundColor: '#007fa3',       // Custom hover color
                   },
                 }}
               >
