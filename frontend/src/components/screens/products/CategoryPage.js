@@ -163,6 +163,7 @@ const CategoryPage = () => {
             sx={{
               '&:hover': {
               backgroundColor: '#007fa3',       // Custom hover color
+              WebkitTextFillColor: 'white'      // Change to white text
               },
             }}
           >
