@@ -168,6 +168,11 @@ const UsersLogin = () => {
             variant="text"
             color="primary"
             onClick={handleForgotPassword}
+            sx={{
+              '&:hover': {
+              WebkitTextFillColor: '#007fa3'      // Change to secondary colour text
+              },
+            }}
           >
             <Typography color='primary'>Forgot Password?</Typography>
           </Button>
@@ -196,6 +201,11 @@ const UsersLogin = () => {
               variant="text"
               color="primary"
               onClick={handleSignUpButton}
+              sx={{
+                '&:hover': {
+                WebkitTextFillColor: '#007fa3'      // Change to secondary colour text
+                },
+              }}
             >
               <Typography color='primary'>Sign Up</Typography>
             </Button>

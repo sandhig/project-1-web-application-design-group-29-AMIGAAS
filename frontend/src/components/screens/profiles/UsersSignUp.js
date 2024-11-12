@@ -216,6 +216,11 @@ const UsersSignUp = () => {
               variant="text"
               color="primary"
               onClick={handleLoginButton}
+              sx={{
+                '&:hover': {
+                WebkitTextFillColor: '#007fa3'      // Change to secondary colour text
+                },
+              }}
             >
               <Typography color='primary'>Login</Typography>
             </Button>
