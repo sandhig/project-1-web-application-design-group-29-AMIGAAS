@@ -218,7 +218,6 @@ PROJECT1-WEB-APPLICATION-DESIGN-GROUP-29-AMIGAAS:.
 |       |       
 |       \---tests
 |               locustfile.py
-|               locust.py
 |               test_products.py
 |               test_profiles.py
 |               
