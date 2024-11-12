@@ -110,7 +110,7 @@ Animation: The @keyframes shine animation alternates between two states:
 }
 
 /* Front side of the circle with the "AMIGAAS" text */
-.center-circle .front, .center-circle .back {
+/*.center-circle .front, .center-circle .back {
     position: absolute;
     width: 100%;
     height: 100%;
@@ -118,22 +118,59 @@ Animation: The @keyframes shine animation alternates between two states:
     display: flex;
     justify-content: center;
     align-items: center;
-    backface-visibility: hidden; /* the reverse side hidden during flip */
+    backface-visibility: hidden; 
+}*/
+
+.center-circle .front {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    backface-visibility: hidden;
+    transition: display 0s 0.8s;
 }
 
+/* Show the front content only when the circle is not flipped */
+.center-circle:not(.flipped) .front {
+    display: flex;
+}
+
+/* Hide the front content when the circle is flipped */
+.center-circle.flipped .front {
+    display: none;
+}
 
 /* Back side of the circle with the abbreviations */
 .center-circle .back {
-    transform: rotateY(180deg); /* Rotated back side for the flip effect */
-    font-size: 0.75rem; /* Comparitively smaller font for the abbreviations */
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: rotateY(180deg);
+    backface-visibility: hidden;
+    font-size: 0.75rem;
     color: #ffffff;
     text-align: left;
-    line-height: 1.1; /* Increased spacing for readability */
-    display: flex;
+    line-height: 1.1;
+    display: none; /* Initially hidden */
     flex-direction: column;
-    align-items: flex-start; /* Ensures all items start from the left */
-    padding-left: 90px; /* Controls how far left the text starts */
-    padding-top: 00px;  /* Adjusts top spacing for a balanced look */
+    align-items: flex-start;
+    padding-left: 90px;
+}
+
+.center-circle.flipped .back {
+    display: flex;
+}
+
+/* Hide the back content when the circle is not flipped */
+.center-circle:not(.flipped) .back {
+    display: none;
 }
 
 /* Each abbreviation entry on the back side */
