@@ -50,7 +50,6 @@ function Wishlist() {
             })
             .then(response => {
                 if (response.ok) {
-                    console.log('Product removed from wishlist');
                     fetchWishlistItems();
                 } else {
                     return response.json().then(data => {

@@ -36,7 +36,30 @@ const ProductView = ({
     }, [product, currentUser, token]);
     
     const handleToggleFavorite = () => {
-        fetch(`http://54.165.176.36:8000/api/wishlist/`, {
+
+        if (isFavorited) {
+            // Remove from wishlist
+            fetch(`http://54.165.176.36:8000/api/wishlist/`, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': `Token ${token}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ product_id: product.id })
+            })
+            .then(response => {
+                if (response.ok) {
+                    setIsFavorited(prev => !prev);
+                } else {
+                    return response.json().then(data => {
+                        console.error('Failed to remove product from wishlist:', data);
+                    });
+                }
+            })
+            .catch(error => console.error('Error removing from wishlist:', error))
+        } else {
+            // Add to wishlist
+            fetch(`http://54.165.176.36:8000/api/wishlist/`, {
                 method: 'POST',
                 headers: {
                     'Authorization': `Token ${token}`,
@@ -46,6 +69,7 @@ const ProductView = ({
             })
             .then(response => response.json())
             .then(setIsFavorited(prev => !prev));
+        }
     };
 
     const sendMessageToSeller = () => {
@@ -72,7 +96,6 @@ const ProductView = ({
                     },
                 })
                 .then(response => {
-                    console.log('Message sent:', response.data);
                     setConfirmation(true);
                 })
                 .catch(error => console.error('Error sending message:', error));

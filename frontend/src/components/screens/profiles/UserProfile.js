@@ -64,7 +64,6 @@ function UserProfile() {
                             .then(response => response.json())
                             .then((data) => {
                                 setSoldProducts(data);
-                                console.log(soldProducts);
                                 setSoldLoading(false);
                             });
                     }
@@ -106,7 +105,6 @@ function UserProfile() {
                         },
                     })
                         .then(response => {
-                            console.log('Message sent:', response.data);
                             setConfirmation(true);
                         })
                         .catch(error => console.error('Error sending message:', error));
@@ -128,8 +126,6 @@ function UserProfile() {
     };
 
     const scrollLeft = (ref) => {
-
-        console.log(ref)
         const itemWidth = ref.current.children[0].offsetWidth;
         ref.current.scrollBy({ left: -itemWidth, behavior: "smooth" });
     };

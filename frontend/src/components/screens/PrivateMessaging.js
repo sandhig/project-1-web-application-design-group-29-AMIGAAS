@@ -59,7 +59,6 @@ function PrivateMessage() {
                     ws.current = new WebSocket(`ws://54.165.176.36:8000/ws/chat/user/${currentUser.id}/`);
                     
                     ws.current.onopen = function () {
-                        console.log("WebSocket connection opened");
                         setHasConversations(true);
                         setConversations(data.conversations);
                     };
@@ -80,10 +79,6 @@ function PrivateMessage() {
                         }
 
                         fetchConversations();
-                    };
-
-                    ws.current.onclose = function () {
-                        console.log("WebSocket connection closed");
                     };
 
                     ws.current.onerror = (error) => {
