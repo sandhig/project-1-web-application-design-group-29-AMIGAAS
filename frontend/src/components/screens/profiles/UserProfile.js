@@ -21,6 +21,7 @@ function UserProfile() {
     const [confirmation, setConfirmation] = useState(false);
     const [activeLoading, setActiveLoading] = useState(true);
     const [soldLoading, setSoldLoading] = useState(true);
+    const [isNull, setIsNull] = useState(false);
 
     const { currentUser } = useUser();
     const token = localStorage.getItem('authToken');
@@ -37,7 +38,17 @@ function UserProfile() {
                     'Content-Type': 'application/json',
                 },
             })
-                .then(response => response.json())
+                .then(response => {
+                    if (!response.ok) {
+                        if (response.status === 404) {
+                            console.error("User not found");
+                            setIsNull(true);
+                            return null;
+                        }
+                        throw new Error(`Error fetching user: ${response.statusText}`);
+                    }
+                    return response.json();
+                })
                 .then((data) => {
                     setUser(data);
                     fetch(`http://54.165.176.36:8000/api/user-products/${userId}/`, {
@@ -67,7 +78,10 @@ function UserProfile() {
                                 setSoldLoading(false);
                             });
                     }
-                });
+                })
+                .catch(error => {
+                    console.error("Error fetching user:", error);
+                })
         }
 
     }, [userId, currentUser, token]);
@@ -142,60 +156,66 @@ function UserProfile() {
             <div className="profile-page-container">
 
                 <div className="profile-info-container">
-                    {!user ? (<span className="profile-loader"></span>) : (
+                    {isNull ? (
+                        <h1 style={{alignSelf:"baseline"}}>User not found</h1>
+                    ) : (
                         <>
-                            <div className="profile-header">
+                            {!user ? (<span className="profile-loader"></span>) : (
+                                <>
+                                    <div className="profile-header">
 
-                                <div className="profile-icon">
-                                    {user.profilePic ? (
-                                        <img src={user.profilePic} alt="Profile" className="profile-pic" />
-                                    ) : (
-                                        <img src="/profile-icon.jpg" alt="Default Profile" className="profile-pic" />
-                                    )}
-                                </div>
-
-                                <div className="profile-name">
-
-                                    <h1>{user.first_name} {user.last_name}</h1>
-
-                                    {parseInt(currentUser.id) !== parseInt(userId) && (
-                                        <div className="text-input">
-                                            <input type="text" value={message} onChange={e => setMessage(e.target.value)}
-                                                onKeyPress={e => {
-                                                    if (e.key === 'Enter') {
-                                                        sendMessageToSeller()
-                                                    }
-                                                }}
-                                            />
-                                            <button onClick={() => sendMessageToSeller()}><IoSend /></button>
+                                        <div className="profile-icon">
+                                            {user.profilePic ? (
+                                                <img src={user.profilePic} alt="Profile" className="profile-pic" />
+                                            ) : (
+                                                <img src="/profile-icon.jpg" alt="Default Profile" className="profile-pic" />
+                                            )}
                                         </div>
-                                    )}
 
-                                    {parseInt(currentUser.id) == parseInt(userId) && (
-                                        <Button onClick={handleEditProfile} variant="outlined"
-                                            sx={{
-                                                '&:hover': {
-                                                backgroundColor: '#007fa3',       // Custom hover color
-                                                WebkitTextFillColor: 'white'      // Change to white text
-                                                },
-                                            }}
-                                        >
-                                            Edit Profile
-                                        </Button>
-                                    )}
+                                        <div className="profile-name">
 
-                                </div>
+                                            <h1>{user.first_name} {user.last_name}</h1>
 
-                            </div>
+                                            {parseInt(currentUser.id) !== parseInt(userId) && (
+                                                <div className="text-input">
+                                                    <input type="text" value={message} onChange={e => setMessage(e.target.value)}
+                                                        onKeyPress={e => {
+                                                            if (e.key === 'Enter') {
+                                                                sendMessageToSeller()
+                                                            }
+                                                        }}
+                                                    />
+                                                    <button onClick={() => sendMessageToSeller()}><IoSend /></button>
+                                                </div>
+                                            )}
 
-                            <span style={{ fontWeight: "bold", marginBottom: "10px" }}>About me</span>
-                            <p>{user.bio || "This user hasn't added a bio yet."}</p>
+                                            {parseInt(currentUser.id) == parseInt(userId) && (
+                                                <Button onClick={handleEditProfile} variant="outlined"
+                                                    sx={{
+                                                        '&:hover': {
+                                                            backgroundColor: '#007fa3',       // Custom hover color
+                                                            WebkitTextFillColor: 'white'      // Change to white text
+                                                        },
+                                                    }}
+                                                >
+                                                    Edit Profile
+                                                </Button>
+                                            )}
 
-                            <span style={{ fontWeight: "bold", marginBottom: "10px", marginTop: "30px" }}>Email</span>
-                            <p>{user.email}</p>
+                                        </div>
 
-                            <span style={{ fontWeight: "bold", marginBottom: "10px", marginTop: "30px" }}>Joined</span>
-                            <p>{(new Date(user.date_joined)).toLocaleDateString(undefined, { year: 'numeric', month: 'long' })}</p>
+                                    </div>
+
+                                    <span style={{ fontWeight: "bold", marginBottom: "10px" }}>About me</span>
+                                    <p>{user.bio || "This user hasn't added a bio yet."}</p>
+
+                                    <span style={{ fontWeight: "bold", marginBottom: "10px", marginTop: "30px" }}>Email</span>
+                                    <p>{user.email}</p>
+
+                                    <span style={{ fontWeight: "bold", marginBottom: "10px", marginTop: "30px" }}>Joined</span>
+                                    <p>{(new Date(user.date_joined)).toLocaleDateString(undefined, { year: 'numeric', month: 'long' })}</p>
+                                </>
+                            )}
                         </>)}
                 </div>
 
@@ -251,7 +271,11 @@ function UserProfile() {
                                     </IconButton>
 
                                 </div>
-                            ) : (<h3 style={{ color: "grey" }}>No active listings</h3>)}
+                            ) : (
+                                <>
+                                    {!isNull && (<h3 style={{ color: "grey" }}>No active listings</h3>)}
+                                </>
+                            )}
                         </>
 
                     )}

@@ -103,6 +103,10 @@
     justify-self: center;
     box-sizing: border-box;
     flex-shrink: 0;
+
+    &:hover {
+        cursor: pointer;
+    }
 }
 
 .product-item {
