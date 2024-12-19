@@ -119,6 +119,7 @@ const EmailVerification = () => {
       <HeaderPre />
       <div className="signup-container">
         <h1>Email Verification</h1>
+        <p style={{marginBottom:"20px"}}>An email verification link has been sent. Please check your junk folder if it does not arrive within a few minutes.</p>
         <form noValidate onSubmit={handleSubmit} className='signup-form'>
           <TextField
             label="UofT Email"

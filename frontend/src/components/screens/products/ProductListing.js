@@ -18,35 +18,47 @@ const ProductListing = () => {
     const navigate = useNavigate();
     const [editable, setEditable] = useState(false);
     const [loading, setLoading] = useState(true);
+    const [isNull, setIsNull] = useState(false);
 
     useEffect(() => {
         fetch(`http://54.165.176.36:8000/api/products/${id}`, {
             headers: {
-            'Authorization': `Token ${token}`,
+                'Authorization': `Token ${token}`,
             }
         })
-        .then(response => response.json())
-        .then(data => {
-            setProduct(data);
-            if (data.user && currentUser) {
-                setEditable(data.user.id === currentUser.id);
-                setLoading(false)
-            }
-            
-        })
-        .catch(error => console.error('Error fetching product:', error));
+            .then(response => {
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        console.error("Listing not found");
+                        setIsNull(true);
+                        setLoading(false)
+                        return null;
+                    } else {
+                    throw new Error(`Error fetching listing: ${response.statusText}`);
+                    }
+                }
+                return response.json()
+            })
+            .then(data => {
+                setProduct(data);
+                if (data.user && currentUser) {
+                    setEditable(data.user.id === currentUser.id);
+                    setLoading(false)
+                }
+            })
+            .catch(error => console.error('Error fetching product:', error));
     }, [id, currentUser, token]);
 
     const handleBack = () => {
         navigate(-1); // This navigates back to the previous page
     };
-    
+
     return (
-            
+
         <div className="listing-page-container">
 
             <Header />
-            
+
             <div style={{ width: "fit-content" }} onClick={handleBack}>
                 <IconButton type="submit" aria-label="back" className="back-to-listings">
                     <ArrowBackIcon style={{ fill: "grey", fontSize: "medium" }} />
@@ -55,29 +67,35 @@ const ProductListing = () => {
             </div>
 
             {loading ? (
-                <p>Loading...</p>
+                <span className="loader"></span>
             ) : (
-            
-            <>
-            {editable ? (
                 <>
-                <ProductEdit
-                    product={product}
-                    currentUser={currentUser}
-                />
+                {isNull ? (
+                    <h2>Listing not found</h2>
+                ) : (
+
+                <>
+                    {editable ? (
+                        <>
+                            <ProductEdit
+                                product={product}
+                                currentUser={currentUser}
+                            />
+                        </>
+                    ) : (
+                        <ProductView
+                            product={product}
+                            currentUser={currentUser}
+                        />
+                    )}
                 </>
-            ) : (
-                <ProductView 
-                    product={product} 
-                    currentUser={currentUser}
-                />
-            )}  
-            </> 
-        )}
+                )}
+                </>
+            )}
 
         </div>
 
     )
-} 
+}
 
 export default ProductListing;

@@ -63,6 +63,7 @@ p {
 
 .listing-description {
     font-size: large;
+    white-space: pre-line;
 }
 
 hr {

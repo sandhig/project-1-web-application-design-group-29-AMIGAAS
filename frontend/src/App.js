@@ -11,7 +11,6 @@ import CreateListing from './components/screens/products/CreateListing';
 import UsersSignUp from "./components/screens/profiles/UsersSignUp";
 import UsersLogin from './components/screens/profiles/UsersLogin';
 import EmailVerification from './components/screens/profiles/EmailVerification';
-import Header from "./components/Header"; 
 import PrivateRoute from './components/PrivateRoute';
 import { UserProvider } from './context/UserContext';
 import WelcomePage from './components/screens/WelcomePage';
@@ -24,6 +23,7 @@ import FAQ from './components/screens/FAQ';
 import CategoryPage from './components/screens/products/CategoryPage';
 import PasswordReset from './components/screens/profiles/PasswordReset';
 import PasswordResetConfirm from './components/screens/profiles/PasswordResetConfirm';
+import ScrollToTop from './components/ScrollToTop';
 
 const theme = createTheme({
   palette: {
@@ -35,21 +35,22 @@ const theme = createTheme({
 
 function App() {
 
-    return (
-      <div className="App">
-        <ThemeProvider theme={theme}>
-          <UserProvider>
-            <Router>
-              
+  return (
+    <div className="App">
+      <ThemeProvider theme={theme}>
+        <UserProvider>
+          <Router>
+            <ScrollToTop />
+
             <div className="App-scroll-container">
               <Routes>
                 {/* Public pages */}
-                <Route path = "/" element={<WelcomePage/>}></Route>
-                <Route path = "/profiles/signup" element={<UsersSignUp/>}></Route>
-                <Route path = "/profiles/verify-email" element={<EmailVerification/>}></Route>
-                <Route path = "/password_reset_request" element={<PasswordReset/>}></Route>
-                <Route path = "/password_reset_confirm" element={<PasswordResetConfirm/>}></Route>
-                <Route path = "/profiles/login" element={<UsersLogin/>}></Route>
+                <Route path="/" element={<WelcomePage />}></Route>
+                <Route path="/profiles/signup" element={<UsersSignUp />}></Route>
+                <Route path="/profiles/verify-email" element={<EmailVerification />}></Route>
+                <Route path="/password_reset_request" element={<PasswordReset />}></Route>
+                <Route path="/password_reset_confirm" element={<PasswordResetConfirm />}></Route>
+                <Route path="/profiles/login" element={<UsersLogin />}></Route>
 
                 {/* Protected pages */}
                 <Route path="/" element={<Navigate to="/products" replace />} />
@@ -66,15 +67,15 @@ function App() {
                 <Route path="/about" element={<About />} />
                 <Route path="/faq" element={<FAQ />} />
               </Routes>
-              
+
             </div>
-            
+
           </Router>
         </UserProvider>
       </ThemeProvider>
 
-      </div>
-    );
-  }
+    </div>
+  );
+}
 
 export default App;

@@ -95,7 +95,7 @@ const Products = () => {
               showDots={true}
               infinite={true}
               autoPlay={isPlaying} 
-              autoPlaySpeed={4000}
+              autoPlaySpeed={3000}
               keyBoardControl={true}
               customTransition="all 0.5s"
               transitionDuration={500}

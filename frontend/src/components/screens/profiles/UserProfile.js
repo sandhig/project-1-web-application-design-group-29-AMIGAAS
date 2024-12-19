@@ -207,7 +207,7 @@ function UserProfile() {
                                     </div>
 
                                     <span style={{ fontWeight: "bold", marginBottom: "10px" }}>About me</span>
-                                    <p>{user.bio || "This user hasn't added a bio yet."}</p>
+                                    <p style={{whiteSpace:"pre-line"}}>{user.bio || "This user hasn't added a bio yet."}</p>
 
                                     <span style={{ fontWeight: "bold", marginBottom: "10px", marginTop: "30px" }}>Email</span>
                                     <p>{user.email}</p>

@@ -95,7 +95,7 @@ const UsersSignUp = () => {
         },
       });
       if (response.status === 201) {
-        setSuccessMessage('User successfully added!');
+        setSuccessMessage('Success! An email verification link will be sent shortly.');
         setErrorMessage('');
 
         setTimeout(() => {

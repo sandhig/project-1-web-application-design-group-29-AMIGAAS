@@ -51,7 +51,7 @@ const PasswordReset = () => {
 
         try {
             const response = await axios.post('http://54.165.176.36:8000/api/password_reset_request/', { email });
-            setSuccessMessage('If this email is registered, a password reset link will be sent shortly. This may take a few minutes.');
+            setSuccessMessage('If this email is registered, a password reset link will be sent shortly. Please check your junk folder if it does not arrive within a few minutes.');
         } catch (err) {
             setErrorMessage('An error occurred. Please try again.');
         } finally {
